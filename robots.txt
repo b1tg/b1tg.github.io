@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://b1tg.github.io/sitemap.xml

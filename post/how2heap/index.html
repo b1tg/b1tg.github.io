@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>how2heap笔记 - B1TG</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="b1tg" /><meta name="description" content="how2heap笔记" /><meta name="keywords" content="Hugo, b1tg, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.73.0 with theme even" />
+
+
+<link rel="canonical" href="https://b1tg.github.io/post/how2heap/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link href="/dist/even.c2a46f00.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="how2heap笔记" />
+<meta property="og:description" content="how2heap笔记" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://b1tg.github.io/post/how2heap/" />
+<meta property="article:published_time" content="2019-10-30T14:28:00+08:00" />
+<meta property="article:modified_time" content="2019-10-30T14:28:00+08:00" />
+<meta itemprop="name" content="how2heap笔记">
+<meta itemprop="description" content="how2heap笔记">
+<meta itemprop="datePublished" content="2019-10-30T14:28:00&#43;08:00" />
+<meta itemprop="dateModified" content="2019-10-30T14:28:00&#43;08:00" />
+<meta itemprop="wordCount" content="3715">
+
+
+
+<meta itemprop="keywords" content="笔记,ctf," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="how2heap笔记"/>
+<meta name="twitter:description" content="how2heap笔记"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">B1TG</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">B1TG</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about">About</a>
+      </li>
+  </ul>
+</nav>
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">how2heap笔记</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2019-10-30 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents"></nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h1 id="first-fit">First fit</h1>
+<blockquote>
+<p>当一个应用请求一个k字节的块时，分配器搜索空闲链表，查找一个足够大可以放置所请求块的空闲块。分配器执行这种搜索的方式是由放置策略(placement policy)确定的。一些常见的策略是首次适配(first fit)、下一次适配(next fit)和最佳适配(best fit)。首次适配从头开始搜索空闲链表，选择第一个合适的空闲块&hellip;.</p>
+<p>《深入理解计算机系统 第二版(CSAPP)》P567</p>
+</blockquote>
+<p>glibc使用的策略就是first fit，这种特性使我们可以很好地预测分配器将会使用空闲列表中的哪个块。一个常见情景是在存在堆指针UAF的情况下，我们可以控制其他块的内容。</p>
+<p><a href="https://github.com/shellphish/how2heap/blob/master/first_fit.c">first_fit.c</a></p>
+<p>代码中我们先请求了两个块a和b，释放a后，a被放入空闲链表，此时请求一个比a小的块c，分配器会使用原来a使用的空间，此时如果a存在UAF，我们将有两个指向同一片内存区域的指针(a和c)，这种情形往往是一次攻击的开端。</p>
+<h1 id="fastbin-dup">Fastbin dup</h1>
+<p>绕过fastbin double free检查的一种方式。</p>
+<p>请求两个大小合适的块a和b，释放a进入fastbin，此时如果再次释放a，就会触发double free检查。但是<code>malloc.c:3935</code>这个判断只检查了bin的顶端和要释放的指针是否相同，所以如果我们按照a-&gt;b-&gt;a的顺序释放，检查就会被绕过。</p>
+<p><img src="/img/how2heap/image-20191031160126798.png" alt="image-20191031160126798"></p>
+<p><img src="/img/how2heap/image-20191031160416744.png" alt="image-20191031160416744"></p>
+<h1 id="fastbin_dup_into_stack">fastbin_dup_into_stack</h1>
+<p>fastbin dup的进一步利用。</p>
+<p>在fastbin dup构造出double free的基础上(假设0x60200在fastbin中存在两次)，我们第一次请求到0x60200的地址时，把0x60200的fd位置写入某个地址x，因为0x60200仍在fastbin中，所以在再次请求到0x60200后，fastbin top变成了x，意味着我们下次的请求到的地址是x。选择合适的x值，我们就可能获得任意内存读写的机会。(这里有一个需要绕过的检查是需要让x+sizeof(long)处的值为这个fastbin的大小来“骗”过分配器x指向的是一个合法的块。)</p>
+<p><a href="https://github.com/shellphish/how2heap/blob/master/glibc_2.25/fastbin_dup_into_stack.c">fastbin_dup_into_stack.c</a>中的x是&amp;stack_var-8</p>
+<p><img src="/img/how2heap/image-20191031164225989.png" alt="image-20191031164225989"></p>
+<p>​</p>
+<h1 id="fastbin_dup_consolidate">fastbin_dup_consolidate</h1>
+<p>绕过fastbin double free检查的另一种方式。</p>
+<p>当请求一个大块时会触发malloc_consolidate，把fastbin中的空闲块都整理到unsorted bin中。存在这样的场景：我们请求一个块a并释放让他进入fastbin，此时请求一个大块触发malloc_consolidate让这个空闲块被转移到unsorted bin中，这样再次释放块a的时候，fastbin top不是块a，所以可以利绕过检查把a被放置到fastbin中，此时块a同时处于fastbin和unsorted bin中，double free达成。</p>
+<p><img src="/img/how2heap/image-20191101144309575.png" alt="image-20191101144309575"></p>
+<p><img src="/img/how2heap/image-20191101144412511.png" alt="image-20191101144412511"></p>
+<h1 id="unsafe_unlink">unsafe_unlink</h1>
+<p>有两个相邻的堆块a和b，a存在溢出可以把b的in_use位覆盖成0，可以在a中伪造一个fake chunk，并改写b的pre_size让它认为它前面的空闲块就是这个fake chunk。此时释放块b，就会对fake chunk进行unlink。</p>
+<p><img src="/img/how2heap/image-20191103203645894.png" alt="image-20191103203645894"></p>
+<p>unlink宏在进行双向链表合法性的检查后把目标块从链表中取出，通过在fake chunk的fd和bk处填入合适的值，我们就可以绕过检查并且达成一个场景&mdash;自己写自己</p>
+<p>假设有一个我们可以控制的指针p，让fd=p-0x18, bk=p-0x10，就可以满足fd-&gt;bk==p和bk-&gt;fd==p，之后的交换指针之后p=p-0x18，这意味着p指向了自己之前的区域，在合适的条件下，我们就得到了一个任意地址读写。</p>
+<p><img src="/img/how2heap/image-20191103204702541.png" alt="image-20191103204702541"></p>
+<p><img src="/img/how2heap/image-20191103211327710.png" alt="image-20191103211327710"></p>
+<p><img src="/img/how2heap/image-20191103211742192.png" alt="image-20191103211742192"></p>
+<h1 id="house_of_spirit">house_of_spirit</h1>
+<p>在栈上伪造一个fake chunk，释放它进入fastbins，这样如果再次申请就会申请到这片可控区域🚧</p>
+<p><img src="/img/how2heap/image-20191103213031926.png" alt="image-20191103213031926"></p>
+<p><!-- raw HTML omitted --></p>
+<h1 id="poison_null_byte">poison_null_byte</h1>
+<p>通过溢出相邻free chunk的chunk_size的低1位为0。制造fake chunk最后达成块重叠</p>
+<p><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --></p>
+<p>after <code>b1 = malloc(0x100)</code></p>
+<p><!-- raw HTML omitted --></p>
+<p>​				after <code>b2 = malloc(0x80)</code></p>
+<p><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted --></p>
+<p>​	after <code>free(b1)</code></p>
+<p><img src="/img/how2heap/image-20191103223650584.png" alt="image-20191103223650584"></p>
+<p>after <code>free(c)</code>，b1和c合并，b2被忽视😟</p>
+<p><img src="/img/how2heap/image-20191103223748949.png" alt="image-20191103223748949"></p>
+<p>after <code>d=malloc(0x300)</code>，d和b2重叠</p>
+<p><img src="/img/how2heap/image-20191103224501945.png" alt="image-20191103224501945"></p>
+<h1 id="house_of_lore">house_of_lore</h1>
+<p>在栈上设计两个fake chunk，写small bin中块的bk指向fake chunk 1，通过两次malloc请求得到栈上的内存。</p>
+<p>下面描述一下house_of_lore.c的过程</p>
+<p>改掉victim-&gt;bk之后</p>
+<p><img src="/img/how2heap/image-20191103233258704.png" alt="image-20191103233258704"></p>
+<p><img src="/img/how2heap/image-20191103233406717.png" alt="image-20191103233406717"></p>
+<p>after <code>void *p3 = malloc(100);</code></p>
+<p><img src="/img/how2heap/image-20191103234115374.png" alt="image-20191103234115374"></p>
+<p><img src="/img/how2heap/image-20191103234205313.png" alt="image-20191103234205313"></p>
+<p>after <code>char *p4 = malloc(100);</code> ，此时p4指向栈上的地址</p>
+<p><img src="/img/how2heap/image-20191103234342336.png" alt="image-20191103234342336"></p>
+<p>最后两次malloc都涉及了small bin的取用，注意small bins是顺着头结点按bk来“取件”🛴</p>
+<p><img src="/img/how2heap/image-20191104000153906.png" alt="image-20191104000153906"></p>
+<h1 id="overlapping_chunks">overlapping_chunks</h1>
+<p>通过修改unsorted bin中chunk的size，使得在获取新块的时候得到与已有chunk重叠的块。</p>
+<p>修改p2 size之前</p>
+<p><img src="/img/how2heap/image-20191104091933720.png" alt="image-20191104091933720"></p>
+<p>修改p2 size为evil_chunk_size之后。unsortedbin中的空闲块大小为0x181，覆盖p3的区域</p>
+<p><img src="/img/how2heap/image-20191104092327588.png" alt="image-20191104092327588"></p>
+<p><code>p4=malloc(0x178)</code>之后， p4使用了空闲块，此时p4包含p3</p>
+<p><img src="/img/how2heap/image-20191104092848744.png" alt="image-20191104092848744"></p>
+<h1 id="overlapping_chunks_2">overlapping_chunks_2</h1>
+<p>修改chunk的大小，使他错误地包含其他使用中的chunk，经过释放再重新获取得到的新块和老的chunk重叠</p>
+<p>before change p2 size</p>
+<p><img src="/img/how2heap/image-20191104095001025.png" alt="image-20191104095001025"></p>
+<p>p2 size被改之后，此时p2和p4 &ldquo;相邻&rdquo;</p>
+<p><img src="/img/how2heap/image-20191104095447527.png" alt="image-20191104095447527"></p>
+<p><code>free(p2)</code>之后，p2和p4合并成一个空闲块，大小为0xbd0，p3被包含在其中</p>
+<p><img src="/img/how2heap/image-20191104100430025.png" alt="image-20191104100430025"></p>
+<p>此时申请一个合适大小的块便会和p3重叠。</p>
+<h1 id="house_of_force">house_of_force</h1>
+<p>通过修改top_chunk为特别大的数使得可以是堆请求落到bss处</p>
+<p>修改top chunk size之前</p>
+<p><img src="/img/how2heap/image-20191104101859688.png" alt="image-20191104101859688"></p>
+<p>修改top chunk size为-1(0xffffffffffffffff)，此时即使申请一个特别大的块，也不会触发mmap，这里我们想让堆请求到bss区域，而在内存布局中bss地址比heap地址低，所以请求的大小是一个负值，无符号表现为0xfff&hellip;.这样的形式。</p>
+<p><img src="/img/how2heap/image-20191104101940203.png" alt="image-20191104101940203"></p>
+<p><!-- raw HTML omitted --></p>
+<p>如果我们想让堆分配到bss上的dest处，malloc的size应该多大呢，下面是计算过程：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c">	<span class="cm">/*
+</span><span class="cm">	 * The evil_size is calulcated as (nb is the number of bytes requested + space for metadata):
+</span><span class="cm">	 * new_top = old_top + nb
+</span><span class="cm">	 * nb = new_top - old_top
+</span><span class="cm">	 * req + 2sizeof(long) = new_top - old_top
+</span><span class="cm">	 * req = new_top - old_top - 2sizeof(long)
+</span><span class="cm">	 * req = dest - 2sizeof(long) - old_top - 2sizeof(long)
+</span><span class="cm">	 * req = dest - old_top - 4*sizeof(long)
+</span><span class="cm">	 */</span>
+	<span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">evil_size</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">bss_var</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="o">*</span><span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">ptr_top</span><span class="p">;</span>
+
+</code></pre></td></tr></table>
+</div>
+</div><p>后面通过两次malloc，就可以达成目标。</p>
+<p>第一次：<code>malloc(evil_size)</code>，此时top chunk在bss_var-0x10处</p>
+<p><img src="/img/how2heap/image-20191104105719220.png" alt="image-20191104105719220"></p>
+<p>第二次：<code>malloc(100)</code>，成功！</p>
+<p><img src="/img/how2heap/image-20191104105929084.png" alt="image-20191104105929084"></p>
+<h1 id="unsorted_bin_into_stack">unsorted_bin_into_stack</h1>
+<p>修改unsorted bin中chunk的size和bk指向一个fake chunk，请求一个大小在(size, fake_chunk size)之间的块，使得fake chunk被征用。</p>
+<p>修改victim的size和bk之前</p>
+<p><img src="/img/how2heap/image-20191104111357125.png" alt="image-20191104111357125"></p>
+<p>修改victim的size和bk之后，减少victim的size为0x20并把victim的bk指向stack_buffer，在stack_buffer处伪造了一个大小为0x110的chunk</p>
+<p><img src="/img/how2heap/image-20191104111203297.png" alt="image-20191104111203297"></p>
+<p>现在请求一个0x100的，会在unsortedbin中顺着bk找可用的块，victim不满足，命中stack_buffer指向的fake chunk。注意stack_buffer[3]的位置需要提前写入一个可写的地址(这个原因没在源码中找到)，不一定非得是stack_buffer的地址。</p>
+<h1 id="unsorted_bin_attack">unsorted_bin_attack</h1>
+<p>修改unsorted bin中chunk的bk使其指向target-0x10，此chunk被取用时发生unlink，taget被赋值改写。</p>
+<p>写p的bk使其指向stack_var-0x10处</p>
+<p><img src="/img/how2heap/image-20191104113309035.png" alt="image-20191104113309035"></p>
+<p>此时<code>malloc(400)</code>，p指向的chunk被使用。unlink过程中发生<code>victim-&gt;bk-&gt;fd = victim-&gt;fd</code>，stack_var被赋值为0x00007ffff7dd1b78。</p>
+<p><img src="/img/how2heap/image-20191104114013030.png" alt="image-20191104114013030"></p>
+<p>这里改写的值是不可控制，一般为unsorted bin的链表头。在真实场景中，这招通常用来改写global_max_fast来为后面的攻击做铺垫。</p>
+<h1 id="large_bin_attack">large_bin_attack</h1>
+<p>通过改写large bin中chunk的bk和bk_nextsize使得在large bin中插入新节点的时候目标地址被改写。改写的值为堆地址。常被用来改写global_max_fast的值以进行fast bin attack</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p1</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x320</span><span class="p">);</span>
+<span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
+<span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p2</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x400</span><span class="p">);</span>
+<span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
+<span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p3</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x400</span><span class="p">);</span>
+<span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
+<span class="n">free</span><span class="p">(</span><span class="n">p1</span><span class="p">);</span>
+<span class="n">free</span><span class="p">(</span><span class="n">p2</span><span class="p">);</span>
+<span class="n">malloc</span><span class="p">(</span><span class="mh">0x90</span><span class="p">);</span>
+<span class="n">free</span><span class="p">(</span><span class="n">p3</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="/img/how2heap/image-20191104115546389.png" alt="image-20191104115546389"></p>
+<p><code>malloc(0x90)</code>之后，p1被切割使用，p2被放入largebins</p>
+<p><img src="/img/how2heap/image-20191104120337879.png" alt="image-20191104120337879"></p>
+<p><code>free(p3)</code></p>
+<p><img src="/img/how2heap/image-20191104120857402.png" alt="image-20191104120857402"></p>
+<p>此时改写p2的size、bk、bk_nextsize。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="n">p2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3f1</span><span class="p">;</span> <span class="c1">//缩小p2的size，使得后面p3进入largebin的时候被插在头部(因为largebin降序排列)
+</span><span class="c1"></span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">p2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">stack_var1</span> <span class="o">-</span> <span class="mi">2</span><span class="p">);</span>
+<span class="n">p2</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">stack_var2</span> <span class="o">-</span> <span class="mi">4</span><span class="p">);</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><img src="/img/how2heap/image-20191104121015416.png" alt="image-20191104121015416"></p>
+<p><code>malloc(0x90)</code>后，p1继续被分割，p3被整理到large bin中。p3被插入large bin的头部，发生</p>
+<p><code>victim-&gt;bk-&gt;fd=p3</code>和<code>victim-&gt;bk_nextsize-&gt;fd=p3</code>,所以stack_var1和stack_var2都被改写为p3的地址</p>
+<p><img src="/img/how2heap/image-20191104121739626.png" alt="image-20191104121739626"></p>
+<p><img src="/img/how2heap/image-20191104122108956.png" alt="image-20191104122108956"></p>
+<p><img src="/img/how2heap/image-20191104122842499.png" alt="image-20191104122842499"></p>
+<h1 id="house_of_einherjar">house_of_einherjar</h1>
+<p>溢出相邻下一个chunk的size低位字节为\x00，并伪造pre_size，使得下一个chunk释放的时候发生合并，指针指向设计好的位置。</p>
+<p><img src="/img/how2heap/image-20191104142409949.png" alt="image-20191104142409949"></p>
+<p>溢出低位字节并写入伪造的pre_size，使得pre chunk指向fake_chunk，注意fake_chunk-&gt;size需要和b的pre size对应上</p>
+<p><img src="/img/how2heap/image-20191104142457570.png" alt="image-20191104142457570"></p>
+<p><img src="/img/how2heap/image-20191104142603983.png" alt="image-20191104142603983"></p>
+<p>此时<code>free(b)</code>，top_chunk指向fake_chunk</p>
+<p><img src="/img/how2heap/image-20191104142849363.png" alt="image-20191104142849363"></p>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">b1tg</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2019-10-30
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/%E7%AC%94%E8%AE%B0/">笔记</a>
+          <a href="/tags/ctf/">ctf</a>
+          </div>
+      <nav class="post-nav">
+        <a class="prev" href="/post/vscode-local-execute/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Visual Studio Code本地代码执行漏洞</span>
+            <span class="prev-text nav-mobile">上一篇</span>
+          </a>
+        <a class="next" href="/post/vim-arbitary-execute/">
+            <span class="next-text nav-default">Vim任意代码执行漏洞</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
+  <a href="https://b1tg.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2018 - 
+    2020
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">b1tg</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/dist/even.26188efa.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

