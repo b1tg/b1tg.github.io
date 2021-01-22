@@ -6,11 +6,7 @@
     <description>Recent content in 漏洞分析 on B1TG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 15 Jan 2020 15:32:30 +0800</lastBuildDate>
-    
-	<atom:link href="https://b1tg.github.io/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 15 Jan 2020 15:32:30 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CVE-2018-0802 Microsoft Office stack overflow 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2018-0802-office-eqnedt32/</link>
@@ -62,15 +58,6 @@
       <pubDate>Tue, 05 Nov 2019 12:54:02 +0800</pubDate>
       
       <guid>https://b1tg.github.io/post/vscode-local-execute/</guid>
-      <description>CVE-2019-1414漏洞复现与分析</description>
-    </item>
-    
-    <item>
-      <title>Visual Studio Code本地代码执行漏洞</title>
-      <link>https://b1tg.github.io/posts/vscode-local-execute/</link>
-      <pubDate>Tue, 05 Nov 2019 12:54:02 +0800</pubDate>
-      
-      <guid>https://b1tg.github.io/posts/vscode-local-execute/</guid>
       <description>CVE-2019-1414漏洞复现与分析</description>
     </item>
     

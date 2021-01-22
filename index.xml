@@ -6,10 +6,15 @@
     <description>Recent content on B1TG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 15 Jan 2020 15:32:30 +0800</lastBuildDate>
-    
-	<atom:link href="https://b1tg.github.io/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Wed, 15 Jan 2020 15:32:30 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://b1tg.github.io/quotes/</link>
+      <pubDate>Fri, 22 Jan 2021 23:47:10 +0800</pubDate>
+      
+      <guid>https://b1tg.github.io/quotes/</guid>
+      <description>绝大多数的爱好者，囿于天资，都无法从爱好本身得到成就感，于是他们无一例外地沦为器材派，搞摄影的开始对各路镜头如数家珍，写书法的开始讲究纸墨，</description>
+    </item>
     
     <item>
       <title>CVE-2018-0802 Microsoft Office stack overflow 漏洞分析</title>
@@ -98,15 +103,6 @@
       <pubDate>Tue, 05 Nov 2019 12:54:02 +0800</pubDate>
       
       <guid>https://b1tg.github.io/post/vscode-local-execute/</guid>
-      <description>CVE-2019-1414漏洞复现与分析</description>
-    </item>
-    
-    <item>
-      <title>Visual Studio Code本地代码执行漏洞</title>
-      <link>https://b1tg.github.io/posts/vscode-local-execute/</link>
-      <pubDate>Tue, 05 Nov 2019 12:54:02 +0800</pubDate>
-      
-      <guid>https://b1tg.github.io/posts/vscode-local-execute/</guid>
       <description>CVE-2019-1414漏洞复现与分析</description>
     </item>
     

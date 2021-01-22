@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://b1tg.github.io/quotes/</loc>
+    <lastmod>2021-01-22T23:47:10+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://b1tg.github.io/</loc>
     <lastmod>2020-01-15T15:32:30+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -114,21 +121,7 @@
   </url>
   
   <url>
-    <loc>https://b1tg.github.io/posts/</loc>
-    <lastmod>2019-11-05T12:54:02+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://b1tg.github.io/post/vscode-local-execute/</loc>
-    <lastmod>2019-11-05T12:54:02+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://b1tg.github.io/posts/vscode-local-execute/</loc>
     <lastmod>2019-11-05T12:54:02+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
