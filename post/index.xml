@@ -6,7 +6,16 @@
     <description>Recent content in Posts on B1TG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 24 Apr 2021 20:14:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 18 Aug 2021 00:00:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IE, death marches and impact</title>
+      <link>https://b1tg.github.io/post/impact-and-ie-marches/</link>
+      <pubDate>Wed, 18 Aug 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://b1tg.github.io/post/impact-and-ie-marches/</guid>
+      <description>lcamtfu: 我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他</description>
+    </item>
+    
     <item>
       <title>Chrome V8 CVE-2018-6065 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2018-6065-analysis/</link>
