@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>debug on B1TG</title>
+    <link>https://b1tg.github.io/tags/debug/</link>
+    <description>Recent content in debug on B1TG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 23 Aug 2021 00:00:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/debug/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Windbg Tips</title>
+      <link>https://b1tg.github.io/post/windbg-tips/</link>
+      <pubDate>Mon, 23 Aug 2021 00:00:00 +0800</pubDate>
+      
+      <guid>https://b1tg.github.io/post/windbg-tips/</guid>
+      <description>0x00 断点打印 断点打印 eax 的值，然后继续 1 bp 004046A5 &amp;#34;.printf \&amp;#34;res %d\\n\&amp;#34;, @eax;g;&amp;#34; 断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续 1 bp 004040e2 &amp;#34;.printf \&amp;#34;%d vs %d \\n\&amp;#34;, @eax, poi(ebp-35Ch);g;&amp;#34; 0x01 条件断点 如果 eax 满足条件，则断下，否则继续运</description>
+    </item>
+    
+  </channel>
+</rss>

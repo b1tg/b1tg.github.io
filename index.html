@@ -45,7 +45,7 @@
 <meta property="og:description" content="b1tg blog." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://b1tg.github.io/" />
-<meta property="og:updated_time" content="2021-08-18T00:00:00+08:00" />
+<meta property="og:updated_time" content="2021-08-23T00:00:00+08:00" />
 <meta itemprop="name" content="B1TG">
 <meta itemprop="description" content="b1tg blog.">
 <meta name="twitter:card" content="summary"/>
@@ -127,6 +127,25 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/windbg-tips/">Windbg Tips</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2021-08-23 </span>
+      
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      0x00 断点打印 断点打印 eax 的值，然后继续 1 bp 004046A5 &#34;.printf \&#34;res %d\\n\&#34;, @eax;g;&#34; 断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续 1 bp 004040e2 &#34;.printf \&#34;%d vs %d \\n\&#34;, @eax, poi(ebp-35Ch);g;&#34; 0x01 条件断点 如果 eax 满足条件，则断下，否则继续运
+    </div>
+    <div class="read-more">
+      <a href="/post/windbg-tips/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/impact-and-ie-marches/">IE, death marches and impact</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2021-08-18 </span>
@@ -140,6 +159,25 @@
     </div>
     <div class="read-more">
       <a href="/post/impact-and-ie-marches/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/nvim-cpp-setup/">nvim c&#43;&#43; 环境配置</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2021-06-13 </span>
+      
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      概述：nvim 配置 c++ 环境 第一步， 配好 nvim + coc.nvim 环境，按照项目 readme [1] 做就可以 第二步，配置 c++ 环境： 在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件 给 &quot;languageserver&quot; 字段加上关于 ccls 的配置： 1
+    </div>
+    <div class="read-more">
+      <a href="/post/nvim-cpp-setup/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>
@@ -178,44 +216,6 @@
     </div>
     <div class="read-more">
       <a href="/post/cve-2018-0802-office-eqnedt32/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/cve-2017-11882-office-eqnedt32/">CVE-2017-11882 Microsoft Office stack overflow 漏洞分析</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2020-01-14 </span>
-      
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      Office远程执行漏洞，”噩梦公式“一代目
-    </div>
-    <div class="read-more">
-      <a href="/post/cve-2017-11882-office-eqnedt32/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/cve-2012-0003-microsoft-windows-media-player-heap-overflow/">CVE-2012-0003 Windows Media Player 漏洞分析</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2020-01-10 </span>
-      
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      CVE-2012-0003 Microsoft Windows Media Player heap overflow
-    </div>
-    <div class="read-more">
-      <a href="/post/cve-2012-0003-microsoft-windows-media-player-heap-overflow/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

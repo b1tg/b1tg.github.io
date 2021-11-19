@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <title>IE, death marches and impact - B1TG</title>
+  <title>Windbg Tips - B1TG</title>
   <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
@@ -16,7 +16,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="b1tg" /><meta name="description" content="lcamtfu: 我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他" /><meta name="keywords" content="Hugo, b1tg, even" />
+<meta name="author" content="b1tg" /><meta name="description" content="0x00 断点打印 断点打印 eax 的值，然后继续 1 bp 004046A5 &amp;#34;.printf \&amp;#34;res %d\\n\&amp;#34;, @eax;g;&amp;#34; 断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续 1 bp 004040e2 &amp;#34;.printf \&amp;#34;%d vs %d \\n\&amp;#34;, @eax, poi(ebp-35Ch);g;&amp;#34; 0x01 条件断点 如果 eax 满足条件，则断下，否则继续运" /><meta name="keywords" content="Hugo, b1tg, even" />
 
 
 
@@ -26,7 +26,7 @@
 <meta name="generator" content="Hugo 0.79.1 with theme even" />
 
 
-<link rel="canonical" href="https://b1tg.github.io/post/impact-and-ie-marches/" />
+<link rel="canonical" href="https://b1tg.github.io/post/windbg-tips/" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -39,24 +39,24 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="IE, death marches and impact" />
-<meta property="og:description" content="lcamtfu: 我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他" />
+<meta property="og:title" content="Windbg Tips" />
+<meta property="og:description" content="0x00 断点打印 断点打印 eax 的值，然后继续 1 bp 004046A5 &#34;.printf \&#34;res %d\\n\&#34;, @eax;g;&#34; 断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续 1 bp 004040e2 &#34;.printf \&#34;%d vs %d \\n\&#34;, @eax, poi(ebp-35Ch);g;&#34; 0x01 条件断点 如果 eax 满足条件，则断下，否则继续运" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://b1tg.github.io/post/impact-and-ie-marches/" />
-<meta property="article:published_time" content="2021-08-18T00:00:00+08:00" />
-<meta property="article:modified_time" content="2021-08-18T00:00:00+08:00" />
-<meta itemprop="name" content="IE, death marches and impact">
-<meta itemprop="description" content="lcamtfu: 我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他">
-<meta itemprop="datePublished" content="2021-08-18T00:00:00+08:00" />
-<meta itemprop="dateModified" content="2021-08-18T00:00:00+08:00" />
-<meta itemprop="wordCount" content="829">
+<meta property="og:url" content="https://b1tg.github.io/post/windbg-tips/" />
+<meta property="article:published_time" content="2021-08-23T00:00:00+08:00" />
+<meta property="article:modified_time" content="2021-08-23T00:00:00+08:00" />
+<meta itemprop="name" content="Windbg Tips">
+<meta itemprop="description" content="0x00 断点打印 断点打印 eax 的值，然后继续 1 bp 004046A5 &#34;.printf \&#34;res %d\\n\&#34;, @eax;g;&#34; 断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续 1 bp 004040e2 &#34;.printf \&#34;%d vs %d \\n\&#34;, @eax, poi(ebp-35Ch);g;&#34; 0x01 条件断点 如果 eax 满足条件，则断下，否则继续运">
+<meta itemprop="datePublished" content="2021-08-23T00:00:00+08:00" />
+<meta itemprop="dateModified" content="2021-08-23T00:00:00+08:00" />
+<meta itemprop="wordCount" content="80">
 
 
 
-<meta itemprop="keywords" content="career," />
+<meta itemprop="keywords" content="debug," />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="IE, death marches and impact"/>
-<meta name="twitter:description" content="lcamtfu: 我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他"/>
+<meta name="twitter:title" content="Windbg Tips"/>
+<meta name="twitter:description" content="0x00 断点打印 断点打印 eax 的值，然后继续 1 bp 004046A5 &#34;.printf \&#34;res %d\\n\&#34;, @eax;g;&#34; 断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续 1 bp 004040e2 &#34;.printf \&#34;%d vs %d \\n\&#34;, @eax, poi(ebp-35Ch);g;&#34; 0x01 条件断点 如果 eax 满足条件，则断下，否则继续运"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -133,10 +133,10 @@
           <article class="post">
     
     <header class="post-header">
-      <h1 class="post-title">IE, death marches and impact</h1>
+      <h1 class="post-title">Windbg Tips</h1>
 
       <div class="post-meta">
-        <span class="post-time"> 2021-08-18 </span>
+        <span class="post-time"> 2021-08-23 </span>
         
         
       </div>
@@ -145,56 +145,45 @@
     <div class="post-toc" id="post-toc">
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content always-active">
-    <nav id="TableOfContents"></nav>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#0x00-断点打印">0x00 断点打印</a></li>
+    <li><a href="#0x01-条件断点">0x01 条件断点</a></li>
+  </ul>
+</nav>
   </div>
 </div>
     <div class="post-content">
-      <p><a href="https://twitter.com/lcamtuf/status/1427301196906176512">lcamtfu: </a></p>
-<blockquote>
-<p>我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他们那样被记住（产生类似的影响）。</p>
-</blockquote>
-<!-- raw HTML omitted -->
-<blockquote>
-<p>您可能最终会从事重要的创新项目，而这些项目却莫名其妙地默默无闻。</p>
-<p>你可能会像 IE 团队一样做出真正的改变，但在未来几十年里，你会得到来自其他极客的尖刻言论和怨恨。</p>
-</blockquote>
-<!-- raw HTML omitted -->
-<blockquote>
-<p>或者，您最终可能会从事受到普遍赞誉的变革性项目，但你所做的贡献却从未被公开承认。</p>
-<p>这并不是说最好放弃雄心壮志，但让工作定义你是谁可能会产生伤害。</p>
-</blockquote>
-<!-- raw HTML omitted -->
-<blockquote>
-<p>我认为我在我的领域做了一些开创性的工作，但我也很确定在 20 年后这些都不会被记住或谈论。</p>
-<p>我是会退休并满足于我的生活和曾经产生的影响，还是会感到沮丧和怨恨？</p>
-</blockquote>
-<p>lcamtuf 是 AFL 以及《The Tangled Web》的作者</p>
-<blockquote>
-<p>我认为这里的答案是，在家附近（close to home）最容易获得持久的影响和深刻的满足：没有其他人可以指导你的年轻同事，帮助你最亲密的朋友，抚养你的孩子。这里的满足并不取决于世界的想法。</p>
-<p>这是陈词滥调，但却是真实的。所以我有一点建议：如果你被迫在产生这种影响和完成工作的最后期限之间做出选择，你可能会得到一笔糟糕的交易（getting a bad deal）。</p>
-</blockquote>
-<hr>
-<p><a href="https://twitter.com/aboodman/status/1427137725119959046">Aaron Boodman:</a></p>
-<ul>
-<li>Chrome 当时发布的时候没有任何“冲刺”，在几年的时间内，团队都是在工作日朝九晚五来上班，很规律。No drama. No broken marriages, no broken families.</li>
-<li>为什么 chrome 团队可以在没有“死亡冲刺”（death marches）的情况下做出高质量软件？软件项目迫切需要经验丰富的技术领导力深度参与其中。</li>
-<li>Software engineering is engineering. 像其他工程（engineering）一样， 这是你一生都在培养的能力，而不是 10 年。我加入 chrome 团队的时候快 30 岁了，在团队中算年轻的，团队核心中很多人都曾经参与过好几个浏览器的开发。</li>
-<li>（团队中）有很强的技术领导力有很多优势，其中之一就是会寻求一个更健康的节奏。他们的经历告诉他们“death marches”是起不到作用的。</li>
-</ul>
-<hr>
-<ul>
-<li>context:
-<ul>
-<li>thread link: <a href="https://twitter.com/lcamtuf/status/1427301198198042624">https://twitter.com/lcamtuf/status/1427301198198042624</a></li>
-<li><a href="https://mjtsai.com/blog/2021/08/16/working-on-internet-explorer-3-and-google-chrome/">https://mjtsai.com/blog/2021/08/16/working-on-internet-explorer-3-and-google-chrome/</a>
-<ul>
-<li>一个曾经在 IE 团队工作过的人回忆当时的工作压力大，团队内很多人因此影响到了家庭关系</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
+      <h2 id="0x00-断点打印">0x00 断点打印</h2>
+<p>断点打印 eax 的值，然后继续</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-asm" data-lang="asm"><span class="nf">bp</span> <span class="mi">004046</span><span class="no">A5</span> <span class="err">&#34;</span><span class="no">.printf</span> <span class="err">\&#34;</span><span class="no">res</span> <span class="nv">%d</span><span class="err">\\</span><span class="no">n</span><span class="err">\&#34;</span><span class="p">,</span> <span class="err">@</span><span class="no">eax</span><span class="c">;g;&#34;
+</span></code></pre></td></tr></table>
+</div>
+</div><p>断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-asm" data-lang="asm"><span class="nf">bp</span> <span class="mi">004040</span><span class="no">e2</span> <span class="err">&#34;</span><span class="no">.printf</span> <span class="err">\&#34;</span><span class="nv">%d</span> <span class="no">vs</span> <span class="nv">%d</span> <span class="err">\\</span><span class="no">n</span><span class="err">\&#34;</span><span class="p">,</span> <span class="err">@</span><span class="no">eax</span><span class="p">,</span> <span class="no">poi</span><span class="p">(</span><span class="no">ebp-35Ch</span><span class="p">)</span><span class="c">;g;&#34;
+</span></code></pre></td></tr></table>
+</div>
+</div><h2 id="0x01-条件断点">0x01 条件断点</h2>
+<p>如果 eax 满足条件，则断下，否则继续运行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-asm" data-lang="asm"><span class="nf">bp</span> <span class="mi">004046</span><span class="no">A5</span> <span class="err">&#34;</span><span class="no">.if</span><span class="p">(</span><span class="err">@</span><span class="no">eax</span><span class="err">==</span><span class="mi">7</span><span class="no">ed</span><span class="p">)</span><span class="err">{</span><span class="no">.printf</span> <span class="err">\&#34;</span><span class="no">res</span> <span class="nv">%d</span><span class="err">\\</span><span class="no">n</span><span class="err">\&#34;</span><span class="p">,</span> <span class="err">@</span><span class="no">eax</span><span class="c">;} .else {gc;}&#34;
+</span></code></pre></td></tr></table>
+</div>
+</div>
     </div>
 
     <div class="post-copyright">
@@ -205,7 +194,7 @@
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
     <span class="item-content">
-        2021-08-18
+        2021-08-23
         
     </span>
   </p>
@@ -214,16 +203,12 @@
 </div>
 <footer class="post-footer">
       <div class="post-tags">
-          <a href="/tags/career/">career</a>
+          <a href="/tags/debug/">debug</a>
           </div>
       <nav class="post-nav">
-        <a class="prev" href="/post/windbg-tips/">
-            <i class="iconfont icon-left"></i>
-            <span class="prev-text nav-default">Windbg Tips</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
-        <a class="next" href="/post/nvim-cpp-setup/">
-            <span class="next-text nav-default">nvim c&#43;&#43; 环境配置</span>
+        
+        <a class="next" href="/post/impact-and-ie-marches/">
+            <span class="next-text nav-default">IE, death marches and impact</span>
             <span class="next-text nav-mobile">下一篇</span>
             <i class="iconfont icon-right"></i>
           </a>
