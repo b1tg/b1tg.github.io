@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RE on B1TG</title>
+    <link>https://b1tg.github.io/tags/re/</link>
+    <description>Recent content in RE on B1TG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 22 Jan 2022 23:37:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/re/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>IDA flare-emu 教程</title>
+      <link>https://b1tg.github.io/post/flare-emu-tutorial/</link>
+      <pubDate>Sat, 22 Jan 2022 23:37:00 +0800</pubDate>
+      
+      <guid>https://b1tg.github.io/post/flare-emu-tutorial/</guid>
+      <description>0x00 前言 在逆向工程中，常常会遇到加/解密函数，运气好的话发现是常见算法，找个在线工具直接解就好；运气不好的话就得慢慢厘清算法细节，并尝试写脚本</description>
+    </item>
+    
+  </channel>
+</rss>
