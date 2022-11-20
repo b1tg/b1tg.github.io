@@ -6,7 +6,16 @@
     <description>Recent content in Tags on B1TG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 22 Jan 2022 23:37:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 19 Nov 2022 15:03:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>linux</title>
+      <link>https://b1tg.github.io/tags/linux/</link>
+      <pubDate>Sat, 19 Nov 2022 15:03:00 +0800</pubDate>
+      
+      <guid>https://b1tg.github.io/tags/linux/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>IDA</title>
       <link>https://b1tg.github.io/tags/ida/</link>
@@ -28,7 +37,7 @@
     <item>
       <title>debug</title>
       <link>https://b1tg.github.io/tags/debug/</link>
-      <pubDate>Mon, 23 Aug 2021 00:00:00 +0800</pubDate>
+      <pubDate>Mon, 23 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>https://b1tg.github.io/tags/debug/</guid>
       <description></description>
@@ -37,7 +46,7 @@
     <item>
       <title>career</title>
       <link>https://b1tg.github.io/tags/career/</link>
-      <pubDate>Wed, 18 Aug 2021 00:00:00 +0800</pubDate>
+      <pubDate>Wed, 18 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>https://b1tg.github.io/tags/career/</guid>
       <description></description>
@@ -46,7 +55,7 @@
     <item>
       <title>setup</title>
       <link>https://b1tg.github.io/tags/setup/</link>
-      <pubDate>Sun, 13 Jun 2021 00:00:00 +0800</pubDate>
+      <pubDate>Sun, 13 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://b1tg.github.io/tags/setup/</guid>
       <description></description>
@@ -67,15 +76,6 @@
       <pubDate>Thu, 21 Nov 2019 00:23:09 +0800</pubDate>
       
       <guid>https://b1tg.github.io/tags/ctf/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>linux</title>
-      <link>https://b1tg.github.io/tags/linux/</link>
-      <pubDate>Wed, 20 Nov 2019 20:51:29 +0800</pubDate>
-      
-      <guid>https://b1tg.github.io/tags/linux/</guid>
       <description></description>
     </item>
     

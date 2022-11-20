@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.79.1 with theme even" />
+<meta name="generator" content="Hugo 0.106.0 with theme even" />
 
 
 <link rel="canonical" href="https://b1tg.github.io/post/how2heap/" />
@@ -35,26 +35,22 @@
 
 
 
-<link href="/sass/main.min.2e81bbed97b8b282c1aeb57488cc71c8d8c8ec559f3931531bd396bf31e0d4dd.css" rel="stylesheet">
+<link href="/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
 <meta property="og:title" content="how2heap笔记" />
 <meta property="og:description" content="how2heap笔记" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://b1tg.github.io/post/how2heap/" />
+<meta property="og:url" content="https://b1tg.github.io/post/how2heap/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2019-10-30T14:28:00+08:00" />
 <meta property="article:modified_time" content="2019-10-30T14:28:00+08:00" />
+
 <meta itemprop="name" content="how2heap笔记">
-<meta itemprop="description" content="how2heap笔记">
-<meta itemprop="datePublished" content="2019-10-30T14:28:00+08:00" />
+<meta itemprop="description" content="how2heap笔记"><meta itemprop="datePublished" content="2019-10-30T14:28:00+08:00" />
 <meta itemprop="dateModified" content="2019-10-30T14:28:00+08:00" />
-<meta itemprop="wordCount" content="3715">
-
-
-
-<meta itemprop="keywords" content="笔记,ctf," />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="wordCount" content="3714">
+<meta itemprop="keywords" content="笔记,ctf," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="how2heap笔记"/>
 <meta name="twitter:description" content="how2heap笔记"/>
 
@@ -184,17 +180,17 @@
 <h1 id="house_of_spirit">house_of_spirit</h1>
 <p>在栈上伪造一个fake chunk，释放它进入fastbins，这样如果再次申请就会申请到这片可控区域🚧</p>
 <p><img src="/img/how2heap/image-20191103213031926.png" alt="image-20191103213031926"></p>
-<p><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 <h1 id="poison_null_byte">poison_null_byte</h1>
 <p>通过溢出相邻free chunk的chunk_size的低1位为0。制造fake chunk最后达成块重叠</p>
-<p><!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>after <code>b1 = malloc(0x100)</code></p>
-<p><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 <p>​				after <code>b2 = malloc(0x80)</code></p>
-<p><!-- raw HTML omitted --></p>
-<p><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>​	after <code>free(b1)</code></p>
 <p><img src="/img/how2heap/image-20191103223650584.png" alt="image-20191103223650584"></p>
 <p>after <code>free(c)</code>，b1和c合并，b2被忽视😟</p>
@@ -237,11 +233,11 @@
 <p><img src="/img/how2heap/image-20191104101859688.png" alt="image-20191104101859688"></p>
 <p>修改top chunk size为-1(0xffffffffffffffff)，此时即使申请一个特别大的块，也不会触发mmap，这里我们想让堆请求到bss区域，而在内存布局中bss地址比heap地址低，所以请求的大小是一个负值，无符号表现为0xfff&hellip;.这样的形式。</p>
 <p><img src="/img/how2heap/image-20191104101940203.png" alt="image-20191104101940203"></p>
-<p><!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
 <p>如果我们想让堆分配到bss上的dest处，malloc的size应该多大呢，下面是计算过程：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -251,21 +247,19 @@
 </span><span class="lnt"> 8
 </span><span class="lnt"> 9
 </span><span class="lnt">10
-</span><span class="lnt">11
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c">	<span class="cm">/*
-</span><span class="cm">	 * The evil_size is calulcated as (nb is the number of bytes requested + space for metadata):
-</span><span class="cm">	 * new_top = old_top + nb
-</span><span class="cm">	 * nb = new_top - old_top
-</span><span class="cm">	 * req + 2sizeof(long) = new_top - old_top
-</span><span class="cm">	 * req = new_top - old_top - 2sizeof(long)
-</span><span class="cm">	 * req = dest - 2sizeof(long) - old_top - 2sizeof(long)
-</span><span class="cm">	 * req = dest - old_top - 4*sizeof(long)
-</span><span class="cm">	 */</span>
-	<span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">evil_size</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">bss_var</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="o">*</span><span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">ptr_top</span><span class="p">;</span>
-
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl">	<span class="cm">/*
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * The evil_size is calulcated as (nb is the number of bytes requested + space for metadata):
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * new_top = old_top + nb
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * nb = new_top - old_top
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * req + 2sizeof(long) = new_top - old_top
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * req = new_top - old_top - 2sizeof(long)
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * req = dest - 2sizeof(long) - old_top - 2sizeof(long)
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 * req = dest - old_top - 4*sizeof(long)
+</span></span></span><span class="line"><span class="cl"><span class="cm">	 */</span>
+</span></span><span class="line"><span class="cl">	<span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">evil_size</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">bss_var</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">long</span><span class="p">)</span><span class="o">*</span><span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)</span><span class="n">ptr_top</span><span class="p">;</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p>后面通过两次malloc，就可以达成目标。</p>
 <p>第一次：<code>malloc(evil_size)</code>，此时top chunk在bss_var-0x10处</p>
@@ -290,7 +284,7 @@
 <p>通过改写large bin中chunk的bk和bk_nextsize使得在large bin中插入新节点的时候目标地址被改写。改写的值为堆地址。常被用来改写global_max_fast的值以进行fast bin attack</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt"> 1
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
 </span><span class="lnt"> 2
 </span><span class="lnt"> 3
 </span><span class="lnt"> 4
@@ -302,17 +296,17 @@
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p1</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x320</span><span class="p">);</span>
-<span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
-<span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p2</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x400</span><span class="p">);</span>
-<span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
-<span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p3</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x400</span><span class="p">);</span>
-<span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
-<span class="n">free</span><span class="p">(</span><span class="n">p1</span><span class="p">);</span>
-<span class="n">free</span><span class="p">(</span><span class="n">p2</span><span class="p">);</span>
-<span class="n">malloc</span><span class="p">(</span><span class="mh">0x90</span><span class="p">);</span>
-<span class="n">free</span><span class="p">(</span><span class="n">p3</span><span class="p">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p1</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x320</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p2</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x400</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p3</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x400</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">free</span><span class="p">(</span><span class="n">p1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">free</span><span class="p">(</span><span class="n">p2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">malloc</span><span class="p">(</span><span class="mh">0x90</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">free</span><span class="p">(</span><span class="n">p3</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p><img src="/img/how2heap/image-20191104115546389.png" alt="image-20191104115546389"></p>
 <p><code>malloc(0x90)</code>之后，p1被切割使用，p2被放入largebins</p>
@@ -322,19 +316,19 @@
 <p>此时改写p2的size、bk、bk_nextsize。</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code><span class="lnt">1
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span><span class="lnt">2
 </span><span class="lnt">3
 </span><span class="lnt">4
 </span><span class="lnt">5
 </span></code></pre></td>
 <td class="lntd">
-<pre class="chroma"><code class="language-c" data-lang="c"><span class="n">p2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3f1</span><span class="p">;</span> <span class="c1">//缩小p2的size，使得后面p3进入largebin的时候被插在头部(因为largebin降序排列)
-</span><span class="c1"></span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="n">p2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">stack_var1</span> <span class="o">-</span> <span class="mi">2</span><span class="p">);</span>
-<span class="n">p2</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">stack_var2</span> <span class="o">-</span> <span class="mi">4</span><span class="p">);</span>
-</code></pre></td></tr></table>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="n">p2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3f1</span><span class="p">;</span> <span class="c1">//缩小p2的size，使得后面p3进入largebin的时候被插在头部(因为largebin降序排列)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">p2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">stack_var1</span> <span class="o">-</span> <span class="mi">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">p2</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">stack_var2</span> <span class="o">-</span> <span class="mi">4</span><span class="p">);</span>
+</span></span></code></pre></td></tr></table>
 </div>
 </div><p><img src="/img/how2heap/image-20191104121015416.png" alt="image-20191104121015416"></p>
 <p><code>malloc(0x90)</code>后，p1继续被分割，p3被整理到large bin中。p3被插入large bin的头部，发生</p>
@@ -394,21 +388,6 @@
 
   
 
-<script src="https://giscus.app/client.js"
-        data-repo="b1tg/b1tg.github.io"
-        data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
-        data-category="Discuss"
-        data-category-id="DIC_kwDODT0ats4CQAsT"
-        data-mapping="title"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="bottom"
-        data-theme="light"
-        data-lang="en"
-        crossorigin="anonymous"
-        async>
-</script>
-
       </div>
     </main>
 
@@ -450,7 +429,7 @@
 
 
 
-<script type="text/javascript" src="/js/main.min.c12618f9a600c40bd024996677e951e64d3487006775aeb22e200c990006c5c7.js"></script>
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
 
 
 

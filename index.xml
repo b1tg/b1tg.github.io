@@ -6,7 +6,16 @@
     <description>Recent content on B1TG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 22 Jan 2022 23:37:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 19 Nov 2022 15:03:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Remmina RDP 配置共享文件夹</title>
+      <link>https://b1tg.github.io/post/remmina-rdp-share-folder/</link>
+      <pubDate>Sat, 19 Nov 2022 15:03:00 +0800</pubDate>
+      
+      <guid>https://b1tg.github.io/post/remmina-rdp-share-folder/</guid>
+      <description>场景：在 Linux 笔记本上使用 Remmina 通过 RDP 连接到 Windows 主机，想要把本地的一个文件夹共享到远程主机上，方便传文件。 需要修改两处设置： Basic -&amp;gt; Share folder: 填入想要共享给 RDP 服</description>
+    </item>
+    
     <item>
       <title>IDA flare-emu 教程</title>
       <link>https://b1tg.github.io/post/flare-emu-tutorial/</link>
@@ -19,7 +28,7 @@
     <item>
       <title>Windbg Tips</title>
       <link>https://b1tg.github.io/post/windbg-tips/</link>
-      <pubDate>Mon, 23 Aug 2021 00:00:00 +0800</pubDate>
+      <pubDate>Mon, 23 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>https://b1tg.github.io/post/windbg-tips/</guid>
       <description>0x00 断点打印 断点打印 eax 的值，然后继续 1 bp 004046A5 &amp;#34;.printf \&amp;#34;res %d\\n\&amp;#34;, @eax;g;&amp;#34; 断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续 1 bp 004040e2 &amp;#34;.printf \&amp;#34;%d vs %d \\n\&amp;#34;, @eax, poi(ebp-35Ch);g;&amp;#34; 0x01 条件断点 如果 eax 满足条件，则断下，否则继续运</description>
@@ -28,7 +37,7 @@
     <item>
       <title>IE, death marches and impact</title>
       <link>https://b1tg.github.io/post/impact-and-ie-marches/</link>
-      <pubDate>Wed, 18 Aug 2021 00:00:00 +0800</pubDate>
+      <pubDate>Wed, 18 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>https://b1tg.github.io/post/impact-and-ie-marches/</guid>
       <description>lcamtfu: 我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他</description>
@@ -37,7 +46,7 @@
     <item>
       <title>nvim c&#43;&#43; 环境配置</title>
       <link>https://b1tg.github.io/post/nvim-cpp-setup/</link>
-      <pubDate>Sun, 13 Jun 2021 00:00:00 +0800</pubDate>
+      <pubDate>Sun, 13 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://b1tg.github.io/post/nvim-cpp-setup/</guid>
       <description>概述：nvim 配置 c++ 环境 第一步， 配好 nvim + coc.nvim 环境，按照项目 readme [1] 做就可以 第二步，配置 c++ 环境： 在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件 给 &amp;quot;languageserver&amp;quot; 字段加上关于 ccls 的配置： 1</description>
@@ -59,6 +68,15 @@
       
       <guid>https://b1tg.github.io/quotes/</guid>
       <description>绝大多数的爱好者，囿于天资，都无法从爱好本身得到成就感，于是他们无一例外地沦为器材派，搞摄影的开始对各路镜头如数家珍，写书法的开始讲究纸墨，</description>
+    </item>
+    
+    <item>
+      <title>tweets</title>
+      <link>https://b1tg.github.io/tweets/</link>
+      <pubDate>Fri, 22 Jan 2021 23:47:10 +0800</pubDate>
+      
+      <guid>https://b1tg.github.io/tweets/</guid>
+      <description>2022 20221119 学习别人一周的工作生活只学到了看番。</description>
     </item>
     
     <item>

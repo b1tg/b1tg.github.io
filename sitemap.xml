@@ -3,7 +3,35 @@
   
   <url>
     <loc>https://b1tg.github.io/</loc>
-    <lastmod>2022-01-22T23:37:00+08:00</lastmod>
+    <lastmod>2022-11-19T15:03:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1tg.github.io/tags/linux/</loc>
+    <lastmod>2022-11-19T15:03:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1tg.github.io/post/</loc>
+    <lastmod>2022-11-19T15:03:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1tg.github.io/post/remmina-rdp-share-folder/</loc>
+    <lastmod>2022-11-19T15:03:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1tg.github.io/tags/</loc>
+    <lastmod>2022-11-19T15:03:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -23,13 +51,6 @@
   </url>
   
   <url>
-    <loc>https://b1tg.github.io/post/</loc>
-    <lastmod>2022-01-22T23:37:00+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://b1tg.github.io/tags/re/</loc>
     <lastmod>2022-01-22T23:37:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -37,50 +58,43 @@
   </url>
   
   <url>
-    <loc>https://b1tg.github.io/tags/</loc>
-    <lastmod>2022-01-22T23:37:00+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://b1tg.github.io/tags/debug/</loc>
-    <lastmod>2021-08-23T00:00:00+08:00</lastmod>
+    <lastmod>2021-08-23T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://b1tg.github.io/post/windbg-tips/</loc>
-    <lastmod>2021-08-23T00:00:00+08:00</lastmod>
+    <lastmod>2021-08-23T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://b1tg.github.io/tags/career/</loc>
-    <lastmod>2021-08-18T00:00:00+08:00</lastmod>
+    <lastmod>2021-08-18T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://b1tg.github.io/post/impact-and-ie-marches/</loc>
-    <lastmod>2021-08-18T00:00:00+08:00</lastmod>
+    <lastmod>2021-08-18T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://b1tg.github.io/post/nvim-cpp-setup/</loc>
-    <lastmod>2021-06-13T00:00:00+08:00</lastmod>
+    <lastmod>2021-06-13T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://b1tg.github.io/tags/setup/</loc>
-    <lastmod>2021-06-13T00:00:00+08:00</lastmod>
+    <lastmod>2021-06-13T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -101,6 +115,13 @@
   
   <url>
     <loc>https://b1tg.github.io/quotes/</loc>
+    <lastmod>2021-01-22T23:47:10+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1tg.github.io/tweets/</loc>
     <lastmod>2021-01-22T23:47:10+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -151,13 +172,6 @@
   <url>
     <loc>https://b1tg.github.io/tags/ctf/</loc>
     <lastmod>2019-11-21T00:23:09+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://b1tg.github.io/tags/linux/</loc>
-    <lastmod>2019-11-20T20:51:29+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

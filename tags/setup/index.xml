@@ -6,11 +6,11 @@
     <description>Recent content in setup on B1TG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 13 Jun 2021 00:00:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/setup/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 13 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://b1tg.github.io/tags/setup/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>nvim c&#43;&#43; 环境配置</title>
       <link>https://b1tg.github.io/post/nvim-cpp-setup/</link>
-      <pubDate>Sun, 13 Jun 2021 00:00:00 +0800</pubDate>
+      <pubDate>Sun, 13 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://b1tg.github.io/post/nvim-cpp-setup/</guid>
       <description>概述：nvim 配置 c++ 环境 第一步， 配好 nvim + coc.nvim 环境，按照项目 readme [1] 做就可以 第二步，配置 c++ 环境： 在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件 给 &amp;quot;languageserver&amp;quot; 字段加上关于 ccls 的配置： 1</description>
