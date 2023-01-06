@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>eBPF on B1TG</title>
+    <link>https://b1tg.github.io/tags/ebpf/</link>
+    <description>Recent content in eBPF on B1TG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 06 Jan 2023 22:30:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/ebpf/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>基于 eBPF&#43;Rust 的 Github DNS 加速</title>
+      <link>https://b1tg.github.io/post/github-hosts-ebpf/</link>
+      <pubDate>Fri, 06 Jan 2023 22:30:00 +0800</pubDate>
+      
+      <guid>https://b1tg.github.io/post/github-hosts-ebpf/</guid>
+      <description>0x00 前言 最近学了点 eBPF 相关的东西，写了 github-hosts-ebpf 这个项目练手， 项目基于 aya-rs 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录</description>
+    </item>
+    
+  </channel>
+</rss>

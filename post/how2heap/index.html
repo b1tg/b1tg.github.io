@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.106.0 with theme even" />
+<meta name="generator" content="Hugo 0.109.0 with theme even" />
 
 
 <link rel="canonical" href="https://b1tg.github.io/post/how2heap/" />
@@ -35,7 +35,7 @@
 
 
 
-<link href="/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css" rel="stylesheet">
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
@@ -45,7 +45,6 @@
 <meta property="og:url" content="https://b1tg.github.io/post/how2heap/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2019-10-30T14:28:00+08:00" />
 <meta property="article:modified_time" content="2019-10-30T14:28:00+08:00" />
-
 <meta itemprop="name" content="how2heap笔记">
 <meta itemprop="description" content="how2heap笔记"><meta itemprop="datePublished" content="2019-10-30T14:28:00+08:00" />
 <meta itemprop="dateModified" content="2019-10-30T14:28:00+08:00" />
@@ -296,16 +295,16 @@
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p1</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x320</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p2</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x400</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p3</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="mh">0x400</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">free</span><span class="p">(</span><span class="n">p1</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">free</span><span class="p">(</span><span class="n">p2</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">malloc</span><span class="p">(</span><span class="mh">0x90</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl"><span class="n">free</span><span class="p">(</span><span class="n">p3</span><span class="p">);</span>
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p1</span> <span class="o">=</span> <span class="nf">malloc</span><span class="p">(</span><span class="mh">0x320</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p2</span> <span class="o">=</span> <span class="nf">malloc</span><span class="p">(</span><span class="mh">0x400</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="kt">unsigned</span> <span class="kt">long</span> <span class="o">*</span><span class="n">p3</span> <span class="o">=</span> <span class="nf">malloc</span><span class="p">(</span><span class="mh">0x400</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">malloc</span><span class="p">(</span><span class="mh">0x20</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">free</span><span class="p">(</span><span class="n">p1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">free</span><span class="p">(</span><span class="n">p2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">malloc</span><span class="p">(</span><span class="mh">0x90</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="nf">free</span><span class="p">(</span><span class="n">p3</span><span class="p">);</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p><img src="/img/how2heap/image-20191104115546389.png" alt="image-20191104115546389"></p>
@@ -390,7 +389,21 @@
 
       </div>
     </main>
-
+    <script src="https://giscus.app/client.js"
+    data-repo="b1tg/b1tg.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
+    data-category="Discuss"
+    data-category-id="DIC_kwDODT0ats4CQAsT"
+    data-mapping="title"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+</script>
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
@@ -412,7 +425,7 @@
   <span class="copyright-year">
     &copy; 
     2018 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>b1tg</span>
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>b1tg</span>
   </span>
 </div>
 
@@ -439,4 +452,5 @@
 
 
 </body>
+
 </html>

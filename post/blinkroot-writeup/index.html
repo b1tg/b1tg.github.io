@@ -23,7 +23,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.106.0 with theme even" />
+<meta name="generator" content="Hugo 0.109.0 with theme even" />
 
 
 <link rel="canonical" href="https://b1tg.github.io/post/blinkroot-writeup/" />
@@ -35,7 +35,7 @@
 
 
 
-<link href="/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css" rel="stylesheet">
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
@@ -45,7 +45,6 @@
 <meta property="og:url" content="https://b1tg.github.io/post/blinkroot-writeup/" /><meta property="article:section" content="post" />
 <meta property="article:published_time" content="2019-11-21T00:23:09+08:00" />
 <meta property="article:modified_time" content="2019-11-21T00:23:09+08:00" />
-
 <meta itemprop="name" content="blinkroot writeup">
 <meta itemprop="description" content="hitcon2015 blinkroot writeup"><meta itemprop="datePublished" content="2019-11-21T00:23:09+08:00" />
 <meta itemprop="dateModified" content="2019-11-21T00:23:09+08:00" />
@@ -253,17 +252,17 @@
 <pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">data</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">recvlen</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">close</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">close</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">close</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nf">recvlen</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">close</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">close</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">close</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">        <span class="n">rax</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">int64_t</span> <span class="o">*</span><span class="p">)</span><span class="n">data</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="n">target</span> <span class="o">=</span> <span class="n">rax</span><span class="o">+&amp;</span><span class="n">data</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="n">xmm0</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">int64_t</span> <span class="o">*</span><span class="p">)(</span><span class="n">data</span><span class="o">+</span><span class="mi">8</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">64</span> <span class="o">+</span> <span class="mh">0x10</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="o">*</span><span class="p">(</span><span class="n">int128_t</span> <span class="o">*</span><span class="p">)(</span><span class="n">target</span><span class="p">)</span> <span class="o">=</span> <span class="n">xmm0</span><span class="p">;</span> <span class="c1">//128位赋值
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="n">puts</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="o">+</span><span class="mh">0x10</span><span class="p">);</span>         
+</span></span><span class="line"><span class="cl">        <span class="o">*</span><span class="p">(</span><span class="kt">int128_t</span> <span class="o">*</span><span class="p">)(</span><span class="n">target</span><span class="p">)</span> <span class="o">=</span> <span class="n">xmm0</span><span class="p">;</span> <span class="c1">//128位赋值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="nf">puts</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="o">+</span><span class="mh">0x10</span><span class="p">);</span>         
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -289,16 +288,16 @@
 <pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="kt">char</span> <span class="n">data</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
 </span></span><span class="line"><span class="cl"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl"><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">recvlen</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">close</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">close</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">close</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nf">recvlen</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">close</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">close</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">close</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">        <span class="kt">int64_t</span> <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int64_t</span><span class="p">)</span><span class="n">data</span>
 </span></span><span class="line"><span class="cl">        <span class="n">data</span><span class="p">[</span><span class="n">offset</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x10</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="n">data</span><span class="p">[</span><span class="n">offset</span><span class="o">+</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int64_t</span><span class="p">)(</span><span class="n">data</span><span class="o">+</span><span class="mi">8</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">puts</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">16</span><span class="p">]);</span>
+</span></span><span class="line"><span class="cl">        <span class="nf">puts</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">16</span><span class="p">]);</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="nf">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -782,7 +781,21 @@
 
       </div>
     </main>
-
+    <script src="https://giscus.app/client.js"
+    data-repo="b1tg/b1tg.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
+    data-category="Discuss"
+    data-category-id="DIC_kwDODT0ats4CQAsT"
+    data-mapping="title"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+</script>
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
@@ -804,7 +817,7 @@
   <span class="copyright-year">
     &copy; 
     2018 - 
-    2022<span class="heart"><i class="iconfont icon-heart"></i></span><span>b1tg</span>
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>b1tg</span>
   </span>
 </div>
 
@@ -831,4 +844,5 @@
 
 
 </body>
+
 </html>

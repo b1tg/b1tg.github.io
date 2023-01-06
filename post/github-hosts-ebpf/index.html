@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>基于 eBPF&#43;Rust 的 Github DNS 加速 - B1TG</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="b1tg" /><meta name="description" content="0x00 前言 最近学了点 eBPF 相关的东西，写了 github-hosts-ebpf 这个项目练手， 项目基于 aya-rs 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录" /><meta name="keywords" content="Hugo, b1tg, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.109.0 with theme even" />
+
+
+<link rel="canonical" href="https://b1tg.github.io/post/github-hosts-ebpf/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="基于 eBPF&#43;Rust 的 Github DNS 加速" />
+<meta property="og:description" content="0x00 前言 最近学了点 eBPF 相关的东西，写了 github-hosts-ebpf 这个项目练手， 项目基于 aya-rs 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://b1tg.github.io/post/github-hosts-ebpf/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2023-01-06T22:30:00+08:00" />
+<meta property="article:modified_time" content="2023-01-06T22:30:00+08:00" />
+<meta itemprop="name" content="基于 eBPF&#43;Rust 的 Github DNS 加速">
+<meta itemprop="description" content="0x00 前言 最近学了点 eBPF 相关的东西，写了 github-hosts-ebpf 这个项目练手， 项目基于 aya-rs 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录"><meta itemprop="datePublished" content="2023-01-06T22:30:00+08:00" />
+<meta itemprop="dateModified" content="2023-01-06T22:30:00+08:00" />
+<meta itemprop="wordCount" content="1748">
+<meta itemprop="keywords" content="eBPF,Rust," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="基于 eBPF&#43;Rust 的 Github DNS 加速"/>
+<meta name="twitter:description" content="0x00 前言 最近学了点 eBPF 相关的东西，写了 github-hosts-ebpf 这个项目练手， 项目基于 aya-rs 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">B1TG</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">About</li>
+      </a><a href="/quotes">
+        <li class="mobile-menu-item">Quotes</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">B1TG</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about">About</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/quotes">Quotes</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">基于 eBPF&#43;Rust 的 Github DNS 加速</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2023-01-06 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#0x00-前言">0x00 前言</a></li>
+    <li><a href="#0x01-what-is-ebpfxdp">0x01 What is eBPF/XDP</a></li>
+    <li><a href="#0x02-技术原理">0x02 技术原理</a></li>
+    <li><a href="#0x03-参考链接">0x03 参考链接</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="0x00-前言">0x00 前言</h2>
+<p>最近学了点 eBPF 相关的东西，写了 <a href="https://github.com/b1tg/github-hosts-ebpf">github-hosts-ebpf</a> 这个项目练手， 项目基于 <a href="https://github.com/aya-rs/aya">aya-rs</a> 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录为加速 IP 地址。你可能要问了，为什么不直接改 hosts 文件？emmm, <a href="https://www.youtube.com/watch?v=onZ4KMM94yI">just for fun :)</a></p>
+<blockquote>
+<p>这个项目的初衷是用来学习 eBPF/XDP，我在这方面的经验比较少，写的过程中和 eBPF Verifier 搏斗地很痛苦，一些报错也没有理解透彻而是想办法绕过了。如果文中有说得不准确的地方欢迎大家指正。</p>
+</blockquote>
+<blockquote>
+<p>为了方便有兴趣的读者测试程序，我这边的开发环境是：Debian 5.10.158-2 + rustc 1.66.0 + llvm 15</p>
+</blockquote>
+<h2 id="0x01-what-is-ebpfxdp">0x01 What is eBPF/XDP</h2>
+<p>eBPF 是一项起源于 Linux 内核的革命性技术，可以在内核中运行一个沙盒程序而无需更改内核源代码或加载内核模块。</p>
+<p>XDP(eXpress Data Path) 是基于 eBPF 技术的一种网络数据包处理框架，能够在比较早的阶段进行数据包处理，可以达到比较好的性能。</p>
+<h2 id="0x02-技术原理">0x02 技术原理</h2>
+<p>在 XDP 程序中可以对流量包进行解析，忽略(XDP_PASS)不感兴趣的数据包，并根据需要对数据包进行修改(XDP_PASS)、丢弃(XDP_DROP)等操作。</p>
+<p>首先处理以太网头和IP头，对数据包按照 ethhdr + iphdr 结构进行解析，通过 iphdr.protocol 字段可以判断传输层协议类型，我们这里只对 UDP 包感兴趣。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">eth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ptr_at</span>::<span class="o">&lt;</span><span class="n">ethhdr</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">).</span><span class="n">ok_or</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">u16</span>::<span class="n">from_be</span><span class="p">((</span><span class="o">*</span><span class="n">eth</span><span class="p">).</span><span class="n">h_proto</span><span class="p">)</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">ETH_P_IP</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">ip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ptr_at</span>::<span class="o">&lt;</span><span class="n">iphdr</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">ETH_HDR_LEN</span><span class="p">).</span><span class="n">ok_or</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">ip</span><span class="p">).</span><span class="n">protocol</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">IPPROTO_UDP</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">trace</span><span class="o">!</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;received a UDP packet&#34;</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>继续对数据包按照 udphdr 进行解析，只留下 udphdr.source 字段等于 53 的数据包，即我们想要处理的 DNS 响应包。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-rs" data-lang="rs"><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">udp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ptr_at_mut</span>::<span class="o">&lt;</span><span class="n">udphdr</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">ETH_HDR_LEN</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">IP_HDR_LEN</span><span class="p">).</span><span class="n">ok_or</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">udp</span><span class="p">).</span><span class="n">check</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">destination_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">u16</span>::<span class="n">from_be</span><span class="p">((</span><span class="o">*</span><span class="n">udp</span><span class="p">).</span><span class="n">dest</span><span class="p">)</span><span class="w"> </span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">src_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">u16</span>::<span class="n">from_be</span><span class="p">((</span><span class="o">*</span><span class="n">udp</span><span class="p">).</span><span class="n">source</span><span class="p">)</span><span class="w"> </span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="n">src_port</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">53</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里开始进行 DNS 响应包的解析工作，DNS 响应包有一个 12 字节的头，解析后可以得到后续 Questions 、Answers 等结构的的长度</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="cp">#[repr(C)]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cp">#[derive(Copy, Clone)]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">dnshdr</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">trans_id</span>: <span class="kt">u16</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">flags</span>: <span class="kt">u16</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">qcount</span>: <span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="mi">2</span><span class="p">],</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">acount</span>: <span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="mi">2</span><span class="p">],</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// authority_rrs
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">nscount</span>: <span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="mi">2</span><span class="p">],</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// additional_rrs
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">arcount</span>: <span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="mi">2</span><span class="p">],</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>DNS 包头后面是 Questions 部分，包含 Question 的个数由 dnshdr.qcount 指定, 相应的 Questions 部分后面是 dnshdr.acount 个 Answer 结构。</p>
+<p>Question 结构包含 3 个字段：name, type, class, 其中 type 和 class 各占 2 字节，name 的长度非固定，需要动态解析，这也是在 eBPF 中比较难写的部分。</p>
+<p>name 即主机名，在数据包中会进行编码，比如 <code>www.bing.com</code> 会被编码成 <code>\x03www\x04bing\x03\com\x00</code> , 即把主机名按照域名级数拆分成多个标签(label)，然后按照 <code>[标签长度(单字节)]+[标签]</code> 为一组的形式进行编码，最后以 <code>\x00</code> 结尾。</p>
+<p>在 eBPF 中的写循环语句 Verifier 很容易报错，比如不能用变量作为循环次数，实际使用中使用合适的常量作为最大循环次数，再在循环内做检查按需 break 是比较容易通过检查的写法。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 0..5: support a.b.c.d
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">5</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 读取单字节内容长度
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">*</span><span class="p">(</span><span class="n">ptr_at</span>::<span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">)</span><span class="o">?</span><span class="p">)</span><span class="w">  </span><span class="p">};</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">j</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// 数据指针加一
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">	</span><span class="c1">// 内容长度等于 0 意味着读完
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">break</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// 数据指针跳过这段内容
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="n">j</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">num</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>Answer 的结构包含6个字段：name, type, class, ttl, data_length, data, 其中 type 字段表示回答的类型，常见有 A, CNAME 等，一个 DNS 响应包中可能会包含多个
+Answer 结构，我们这里做的是找到第一个 A 类型 Answer，并把结构中 data（此时是IP地址）替换成加速IP。</p>
+<p>我们依据第一个 Question 中的 name 来判断请求的域名是否为 Github 相关域名，这里就需要有一个域名和 IP 的映射关系，项目里面使用的数据来源于 <a href="https://github.com/ineo6/hosts">ineo6/hosts</a> 项目，该项目提供了加速国内 Github 访问的 hosts 文件。</p>
+<p>eBPF 程序支持 maps 数据结构来在用户态和内核态之间传递数据，我们在用户态程序中读取最新的 Github hosts 文件并解析存储到 maps 里面供 eBPF 程序取用，这里为了方便，key 为 <code>[u8;256]</code> 存储编码后的主机名 ，value 为 <code>[u8;4]</code> 存储 IP地址 (用主机名的 hash 值来做 key感觉好一点) 。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="c1">// eBPF maps
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="cp">#[map(name = </span><span class="s">&#34;GITHUB_HOSTS&#34;</span><span class="cp">)]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">static</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">GITHUB_HOSTS</span>: <span class="nc">HashMap</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="mi">256</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="mi">4</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="o">=</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">HashMap</span>::<span class="o">&lt;</span><span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="mi">256</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="kt">u8</span><span class="p">;</span><span class="mi">4</span><span class="p">]</span><span class="o">&gt;</span>::<span class="n">with_max_entries</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">// 查询
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="kd">let</span><span class="w"> </span><span class="n">ip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">match</span><span class="w"> </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">GITHUB_HOSTS</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="o">&amp;</span><span class="n">query</span><span class="p">)</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nb">Some</span><span class="p">(</span><span class="n">backends</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">info</span><span class="o">!</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;found github hosts&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">backends</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nb">None</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">info</span><span class="o">!</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;not github hosts&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">};</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>最后，写入修改后的 ip 地址，done!</p>
+<blockquote>
+<p>这么写实在是丑陋，我尝试用 <code>core::ptr::copy_nonoverlapping</code> 但总是过不了 Verifier，只好先这样。</p>
+</blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-rs" data-lang="rs"><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">ip0</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">ptr_at_mut</span>::<span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="o">+</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">DNS_HDR_LEN_ALL</span><span class="p">).</span><span class="n">ok_or</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">ip1</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">ptr_at_mut</span>::<span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">DNS_HDR_LEN_ALL</span><span class="p">).</span><span class="n">ok_or</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">ip2</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">ptr_at_mut</span>::<span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">DNS_HDR_LEN_ALL</span><span class="p">).</span><span class="n">ok_or</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">ip3</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">ptr_at_mut</span>::<span class="o">&lt;</span><span class="kt">u8</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="o">+</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">DNS_HDR_LEN_ALL</span><span class="p">).</span><span class="n">ok_or</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">)</span><span class="o">?</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">info</span><span class="o">!</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;old ip: {}.{}.{}.{}&#34;</span><span class="p">,</span><span class="w"> </span><span class="k">unsafe</span><span class="p">{</span><span class="o">*</span><span class="n">ip0</span><span class="p">},</span><span class="w"> </span><span class="k">unsafe</span><span class="p">{</span><span class="o">*</span><span class="n">ip1</span><span class="p">},</span><span class="w"> </span><span class="k">unsafe</span><span class="p">{</span><span class="o">*</span><span class="n">ip2</span><span class="p">},</span><span class="w"> </span><span class="k">unsafe</span><span class="p">{</span><span class="o">*</span><span class="n">ip3</span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">*</span><span class="n">ip0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">*</span><span class="n">ip1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ip</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">*</span><span class="n">ip2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ip</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="o">*</span><span class="n">ip3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ip</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">info</span><span class="o">!</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;new ip: {}.{}.{}.{}&#34;</span><span class="p">,</span><span class="w"> </span><span class="k">unsafe</span><span class="p">{</span><span class="o">*</span><span class="n">ip0</span><span class="p">},</span><span class="w"> </span><span class="k">unsafe</span><span class="p">{</span><span class="o">*</span><span class="n">ip1</span><span class="p">},</span><span class="w"> </span><span class="k">unsafe</span><span class="p">{</span><span class="o">*</span><span class="n">ip2</span><span class="p">},</span><span class="w"> </span><span class="k">unsafe</span><span class="p">{</span><span class="o">*</span><span class="n">ip3</span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">Ok</span><span class="p">(</span><span class="n">xdp_action</span>::<span class="n">XDP_PASS</span><span class="p">);</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>还有，由于修改了数据包，checksum 发生变化，这里的做法是把 udphdr.check 字段置为 0 了，省得去重新计算 checksum 了。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-rs" data-lang="rs"><span class="line"><span class="cl"><span class="k">unsafe</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">udp</span><span class="p">).</span><span class="n">check</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">};</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>最后的运行效果如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">$ RUST_LOG=debug cargo xtask run
+</span></span><span class="line"><span class="cl">add github hosts: github.io: 185.199.108.153
+</span></span><span class="line"><span class="cl">add github hosts: github.io: 185.199.108.153
+</span></span><span class="line"><span class="cl">add github hosts: github.com: 140.82.113.4
+</span></span><span class="line"><span class="cl">add github hosts: api.github.com: 140.82.114.5
+</span></span><span class="line"><span class="cl">add github hosts: raw.githubusercontent.com: 185.199.108.133
+</span></span><span class="line"><span class="cl">[...]
+</span></span><span class="line"><span class="cl">[2023-01-05T10:33:44Z INFO  github_hosts] Waiting for Ctrl-C...
+</span></span><span class="line"><span class="cl">[2023-01-05T10:33:58Z INFO  github_hosts] received a DNS packet
+</span></span><span class="line"><span class="cl">[2023-01-05T10:33:58Z INFO  github_hosts] found github hosts
+</span></span><span class="line"><span class="cl">[2023-01-05T10:33:58Z INFO  github_hosts] old ip: 185.199.111.133
+</span></span><span class="line"><span class="cl">[2023-01-05T10:33:58Z INFO  github_hosts] new ip: 185.199.108.133
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="0x03-参考链接">0x03 参考链接</h2>
+<ul>
+<li><a href="https://github.com/b1tg/github-hosts-ebpf">https://github.com/b1tg/github-hosts-ebpf</a> 项目地址</li>
+<li><a href="https://konghq.com/blog/writing-an-ebpf-xdp-load-balancer-in-rust">https://konghq.com/blog/writing-an-ebpf-xdp-load-balancer-in-rust</a>) 实现了一个简单的负载均衡器</li>
+<li><a href="https://github.com/ihciah/clean-dns-bpf">https://github.com/ihciah/clean-dns-bpf</a> 基于 Rust + eBPF 丢弃 GFW DNS 污染包</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc1035">https://www.rfc-editor.org/rfc/rfc1035</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc1034">https://www.rfc-editor.org/rfc/rfc1034</a></li>
+<li><a href="https://github.com/aya-rs/aya">https://github.com/aya-rs/aya</a></li>
+<li><a href="https://aya-rs.dev/book/start/development/">https://aya-rs.dev/book/start/development/</a> aya-rs 环境搭建文档</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">b1tg</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2023-01-06
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/ebpf/">eBPF</a>
+          <a href="/tags/rust/">Rust</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/flare-emu-tutorial/">
+            <span class="next-text nav-default">IDA flare-emu 教程</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+    <script src="https://giscus.app/client.js"
+    data-repo="b1tg/b1tg.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
+    data-category="Discuss"
+    data-category-id="DIC_kwDODT0ats4CQAsT"
+    data-mapping="title"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+</script>
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
+  <a href="https://b1tg.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2018 - 
+    2023<span class="heart"><i class="iconfont icon-heart"></i></span><span>b1tg</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+
+
+
+</body>
+
+</html>

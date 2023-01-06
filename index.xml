@@ -6,14 +6,14 @@
     <description>Recent content on B1TG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 19 Nov 2022 15:03:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Jan 2023 22:30:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Remmina RDP 配置共享文件夹</title>
-      <link>https://b1tg.github.io/post/remmina-rdp-share-folder/</link>
-      <pubDate>Sat, 19 Nov 2022 15:03:00 +0800</pubDate>
+      <title>基于 eBPF&#43;Rust 的 Github DNS 加速</title>
+      <link>https://b1tg.github.io/post/github-hosts-ebpf/</link>
+      <pubDate>Fri, 06 Jan 2023 22:30:00 +0800</pubDate>
       
-      <guid>https://b1tg.github.io/post/remmina-rdp-share-folder/</guid>
-      <description>场景：在 Linux 笔记本上使用 Remmina 通过 RDP 连接到 Windows 主机，想要把本地的一个文件夹共享到远程主机上，方便传文件。 需要修改两处设置： Basic -&amp;gt; Share folder: 填入想要共享给 RDP 服</description>
+      <guid>https://b1tg.github.io/post/github-hosts-ebpf/</guid>
+      <description>0x00 前言 最近学了点 eBPF 相关的东西，写了 github-hosts-ebpf 这个项目练手， 项目基于 aya-rs 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录</description>
     </item>
     
     <item>
@@ -67,16 +67,7 @@
       <pubDate>Fri, 22 Jan 2021 23:47:10 +0800</pubDate>
       
       <guid>https://b1tg.github.io/quotes/</guid>
-      <description>绝大多数的爱好者，囿于天资，都无法从爱好本身得到成就感，于是他们无一例外地沦为器材派，搞摄影的开始对各路镜头如数家珍，写书法的开始讲究纸墨，</description>
-    </item>
-    
-    <item>
-      <title>tweets</title>
-      <link>https://b1tg.github.io/tweets/</link>
-      <pubDate>Fri, 22 Jan 2021 23:47:10 +0800</pubDate>
-      
-      <guid>https://b1tg.github.io/tweets/</guid>
-      <description>2022 20221119 学习别人一周的工作生活只学到了看番。</description>
+      <description>你需要持续地整理自己周遭的一切。因为你处在的这个世界所指向的趋势是无序的。如果你自身不做足够多的努力，你就会被这样的无序性所吞噬。 虽然生命的</description>
     </item>
     
     <item>
@@ -148,7 +139,7 @@
       <pubDate>Sat, 16 Nov 2019 18:23:10 +0800</pubDate>
       
       <guid>https://b1tg.github.io/about/</guid>
-      <description></description>
+      <description>安全工程师，希望能多写出一些让人按时下班的代码以及给世界带来一点安全感。 Github: https://github.com/b1tg Email: b1tgATprotonmail[.]ch</description>
     </item>
     
     <item>
