@@ -6,7 +6,16 @@
     <description>Recent content in Posts on B1TG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 06 Jan 2023 22:30:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Feb 2023 23:40:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Golang call conversion (Golang 调用规约）</title>
+      <link>https://b1tg.github.io/post/golang-call-conversion/</link>
+      <pubDate>Tue, 28 Feb 2023 23:40:00 +0800</pubDate>
+      
+      <guid>https://b1tg.github.io/post/golang-call-conversion/</guid>
+      <description>0x00 前言 在逆向 Golang 程序时，发现调用约定和平时遇到的 C/C++ 不太一样，ida 反编译效果也不咋样，于是研究一番。 本次分析的 go 版本为 go1.19.3： 1 2 &amp;gt;</description>
+    </item>
+    
     <item>
       <title>基于 eBPF&#43;Rust 的 Github DNS 加速</title>
       <link>https://b1tg.github.io/post/github-hosts-ebpf/</link>
