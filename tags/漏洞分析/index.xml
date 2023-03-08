@@ -6,7 +6,16 @@
     <description>Recent content in 漏洞分析 on B1TG</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 24 Apr 2021 20:14:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 08 Mar 2023 22:12:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CVE-2023-21716 RTF堆溢出漏洞分析</title>
+      <link>https://b1tg.github.io/post/cve-2023-21716-office-rtf-vuln/</link>
+      <pubDate>Wed, 08 Mar 2023 22:12:00 +0800</pubDate>
+      
+      <guid>https://b1tg.github.io/post/cve-2023-21716-office-rtf-vuln/</guid>
+      <description>前言 @jduck 近日公开了CVE-2023-21716的POC，并提供了漏洞细节 。 这篇文章主要是记录下我调试这个漏洞POC的过程。 POC样本 生成POC</description>
+    </item>
+    
     <item>
       <title>Chrome V8 CVE-2018-6065 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2018-6065-analysis/</link>
