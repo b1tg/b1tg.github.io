@@ -125,6 +125,25 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/windows-emacs-ssh-via-tramp/">使用Emacs的tramp功能连接SSH服务</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-04-12 </span>
+      
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      效果 basic 首先安装 putty，并把 plink.exe 放到 PATH 里面。 使用 emacs 编辑 ssh 服务器上的文件： ​ C-x C-f /plink:root@1.2.3.4:/tmp/ 在配置里面添加 tramp 默认信息，C-x C-f /-:: 将使用默认信息登录： 1 2
+    </div>
+    <div class="read-more">
+      <a href="/post/windows-emacs-ssh-via-tramp/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/cve-2023-21716-office-rtf-vuln/">CVE-2023-21716 RTF堆溢出漏洞分析</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2023-03-08 </span>
@@ -195,25 +214,6 @@
     </div>
     <div class="read-more">
       <a href="/post/flare-emu-tutorial/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/windbg-tips/">Windbg Tips</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2021-08-23 </span>
-      
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      0x00 断点打印 断点打印 eax 的值，然后继续 1 bp 004046A5 &#34;.printf \&#34;res %d\\n\&#34;, @eax;g;&#34; 断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续 1 bp 004040e2 &#34;.printf \&#34;%d vs %d \\n\&#34;, @eax, poi(ebp-35Ch);g;&#34; 0x01 条件断点 如果 eax 满足条件，则断下，否则继续运
-    </div>
-    <div class="read-more">
-      <a href="/post/windbg-tips/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

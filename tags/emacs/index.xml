@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Emacs on B1TG</title>
+    <link>https://b1tg.github.io/tags/emacs/</link>
+    <description>Recent content in Emacs on B1TG</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 12 Apr 2023 22:49:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/emacs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用Emacs的tramp功能连接SSH服务</title>
+      <link>https://b1tg.github.io/post/windows-emacs-ssh-via-tramp/</link>
+      <pubDate>Wed, 12 Apr 2023 22:49:00 +0800</pubDate>
+      
+      <guid>https://b1tg.github.io/post/windows-emacs-ssh-via-tramp/</guid>
+      <description>效果 basic 首先安装 putty，并把 plink.exe 放到 PATH 里面。 使用 emacs 编辑 ssh 服务器上的文件： ​ C-x C-f /plink:root@1.2.3.4:/tmp/ 在配置里面添加 tramp 默认信息，C-x C-f /-:: 将使用默认信息登录： 1 2</description>
+    </item>
+    
+  </channel>
+</rss>
