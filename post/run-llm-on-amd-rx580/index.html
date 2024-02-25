@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Run LLM on AMD rx580 - B1TG</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="b1tg" /><meta name="description" content="Make 亮机卡 great again" /><meta name="keywords" content="Hugo, b1tg, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.109.0 with theme even" />
+
+
+<link rel="canonical" href="https://b1tg.github.io/post/run-llm-on-amd-rx580/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="Run LLM on AMD rx580" />
+<meta property="og:description" content="Make 亮机卡 great again" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://b1tg.github.io/post/run-llm-on-amd-rx580/" /><meta property="article:section" content="post" />
+<meta property="article:published_time" content="2024-02-25T23:13:00+08:00" />
+<meta property="article:modified_time" content="2024-02-25T23:13:00+08:00" />
+<meta itemprop="name" content="Run LLM on AMD rx580">
+<meta itemprop="description" content="Make 亮机卡 great again"><meta itemprop="datePublished" content="2024-02-25T23:13:00+08:00" />
+<meta itemprop="dateModified" content="2024-02-25T23:13:00+08:00" />
+<meta itemprop="wordCount" content="2652">
+<meta itemprop="keywords" content="LLM," /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Run LLM on AMD rx580"/>
+<meta name="twitter:description" content="Make 亮机卡 great again"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">B1TG</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/notes/">
+        <li class="mobile-menu-item">Notes</li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">About</li>
+      </a><a href="/quotes">
+        <li class="mobile-menu-item">Quotes</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">B1TG</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/notes/">Notes</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about">About</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/quotes">Quotes</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+    
+    <header class="post-header">
+      <h1 class="post-title">Run LLM on AMD rx580</h1>
+
+      <div class="post-meta">
+        <span class="post-time"> 2024-02-25 </span>
+        
+        
+      </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">文章目录</h2>
+  <div class="post-toc-content always-active">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#0-概述">0. 概述</a></li>
+    <li><a href="#1-安装-rocm">1. 安装 rocm</a></li>
+    <li><a href="#2-tinygrad测试">2. tinygrad测试</a>
+      <ul>
+        <li><a href="#21-tinyllama">2.1 TinyLlama</a></li>
+        <li><a href="#22-gpt2">2.2 GPT2</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-安装pytorch">3. 安装pytorch</a></li>
+    <li><a href="#4-使用-ollama-运行开源大模型">4. 使用 ollama 运行开源大模型</a></li>
+  </ul>
+</nav>
+  </div>
+</div>
+    <div class="post-content">
+      <h2 id="0-概述">0. 概述</h2>
+<p>众所周知，AMD 在软件生态上落后 NVIDIA 很多，AI 从业者多年来都是默认使用 NVIDIA + CUDA，即使 AMD 更便宜。去年年底开始看了不少 getohotz 的视
+频，他开发了一个机器学习框架 tinygrad ，可以用来跑LLM，同时他在筹备一个叫做 tinybox 的硬件项目，目标是在这上面跑 AI，打破 NVIDIA 的
+垄断，tinybox中用的显卡是AMD 7900 xtx，我正好有一块之前买的低端显卡 AMD rx580 4g，于是想要尝试是否能在这上面运行 tinybox 乃至进行模型推理。</p>
+<p>开始后才知道AMD有多坑，在很多次的编译、重装、搜索资料后，最后总算得到一个可用的环境，也成功运行了一些开源模型。本文是折腾过程中的一些笔记。</p>
+<h2 id="1-安装-rocm">1. 安装 rocm</h2>
+<p>安装rocm最好的方式是根据官方文档选择明确支持的linux版本和gpu-installer版本，在各种驱动编译失败和奇怪报错后，我最后成功的环境是：</p>
+<ul>
+<li>Ubuntu 20.04.6 LTS (Focal Fossa)</li>
+<li>5.15.0-91-generic</li>
+<li>amdgpu-install_5.7.50701-1_all.deb</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ uname -a
+</span></span><span class="line"><span class="cl">Linux box 5.15.0-91-generic <span class="c1">#101~20.04.1-Ubuntu SMP Thu Nov 16 14:22:28 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>安装步骤：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">wget https://repo.radeon.com/amdgpu-install/5.7.1/ubuntu/focal/amdgpu-install_5.7.50701-1_all.deb
+</span></span><span class="line"><span class="cl">sudo apt install ./amdgpu-install_5.7.50701-1_all.deb
+</span></span><span class="line"><span class="cl">sudo amdgpu-install --usecase<span class="o">=</span>hiplibsdk,rocm
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>什么时候clinfo和rocminfo输出正确了，就算是安装完成了</p>
+<ul>
+<li>clinfo要显示显卡信息，不能显示device=0</li>
+<li>clinfo不需要root权限运行</li>
+</ul>
+<p>查看显存使用：</p>
+<p><img src="/img/run-llm-on-AMD-rx580/rocm-smi.png" alt="rocm-smi"></p>
+<h2 id="2-tinygrad测试">2. tinygrad测试</h2>
+<p>由于内存只有可怜的4g，很多模型加载不了，找了一些体积比较小的模型测试。</p>
+<h3 id="21-tinyllama">2.1 TinyLlama</h3>
+<p>需要patch一下增加bf16的支持：<a href="https://github.com/tinygrad/tinygrad/pull/2415">https://github.com/tinygrad/tinygrad/pull/2415</a> (暂时未merge）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">/tinygrad/nn/state.py
+</span></span><span class="line"><span class="cl">safe_dtypes = {&#34;F16&#34;: dtypes.float16, &#34;F32&#34;: dtypes.float32, &#34;U8&#34;: dtypes.uint8, &#34;I8&#34;: dtypes.int8, &#34;I32&#34;: dtypes.int32, &#34;I64&#34;: dtypes.int64,
+</span></span><span class="line"><span class="cl"><span class="gd">-               &#34;F64&#34;: dtypes.double, &#34;B&#34;: dtypes.bool, &#34;I16&#34;: dtypes.short, &#34;U16&#34;: dtypes.ushort, &#34;UI&#34;: dtypes.uint, &#34;UL&#34;: dtypes.ulong}
+</span></span></span><span class="line"><span class="cl"><span class="gd"></span><span class="gi">+               &#34;F64&#34;: dtypes.double, &#34;B&#34;: dtypes.bool, &#34;I16&#34;: dtypes.short, &#34;U16&#34;: dtypes.ushort, &#34;UI&#34;: dtypes.uint, &#34;UL&#34;: dtypes.ulong, &#34;BF16&#34;: dtypes.bfloat16}
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">JIT</span><span class="o">=</span><span class="m">1</span> <span class="nv">GPU</span><span class="o">=</span><span class="m">1</span> python3 examples/llama.py --gen<span class="o">=</span><span class="s2">&#34;tiny&#34;</span> --size<span class="o">=</span><span class="s2">&#34;1B&#34;</span> --model<span class="o">=</span><span class="s2">&#34;weights/TinyLlama-1.1B-Chat-v1.0/model.safetensors&#34;</span>  --temperature<span class="o">=</span>0.2 --count<span class="o">=</span><span class="m">120</span> --prompt<span class="o">=</span><span class="s2">&#34;write a function in c++ that adds three float numbers&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">(</span>venv<span class="o">)</span> tiny@box:~/tinygrad$ <span class="nv">JIT</span><span class="o">=</span><span class="m">1</span> <span class="nv">GPU</span><span class="o">=</span><span class="m">1</span> python3 examples/llama.py --gen<span class="o">=</span><span class="s2">&#34;tiny&#34;</span> --size<span class="o">=</span><span class="s2">&#34;1B&#34;</span> --model<span class="o">=</span><span class="s2">&#34;weights/TinyLlama-1.1B-Chat-v1.0/model.safetensors&#34;</span>  --temperature<span class="o">=</span>0.2 --count<span class="o">=</span><span class="m">120</span> --prompt<span class="o">=</span><span class="s2">&#34;best way to learn golang is &#34;</span>
+</span></span><span class="line"><span class="cl">using GPU backend
+</span></span><span class="line"><span class="cl">MODEL_PATH     weights/TinyLlama-1.1B-Chat-v1.0/model.safetensors
+</span></span><span class="line"><span class="cl">TOKENIZER_PATH weights/TinyLlama-1.1B-Chat-v1.0/tokenizer.model
+</span></span><span class="line"><span class="cl">using LLaMA-tiny-1B model
+</span></span><span class="line"><span class="cl">ram used:  2.20 GB, freqs_cis                                         : 100%<span class="p">|</span>████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████<span class="p">|</span> 202/202 <span class="o">[</span>00:01&lt;00:00, 137.33it/s<span class="o">]</span>
+</span></span><span class="line"><span class="cl">loaded weights in 1475.25 ms, 2.20 GB loaded at 1.49 GB/s
+</span></span><span class="line"><span class="cl">best way to learn golang is
+</span></span><span class="line"><span class="cl">- Watching videos on youtube and reading golang documentation
+</span></span><span class="line"><span class="cl">- Reading golang news and blogs
+</span></span><span class="line"><span class="cl">- Attending golang meetups and events
+</span></span><span class="line"><span class="cl">- Joining golang slack community
+</span></span><span class="line"><span class="cl">- Joining golang mailing list
+</span></span><span class="line"><span class="cl">- Reading golang books
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">in conclusion, learning golang is a challenging but rewarding experience. By following the above steps, you can start learning golang and achieve your goals.
+</span></span><span class="line"><span class="cl">&lt;<span class="p">|</span>user<span class="p">|</span>&gt;
+</span></span><span class="line"><span class="cl">Can you provide me with some resources to learn Golang from scratch? I<span class="err">&#39;</span>m not very familiar<span class="o">(</span>venv<span class="o">)</span> tiny@box:~/tinygrad$
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用另一个4gb出头的模型会报一个half的错误，使用HIP会爆内存（HIP很多情况下会，可能是bug），用CPU能跑但是很慢。</p>
+<p>这个half的错误被人提了又关了，可能要重新提一下</p>
+<p><a href="https://github.com/tinygrad/tinygrad/issues/2962">https://github.com/tinygrad/tinygrad/issues/2962</a></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">(</span>venv<span class="o">)</span> tiny@box:~/tinygrad$ <span class="nv">JIT</span><span class="o">=</span><span class="m">1</span> <span class="nv">GPU</span><span class="o">=</span><span class="m">1</span> python3 examples/llama.py --gen<span class="o">=</span><span class="s2">&#34;tiny&#34;</span> --size<span class="o">=</span><span class="s2">&#34;1B&#34;</span> --model<span class="o">=</span><span class="s2">&#34;weights/LLaMA-tiny/model.safetensors&#34;</span>  --temperature<span class="o">=</span>0.2 --count<span class="o">=</span><span class="m">120</span> --prompt<span class="o">=</span><span class="s2">&#34;best way to learn golang is &#34;</span>
+</span></span><span class="line"><span class="cl">using GPU <span class="nv">backend</span>
+</span></span><span class="line"><span class="cl"><span class="o">===</span> MODEL_PATH     weights/LLaMA-tiny/model.safetensors
+</span></span><span class="line"><span class="cl"><span class="o">===</span> TOKENIZER_PATH weights/LLaMA-tiny/tokenizer.model
+</span></span><span class="line"><span class="cl">using LLaMA-tiny-1B model
+</span></span><span class="line"><span class="cl">ram used:  4.40 GB, freqs_cis                                         : 100%<span class="p">|</span>████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████<span class="p">|</span> 202/202 <span class="o">[</span>00:01&lt;00:00, 111.45it/s<span class="o">]</span>
+</span></span><span class="line"><span class="cl">loaded weights in 1816.11 ms, 4.40 GB loaded at 2.42 GB/s
+</span></span><span class="line"><span class="cl">best way to learn golang is Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
+</span></span><span class="line"><span class="cl">  File <span class="s2">&#34;examples/llama.py&#34;</span>, line 419, in &lt;module&gt;
+</span></span><span class="line"><span class="cl">    <span class="nv">tok</span> <span class="o">=</span> llama.model<span class="o">(</span>Tensor<span class="o">([</span>toks<span class="o">[</span>start_pos:<span class="o">]])</span>, start_pos, args.temperature<span class="o">)</span>.item<span class="o">()</span>
+</span></span><span class="line"><span class="cl">  File <span class="s2">&#34;/home/tiny/tinygrad/extra/models/llama.py&#34;</span>, line 153, in __call__
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> self.forward<span class="o">(</span>tokens, start_pos, temperature<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  File <span class="s2">&#34;/home/tiny/tinygrad/extra/models/llama.py&#34;</span>, line 140, in forward
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> layer in self.layers: <span class="nv">h</span> <span class="o">=</span> layer<span class="o">(</span>h, start_pos, freqs_cis, mask<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  File <span class="s2">&#34;/home/tiny/tinygrad/extra/models/llama.py&#34;</span>, line 121, in __call__
+</span></span><span class="line"><span class="cl">    <span class="nv">h</span> <span class="o">=</span> x + self.attention<span class="o">(</span>self.attention_norm<span class="o">(</span>x<span class="o">)</span>, start_pos, freqs_cis, mask<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  File <span class="s2">&#34;/home/tiny/tinygrad/extra/models/llama.py&#34;</span>, line 92, in __call__
+</span></span><span class="line"><span class="cl">    self.cache_k.assign<span class="o">(</span>keys.pad<span class="o">((</span>None,<span class="o">(</span>0,self.max_context-start_pos-seqlen<span class="o">)</span>,None,None<span class="o">))</span>.contiguous<span class="o">())</span>.realize<span class="o">()</span>
+</span></span><span class="line"><span class="cl">  File <span class="s2">&#34;/home/tiny/tinygrad/tinygrad/tensor.py&#34;</span>, line 113, in realize
+</span></span><span class="line"><span class="cl">    run_schedule<span class="o">(</span>self.lazydata.schedule<span class="o">())</span>
+</span></span><span class="line"><span class="cl">  File <span class="s2">&#34;/home/tiny/tinygrad/tinygrad/realize.py&#34;</span>, line 31, in run_schedule
+</span></span><span class="line"><span class="cl">    <span class="nv">prg</span> <span class="o">=</span> lower_schedule_item<span class="o">(</span>si<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  File <span class="s2">&#34;/home/tiny/tinygrad/tinygrad/realize.py&#34;</span>, line 22, in lower_schedule_item
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> Device<span class="o">[</span>si.out.device<span class="o">]</span>.get_runner<span class="o">(</span>si.ast<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  File <span class="s2">&#34;/home/tiny/tinygrad/tinygrad/device.py&#34;</span>, line 330, in get_runner
+</span></span><span class="line"><span class="cl">    def get_runner<span class="o">(</span>self, ast:LazyOp<span class="o">)</span> -&gt; CompiledASTRunner: <span class="k">return</span> self.to_program<span class="o">(</span>self.get_linearizer<span class="o">(</span>ast<span class="o">))</span>
+</span></span><span class="line"><span class="cl">  File <span class="s2">&#34;/home/tiny/tinygrad/tinygrad/device.py&#34;</span>, line 301, in to_program
+</span></span><span class="line"><span class="cl">    <span class="nv">lib</span> <span class="o">=</span> self.compiler<span class="o">(</span>src<span class="o">)</span>
+</span></span><span class="line"><span class="cl">  File <span class="s2">&#34;/home/tiny/tinygrad/tinygrad/runtime/ops_gpu.py&#34;</span>, line 26, in compile_cl
+</span></span><span class="line"><span class="cl">    raise RuntimeError<span class="o">(</span>f<span class="s2">&#34;OpenCL Compile Error\n\n{ctypes.string_at(mstr, size=log_size.value).decode()}&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">RuntimeError: OpenCL Compile Error
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">/tmp/comgr-bec8d2/input/CompileSource:18:70: error: casting to <span class="nb">type</span> <span class="s1">&#39;half&#39;</span> is not allowed
+</span></span><span class="line"><span class="cl">  *<span class="o">((</span>__global float4*<span class="o">)(</span>data0+alu2<span class="o">))</span> <span class="o">=</span> <span class="o">(</span>float4<span class="o">)(</span>float4<span class="o">)((</span>float<span class="o">)((</span>half<span class="o">)(((</span>val0<span class="o">)</span>.x*val3*<span class="o">(</span>val6<span class="o">)</span>.x<span class="o">)))</span>,<span class="o">(</span>float<span class="o">)((</span>half<span class="o">)(((</span>val0<span class="o">)</span>.y*val3*<span class="o">(</span>val6<span class="o">)</span>.y<span class="o">)))</span>,<span class="o">(</span>float<span class="o">)((</span>half<span class="o">)(((</span>val0<span class="o">)</span>.z*val3*<span class="o">(</span>val6<span class="o">)</span>.z<span class="o">)))</span>,<span class="o">(</span>float<span class="o">)((</span>half<span class="o">)(((</span>val0<span class="o">)</span>.w*val3*<span class="o">(</span>val6<span class="o">)</span>.w<span class="o">))))</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">/tmp/comgr-bec8d2/input/CompileSource:19:70: error: casting to <span class="nb">type</span> <span class="s1">&#39;half&#39;</span> is not allowed
+</span></span><span class="line"><span class="cl">  *<span class="o">((</span>__global float4*<span class="o">)(</span>data0+alu3<span class="o">))</span> <span class="o">=</span> <span class="o">(</span>float4<span class="o">)(</span>float4<span class="o">)((</span>float<span class="o">)((</span>half<span class="o">)(((</span>val1<span class="o">)</span>.x*val4*<span class="o">(</span>val6<span class="o">)</span>.x<span class="o">)))</span>,<span class="o">(</span>float<span class="o">)((</span>half<span class="o">)(((</span>val1<span class="o">)</span>.y*val4*<span class="o">(</span>val6<span class="o">)</span>.y<span class="o">)))</span>,<span class="o">(</span>float<span class="o">)((</span>half<span class="o">)(((</span>val1<span class="o">)</span>.z*val4*<span class="o">(</span>val6<span class="o">)</span>.z<span class="o">)))</span>,<span class="o">(</span>float<span class="o">)((</span>half<span class="o">)(((</span>val1<span class="o">)</span>.w*val4*<span class="o">(</span>val6<span class="o">)</span>.w<span class="o">))))</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">/tmp/comgr-bec8d2/input/CompileSource:20:70: error: casting to <span class="nb">type</span> <span class="s1">&#39;half&#39;</span> is not allowed
+</span></span><span class="line"><span class="cl">  *<span class="o">((</span>__global float4*<span class="o">)(</span>data0+alu4<span class="o">))</span> <span class="o">=</span> <span class="o">(</span>float4<span class="o">)(</span>float4<span class="o">)((</span>float<span class="o">)((</span>half<span class="o">)(((</span>val2<span class="o">)</span>.x*val5*<span class="o">(</span>val6<span class="o">)</span>.x<span class="o">)))</span>,<span class="o">(</span>float<span class="o">)((</span>half<span class="o">)(((</span>val2<span class="o">)</span>.y*val5*<span class="o">(</span>val6<span class="o">)</span>.y<span class="o">)))</span>,<span class="o">(</span>float<span class="o">)((</span>half<span class="o">)(((</span>val2<span class="o">)</span>.z*val5*<span class="o">(</span>val6<span class="o">)</span>.z<span class="o">)))</span>,<span class="o">(</span>float<span class="o">)((</span>half<span class="o">)(((</span>val2<span class="o">)</span>.w*val5*<span class="o">(</span>val6<span class="o">)</span>.w<span class="o">))))</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">                                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl"><span class="m">3</span> errors generated.
+</span></span><span class="line"><span class="cl">Error: Failed to compile <span class="nb">source</span> <span class="o">(</span>from CL or HIP <span class="nb">source</span> to LLVM IR<span class="o">)</span>.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="22-gpt2">2.2 GPT2</h3>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-diff" data-lang="diff"><span class="line"><span class="cl">(venv) tiny@box:~/tinygrad$ JIT=1 GPU=1 python3 examples/gpt2.py  --prompt &#34;Google is a company &#34;
+</span></span><span class="line"><span class="cl">using GPU backend
+</span></span><span class="line"><span class="cl">using gpt2-medium
+</span></span><span class="line"><span class="cl">ram used:  1.42 GB, lm_head.weight                                    : 100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 293/293 [00:00&lt;00:00, 360.57it/s]
+</span></span><span class="line"><span class="cl">loaded weights in 816.41 ms, 1.63 GB loaded at 1.99 GB/s
+</span></span><span class="line"><span class="cl">100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 100/100 [00:03&lt;00:00, 26.75it/s]
+</span></span><span class="line"><span class="cl">Generating text...
+</span></span><span class="line"><span class="cl">Google is a company !!!! In fact, it is often referred to as the most important innovation company in the world. It&#39;s true however that Google has been one of the more controversial companies to date. It&#39;s controversial because it&#39;s a giant company, which just to be totally clear, is not going to fuck anyone over. Now what matters most is interest. Google is growing at a steady clip, and is rapidly attracting more and more attention. No one would disagree that Google is an important company that is becoming recognized everywhere
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="3-安装pytorch">3. 安装pytorch</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git clone https://github.com/pytorch/pytorch.git -b v1.13.1
+</span></span><span class="line"><span class="cl">cd pytorch
+</span></span><span class="line"><span class="cl">export PATH=/opt/rocm/bin:$PATH ROCM_PATH=/opt/rocm HIP_PATH=/opt/rocm/hip
+</span></span><span class="line"><span class="cl">export PYTORCH_ROCM_ARCH=gfx803
+</span></span><span class="line"><span class="cl">export PYTORCH_BUILD_VERSION=1.13.1 PYTORCH_BUILD_NUMBER=1
+</span></span><span class="line"><span class="cl">python3 tools/amd_build/build_amd.py
+</span></span><span class="line"><span class="cl">USE_ROCM=1 USE_NINJA=1 python3 setup.py bdist_wheel
+</span></span><span class="line"><span class="cl">pip3 install ./dist/torch-1.13.1-cp38-cp38-linux_x86_64.whl
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="4-使用-ollama-运行开源大模型">4. 使用 ollama 运行开源大模型</h2>
+<p>ollama是一个使用golang编写的LLM开箱即用工具，运行一个开源大模型就像用docker跑服务一样方便。</p>
+<p>ollama支持的很多7B模型都是4g左右的，测试能在rx580上运行成功。</p>
+<p>在一个终端中先运行 ./ollama serve，看到下面的日志说明GPU配置正确：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">2024/02/25 22:46:00 gpu.go:213: Searching for GPU management library librocm_smi64.so
+</span></span><span class="line"><span class="cl">2024/02/25 22:46:00 gpu.go:258: Discovered GPU libraries: [/opt/rocm/lib/librocm_smi64.so.5.0.50701 /opt/rocm-5.7.1/lib/librocm_smi64.so.5.0.50701]
+</span></span><span class="line"><span class="cl">2024/02/25 22:46:00 gpu.go:104: Radeon GPU detected
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">(加载模型后出现)
+</span></span><span class="line"><span class="cl">llm_load_tensors: using ROCm for GPU acceleration
+</span></span><span class="line"><span class="cl">llm_load_tensors: mem required  =  875.17 MiB
+</span></span><span class="line"><span class="cl">llm_load_tensors: offloading 26 repeating layers to GPU
+</span></span><span class="line"><span class="cl">llm_load_tensors: offloaded 26/33 layers to GPU
+</span></span><span class="line"><span class="cl">llm_load_tensors: VRAM used: 3042.81 MiB
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>另开一个终端运行 ./ollama run mistral</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">tiny@box:~/ollama$ ./ollama run mistral
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; Who is Andrej Karpathy?
+</span></span><span class="line"><span class="cl"> Andrej Karpathy is a research scientist at Tesla, Inc. He previously worked as a research scientist and a postdoctoral fellow
+</span></span><span class="line"><span class="cl">at Stanford University Artificial Intelligence Laboratory (SAIL). His research focuses on deep learning and computer vision,
+</span></span><span class="line"><span class="cl">with an emphasis on applying these technologies to real-world problems.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Karpathy gained widespread attention in the machine learning community when he published a blog series called &#34;Deep Learning for
+</span></span><span class="line"><span class="cl">Self-Driving Cars&#34; which described his experience working on autonomous driving projects using deep learning techniques. He has
+</span></span><span class="line"><span class="cl">also made significant contributions to various open source machine learning projects, including TensorFlow and PyTorch, and has
+</span></span><span class="line"><span class="cl">authored several influential research papers in the field of deep learning.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">Karpathy holds a Ph.D. in computer science from Stanford University, where his advisor was Fei-Fei Li, a renowned computer
+</span></span><span class="line"><span class="cl">vision expert and director of the Stanford Artificial Intelligence Laboratory.
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; 为什么x**2的导数是2x，用基础微积分证明
+</span></span><span class="line"><span class="cl"> 首先，我们需要简明地介绍一下函数和其导数的概念。
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">函数f(x)的导数f&#39;(x)（或写成df/dx）可以解释为：如果在点x处有一条足够近的直线，使得从x向右（或左）偏移量小时，点 функ值变化很小，但函数值和偏移量之比很大，那么这条直线的斜率正好是f&#39;(x)。
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">现在，我们来求 x^2 函数的导数。
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">令 h = Δx，则 x += h 时函数值变为 (x + h)^2 = x^2 + 2xh + h^2
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">函数值的变化 Delta f(x) = f(x+h) - f(x) = (x+h)^2 - x^2 = 2xh + h^2
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">当 h 很小时，h^2 可以忽略，因此 Delta f(x)≈ 2xh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">所以，f&#39;(x) = Δf/Δx = lim (h→0) [(2xh)/h] = lim (h→0) 2x = 2x。
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">因此，x^2 函数的导数是 2x。
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+    </div>
+
+    <div class="post-copyright">
+  <p class="copyright-item">
+    <span class="item-title">文章作者</span>
+    <span class="item-content">b1tg</span>
+  </p>
+  <p class="copyright-item">
+    <span class="item-title">上次更新</span>
+    <span class="item-content">
+        2024-02-25
+        
+    </span>
+  </p>
+  
+  
+</div>
+<footer class="post-footer">
+      <div class="post-tags">
+          <a href="/tags/llm/">LLM</a>
+          </div>
+      <nav class="post-nav">
+        
+        <a class="next" href="/post/cve-2023-38831-winrar-analysis/">
+            <span class="next-text nav-default">CVE-2023-38831 winrar 漏洞分析</span>
+            <span class="next-text nav-mobile">下一篇</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+  </article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+    <script src="https://giscus.app/client.js"
+    data-repo="b1tg/b1tg.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
+    data-category="Discuss"
+    data-category-id="DIC_kwDODT0ats4CQAsT"
+    data-mapping="title"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+</script>
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
+  <a href="https://b1tg.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2018 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>b1tg</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+<script src="https://t.usermaven.com/lib.js"
+    data-key="UM6sMIrGGS"
+    data-tracking-host="https://events.usermaven.com"
+    data-autocapture="true"
+    defer>
+</script>
+<script>window.usermaven = window.usermaven || (function(){(window.usermavenQ = window.usermavenQ || []).push(arguments);})</script>
+
+
+
+
+
+
+
+</body>
+
+</html>
