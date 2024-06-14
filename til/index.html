@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>TIL - B1TG</title>
+  <meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+
+<meta name="author" content="b1tg" /><meta name="description" content="** Today I Leanerd ** 2024_06_14 https://spaceraccoon.dev/about/ 他在sg zoom 文件分析blog提纲： golang 类如何找加载、github库 pytinstaller类如何解压，版本 脚本类如何解混淆 通用：如" /><meta name="keywords" content="Hugo, b1tg, even" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.109.0 with theme even" />
+
+
+<link rel="canonical" href="https://b1tg.github.io/til/" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+<link href="/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
+
+
+<meta property="og:title" content="TIL" />
+<meta property="og:description" content="** Today I Leanerd ** 2024_06_14 https://spaceraccoon.dev/about/ 他在sg zoom 文件分析blog提纲： golang 类如何找加载、github库 pytinstaller类如何解压，版本 脚本类如何解混淆 通用：如" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://b1tg.github.io/til/" /><meta property="article:section" content="" />
+<meta property="article:published_time" content="2024-06-14T23:47:00+08:00" />
+<meta property="article:modified_time" content="2024-06-14T23:47:00+08:00" />
+<meta itemprop="name" content="TIL">
+<meta itemprop="description" content="** Today I Leanerd ** 2024_06_14 https://spaceraccoon.dev/about/ 他在sg zoom 文件分析blog提纲： golang 类如何找加载、github库 pytinstaller类如何解压，版本 脚本类如何解混淆 通用：如"><meta itemprop="datePublished" content="2024-06-14T23:47:00+08:00" />
+<meta itemprop="dateModified" content="2024-06-14T23:47:00+08:00" />
+<meta itemprop="wordCount" content="1795">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="TIL"/>
+<meta name="twitter:description" content="** Today I Leanerd ** 2024_06_14 https://spaceraccoon.dev/about/ 他在sg zoom 文件分析blog提纲： golang 类如何找加载、github库 pytinstaller类如何解压，版本 脚本类如何解混淆 通用：如"/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">B1TG</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/til">
+        <li class="mobile-menu-item">TIL</li>
+      </a><a href="/about">
+        <li class="mobile-menu-item">About</li>
+      </a><a href="/quotes">
+        <li class="mobile-menu-item">Quotes</li>
+      </a>
+  </ul>
+
+  
+
+
+</nav>
+
+  <div class="container" id="mobile-panel">
+    <header id="header" class="header">
+        <div class="logo-wrapper">
+  <a href="/" class="logo">B1TG</a>
+</div>
+
+
+
+
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        <a class="menu-item-link" href="/">Home</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/post/">Archives</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/tags/">Tags</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/til">TIL</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/about">About</a>
+      </li><li class="menu-item">
+        <a class="menu-item-link" href="/quotes">Quotes</a>
+      </li>
+  </ul>
+</nav>
+
+    </header>
+
+    <main id="main" class="main">
+      <div class="content-wrapper">
+        <div id="content" class="content">
+          <article class="post">
+  <div class="post-content">
+    <p>** Today I Leanerd **</p>
+<h2 id="2024_06_14">2024_06_14</h2>
+<ul>
+<li><a href="https://spaceraccoon.dev/about/">https://spaceraccoon.dev/about/</a> 他在sg zoom</li>
+<li>文件分析blog提纲：
+<ul>
+<li>golang 类如何找加载、github库</li>
+<li>pytinstaller类如何解压，版本</li>
+<li>脚本类如何解混淆</li>
+<li>通用：如何找入口点</li>
+<li>工具：tinytracer</li>
+<li>工具：hawkeye</li>
+<li>工具：floss针对shellcode提取字符串</li>
+<li>实现：hyperv shellcode执行</li>
+<li>实现：如何把 windefener 数据库用在linux上</li>
+</ul>
+</li>
+<li>#emacs  修复 Windows 上 tramp mode 和  waka-time共用时的bug：会尝试调用sh，来执行进程报错，导致文件无法保存
+<ul>
+<li><a href="https://github.com/b1tg/stuff/blob/main/wakatime-mode-patch.el">https://github.com/b1tg/stuff/blob/main/wakatime-mode-patch.el</a></li>
+</ul>
+</li>
+<li>#emacs Emacs tips
+<ul>
+<li>键盘调出 message 窗口： <code>C-h e</code></li>
+<li>
+<table>
+<thead>
+<tr>
+<th>打印调试 : <code>(message &quot;abc: %s&quot; a)</code></th>
+</tr>
+</thead>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2024_06_13">2024_06_13</h2>
+<h3 id="previous-research">previous research</h3>
+<pre><code>- HawkEye.py
+	- python HawkEye.py --path kf.exe
+	- fork了一份把少量修改提上去了：https://github.com/b1tg/HawkEye 。基本是 2023/07/03改的
+- https://github.com/hasherezade/tiny_tracer/issues/33 提issue 增加了 黑名单功能excluded.txt 2023/08/09
+- fuzz pdf
+  ```
+  X:\Green\DynamoRIO-Windows-9.0.1\bin64\drrun.exe -verbose -64 -t drcov — test 1 2
+  
+  C:\Users\dell\Desktop\DynamoRIO-Windows-8.0.18752\bin64\drrun.exe -verbose -64 -t drcov — &quot;C:\Program Files (x86)\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe&quot; &quot;C:\Users\dell\Desktop\libreoffice-ano-2.pdf&quot;
+  
+  
+  C:\Users\dell\Desktop\DynamoRIO-Windows-8.0.18752\bin32\drrun.exe -verbose  -t drcov -- &quot;C:\Program Files (x86)\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe&quot; &quot;C:\Users\dell\Desktop\libreoffice-ano-2.pdf&quot;
+  
+  
+  C:\Users\dell\Desktop\DynamoRIO-Windows-8.0.18752\bin32\drrun.exe -verbose  -t drcov -- &quot;C:\Program Files (x86)\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe&quot; &quot;C:\Users\dell\Desktop\libreoffice.pdf&quot;
+  ```
+</code></pre>
+<ul>
+<li>start reading 《SRE book》</li>
+<li>tailscale 子网功能
+<ul>
+<li>子网中一台机器：<code>&quot;C:\Program Files\Tailscale\tailscale.exe&quot; up --advertise-routes=192.168.12.0/24</code></li>
+<li>web上勾选确认一下  Subnets</li>
+<li>想要用作发起方的机器：sudo tailscale up &ndash;accept-routes</li>
+</ul>
+</li>
+</ul>
+<h2 id="2024_06_11">2024_06_11</h2>
+<h3 id="理线头">理线头</h3>
+<p>在虚拟机快照里面看到了一些自己之前的研究尝试，但是都没能落成。</p>
+<ul>
+<li>tramp bug：写远程大文件时报错，定位到是缺少unix工具
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Saving file /plink:root@IP:/abc/mixrules.py...
+</span></span><span class="line"><span class="cl">Renaming /plink:root@IP:/abc/mixrules.py to /plink:root@IP:/abc/mixrules.py~...done
+</span></span><span class="line"><span class="cl">Warning: Couldn’t find an inline transfer compress command
+</span></span><span class="line"><span class="cl">Tramp: Encoding local file ‘c:/Users/dear/AppData/Local/Temp/tramp.hDFLyA.py’ using ‘base64-encode-region’...done
+</span></span><span class="line"><span class="cl">Tramp: Decoding remote file ‘/plink:root@IP:/abc/mixrules.py’ using ‘base64 -d -i &gt;%s’...failed
+</span></span><span class="line"><span class="cl">Tramp: Opening connection nil for root@IP using plink...done
+</span></span><span class="line"><span class="cl">Renaming /plink:root@IP:/abc/mixrules.py~ to /plink:root@IP:/abc/mixrules.py...done
+</span></span><span class="line"><span class="cl">tramp-error: Output file descriptor of *tramp/plink root@IP* is closed
+</span></span><span class="line"><span class="cl">mouse-minibuffer-check: Minibuffer window is not active
+</span></span><span class="line"><span class="cl">Mark set [3 times]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>
+<table>
+<thead>
+<tr>
+<th>修复：在PATH中增加 <code>D:\installed\Git\usr\bin\</code>， 主要涉及 base64.exe 和 gzip.exe</th>
+</tr>
+</thead>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2024_06_10">2024_06_10</h2>
+<ul>
+<li>语音转文字(STT) #ai
+<ul>
+<li><a href="https://huggingface.co/Systran/faster-whisper-large-v3">https://huggingface.co/Systran/faster-whisper-large-v3</a></li>
+<li>下载模型及配置文件到m目录下（或者挂代理</li>
+<li>测试mp3或者tts类型都支持；Ubuntu+3090效果很好，显存占用4g左右；Windows+CPU 效果不太行，照理说应该只是速度慢一点但是结果都不一样，可能是库版本有偏差吧；</li>
+<li>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># pip install faster_whisper</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">faster_whisper</span> <span class="kn">import</span> <span class="n">WhisperModel</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># model = WhisperModel(&#34;large-v3&#34;) # 自动下载模型</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 读 venv/lib/python3.9/site-packages/faster_whisper/transcribe.py</span>
+</span></span><span class="line"><span class="cl"><span class="n">model</span> <span class="o">=</span> <span class="n">WhisperModel</span><span class="p">(</span><span class="s2">&#34;m&#34;</span><span class="p">)</span> <span class="c1"># 本地离线目录</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">fw</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;results.txt&#34;</span><span class="p">,</span> <span class="s2">&#34;w&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#segments, info = model.transcribe(&#34;audio.mp3&#34;)</span>
+</span></span><span class="line"><span class="cl"><span class="n">segments</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">transcribe</span><span class="p">(</span><span class="s2">&#34;a.bin&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">line</span> <span class="o">=</span> <span class="s2">&#34;[</span><span class="si">%.2f</span><span class="s2">s -&gt; </span><span class="si">%.2f</span><span class="s2">s] </span><span class="si">%s</span><span class="s2">&#34;</span> <span class="o">%</span> <span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">segment</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">fw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="o">+</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>来源：最近爆火的tts(ChatTTS)出来之后，我就感觉肯定也有stt
+搜到 <a href="https://github.com/jianchang512/stt">https://github.com/jianchang512/stt</a> 这个 wrapper，找到了背后用的模型</li>
+</ul>
+</li>
+</ul>
+<h2 id="2024_06_06">2024_06_06</h2>
+<ul>
+<li>wget proxy #card
+<ul>
+<li>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">wget -e use_proxy=yes -e http_proxy=$proxy http://askubuntu.com
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>迁移emacs 配置
+<ul>
+<li>复制 init.el, priv.el, mannual-plugins/</li>
+<li>
+<h2 id="m-x-package-install-selected-packages"><code>M-x package-install-selected-packages</code></h2>
+</li>
+</ul>
+-</li>
+</ul>
+<h2 id="2024_06_05">2024_06_05</h2>
+<ul>
+<li><a href="https://github.com/simonw/til/blob/main/cocktails/tommys-margarita.md">https://github.com/simonw/til/blob/main/cocktails/tommys-margarita.md</a>
+这种 TIL 组织方式非常漂亮，不过图片我觉得还是存成文件安心</li>
+</ul>
+<h2 id="2024_06_04">2024_06_04</h2>
+<ul>
+<li>命令行编译 visual studio
+<ul>
+<li>msbuild -p:configuration=&ldquo;release&rdquo;</li>
+</ul>
+</li>
+<li>emacs-replace-vim
+<ul>
+<li>复制行yy
+<ul>
+<li>C-d
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-lisp" data-lang="lisp"><span class="line"><span class="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">duplicate-line</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">  <span class="p">(</span><span class="nv">interactive</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">(</span><span class="nv">move-beginning-of-line</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">(</span><span class="nv">kill-line</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">(</span><span class="nv">yank</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">(</span><span class="nv">open-line</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">(</span><span class="nv">next-line</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="p">(</span><span class="nv">yank</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="p">(</span><span class="nv">global-set-key</span> <span class="p">(</span><span class="nv">kbd</span> <span class="s">&#34;C-d&#34;</span><span class="p">)</span> <span class="ss">&#39;duplicate-line</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+<li>
+<table>
+<thead>
+<tr>
+<th>文件头尾gg/G: <code>M-&lt;</code> / <code>M-&gt;</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2024_04_11">2024_04_11</h2>
+<ul>
+<li>top dawg? under dog
+<ul>
+<li>no midclass</li>
+</ul>
+</li>
+</ul>
+<h2 id="2024_04_10">2024_04_10</h2>
+<ul>
+<li>mode：
+<ul>
+<li>
+<table>
+<thead>
+<tr>
+<th>view mode VS solve mode</th>
+</tr>
+</thead>
+</table>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2024_04_09">2024_04_09</h2>
+<ul>
+<li>High Agency
+<ul>
+<li><img src="../assets/image_1712668607022_0.png" alt="image.png"></li>
+</ul>
+</li>
+</ul>
+<h2 id="2023_11_24">2023_11_24</h2>
+<ul>
+<li>week 秩序建立</li>
+</ul>
+<h2 id="2023_11_17">2023_11_17</h2>
+<ul>
+<li>realize true of work
+collapsed:: true
+<ul>
+<li>work stack</li>
+<li>chance</li>
+<li>ability</li>
+<li>people</li>
+</ul>
+</li>
+<li>reducing of talk after grad</li>
+</ul>
+<h2 id="2023_11_15">2023_11_15</h2>
+<ul>
+<li>track
+<ul>
+<li>看报告 14:10</li>
+</ul>
+</li>
+</ul>
+<h2 id="2023_11_14">2023_11_14</h2>
+<ul>
+<li>[issues/golang-调度方法]</li>
+<li>[[plan]]
+<ul>
+<li>
+<h3 id="2023-11-14-cs">2023-11-14 CS</h3>
+</li>
+</ul>
+</li>
+<li>TODO Dtrace</li>
+</ul>
+<h2 id="2023_11_13">2023_11_13</h2>
+<ul>
+<li>what-if</li>
+<li>[[plan]]
+<ul>
+<li>
+<h3 id="2023-11-13-issue-1468943">2023-11-13 issue 1468943</h3>
+<ul>
+<li><a href="https://bugs.chromium.org/p/chromium/issues/detail?id=1468943">https://bugs.chromium.org/p/chromium/issues/detail?id=1468943</a></li>
+<li>描述：在promise 过程中，数组 shift 导致内存重新分配，而原来的context仍然引用 数组旧位置，导致悬挂指针</li>
+<li>不懂：内存结构、poc中promise代码的逻辑，文章里面说是回调里面shift但poc里面是构造器里面shift</li>
+<li>后续：可能要等exp或者暂时放着</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="2023_11_09">2023_11_09</h2>
+<ul>
+<li>#pain-in-ass 写一个parser <a href="https://github.com/OISF/suricata/pull/9745/files">https://github.com/OISF/suricata/pull/9745/files</a></li>
+<li>
+<table>
+<thead>
+<tr>
+<th>关键词：调试、</th>
+</tr>
+</thead>
+</table>
+</li>
+</ul>
+<h2 id="2023_11_08">2023_11_08</h2>
+<ul>
+<li>没有摄取有价值的信息，等于浪费精力</li>
+<li>TODO 如何判断一个ip是内网地址还是公网地址，如果在路由器上配”公网“地址，有什么副作用</li>
+<li>
+<table>
+<thead>
+<tr>
+<th>TODO https手动解密</th>
+</tr>
+</thead>
+</table>
+</li>
+</ul>
+<h2 id="2023_11_06">2023_11_06</h2>
+<ul>
+<li>[[ll/tcpip]]</li>
+<li>[[ll/kernel]]</li>
+<li>[[ll/libc]]</li>
+<li>
+<table>
+<thead>
+<tr>
+<th>[[ll/vm]]</th>
+</tr>
+</thead>
+</table>
+</li>
+</ul>
+<h2 id="2023_11_05">2023_11_05</h2>
+<ul>
+<li><a href="https://it-notes.dragas.net/2022/01/24/why-were-migrating-many-of-our-servers-from-linux-to-freebsd/">https://it-notes.dragas.net/2022/01/24/why-were-migrating-many-of-our-servers-from-linux-to-freebsd/</a> [[tech/random]]
+<ul>
+<li>哲学方便比linux更加注重一致性</li>
+<li>网络栈比linux更好，Meta 多年来一直致力于将 Linux 网络堆栈的性能提升到 FreeBSD 的水平</li>
+<li>Netflix 在其边缘节点上使用 FreeBSD（重量级客户）</li>
+<li>不能用docker（惨）</li>
+<li>FreeBSD? <a href="https://news.ycombinator.com/item?id=30057549&amp;ref=it-notes.dragas.net">够用</a>! 但有所有小众技术栈的缺点，招聘难</li>
+</ul>
+</li>
+<li>精致有害 [[quote]]
+<blockquote>
+<p>同样，你必须研究服装穿搭，配饰选择，茶艺要懂一些，红酒要懂，美食也要懂，你算算每年投入的「精致」时间要多少，你的车载这么多东西，怎么能比别人跑得快。[&hellip;]
+什么是朴拙？朴拙就是极简主义。人生中最重要的事就是做减法，把那些不重要的都砍掉，专注你最重要的目标，一年只完成一两件重要的事，比你规划七八件事都完不成要有意义的多。
+<a href="https://hwv430.blogspot.com/2021/08/blog-post_14.html?m=1">https://hwv430.blogspot.com/2021/08/blog-post_14.html?m=1</a></p>
+</blockquote>
+</li>
+<li>基础很重要，对计算机世界的<a href="https://github.com/geohot/fromthetransistor">透彻</a>才是geohot能在这个时代弄潮的基础</li>
+<li>[[course/uCore]]</li>
+<li>TODO 如何实现一个简单的规则引擎 #blog
+<ul>
+<li>源码阅读 <a href="https://github.com/exein-io/pulsar">https://github.com/exein-io/pulsar</a></li>
+<li><a href="https://thzt.github.io/2021/01/06/parser/">https://thzt.github.io/2021/01/06/parser/</a></li>
+</ul>
+</li>
+<li>
+<table>
+<thead>
+<tr>
+<th>[[priv/cv]]</th>
+</tr>
+</thead>
+</table>
+</li>
+</ul>
+<h2 id="2023_11_04">2023_11_04</h2>
+<ul>
+<li>
+<table>
+<thead>
+<tr>
+<th>[[flag/linux]]</th>
+</tr>
+</thead>
+</table>
+</li>
+</ul>
+
+  </div>
+</article>
+        </div>
+        
+
+  
+
+  
+
+      </div>
+    </main>
+    <script src="https://giscus.app/client.js"
+    data-repo="b1tg/b1tg.github.io"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
+    data-category="Discuss"
+    data-category-id="DIC_kwDODT0ats4CQAsT"
+    data-mapping="title"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+</script>
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
+  <a href="https://b1tg.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    由 <a class="hexo-link" href="https://gohugo.io">Hugo</a> 强力驱动
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    主题 - 
+    <a class="theme-link" href="https://github.com/olOwOlo/hugo-theme-even">Even</a>
+  </span>
+
+  
+
+  <span class="copyright-year">
+    &copy; 
+    2018 - 
+    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>b1tg</span>
+  </span>
+</div>
+
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js" integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.js" integrity="sha256-XVLffZaxoWfGUEbdzuLi7pwaUJv1cecsQJQqGLe7axY=" crossorigin="anonymous"></script>
+
+
+
+<script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
+
+
+
+
+
+<script src="https://t.usermaven.com/lib.js"
+    data-key="UM6sMIrGGS"
+    data-tracking-host="https://events.usermaven.com"
+    data-autocapture="true"
+    defer>
+</script>
+<script>window.usermaven = window.usermaven || (function(){(window.usermavenQ = window.usermavenQ || []).push(arguments);})</script>
+
+
+
+
+
+
+
+</body>
+
+</html>
