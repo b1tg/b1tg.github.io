@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>career on B1TG</title>
+    <title>Career on B1TG</title>
     <link>https://b1tg.github.io/tags/career/</link>
-    <description>Recent content in career on B1TG</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Career on B1TG</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 18 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://b1tg.github.io/tags/career/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 18 Aug 2021 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://b1tg.github.io/tags/career/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>IE, death marches and impact</title>
       <link>https://b1tg.github.io/post/impact-and-ie-marches/</link>
       <pubDate>Wed, 18 Aug 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://b1tg.github.io/post/impact-and-ie-marches/</guid>
-      <description>lcamtfu: 我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://twitter.com/lcamtuf/status/1427301196906176512&#34;&gt;lcamtfu: &lt;/a&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他们那样被记住（产生类似的影响）。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

@@ -16,14 +16,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="b1tg" /><meta name="description" content="Make 亮机卡 great again" /><meta name="keywords" content="Hugo, b1tg, even" />
+<meta name="author" content="" /><meta name="description" content="Make 亮机卡 great again" /><meta name="keywords" content="Hugo, b1tg, even" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.109.0 with theme even" />
+<meta name="generator" content="Hugo 0.140.2 with theme even" />
 
 
 <link rel="canonical" href="https://b1tg.github.io/post/run-llm-on-amd-rx580/" />
@@ -39,19 +39,26 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="Run LLM on AMD rx580" />
-<meta property="og:description" content="Make 亮机卡 great again" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://b1tg.github.io/post/run-llm-on-amd-rx580/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2024-02-25T23:13:00+08:00" />
-<meta property="article:modified_time" content="2024-02-25T23:13:00+08:00" />
-<meta itemprop="name" content="Run LLM on AMD rx580">
-<meta itemprop="description" content="Make 亮机卡 great again"><meta itemprop="datePublished" content="2024-02-25T23:13:00+08:00" />
-<meta itemprop="dateModified" content="2024-02-25T23:13:00+08:00" />
-<meta itemprop="wordCount" content="2652">
-<meta itemprop="keywords" content="LLM," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Run LLM on AMD rx580"/>
-<meta name="twitter:description" content="Make 亮机卡 great again"/>
+<meta property="og:url" content="https://b1tg.github.io/post/run-llm-on-amd-rx580/">
+  <meta property="og:site_name" content="B1TG">
+  <meta property="og:title" content="Run LLM on AMD rx580">
+  <meta property="og:description" content="Make 亮机卡 great again">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2024-02-25T23:13:00+08:00">
+    <meta property="article:modified_time" content="2024-02-25T23:13:00+08:00">
+    <meta property="article:tag" content="LLM">
+
+  <meta itemprop="name" content="Run LLM on AMD rx580">
+  <meta itemprop="description" content="Make 亮机卡 great again">
+  <meta itemprop="datePublished" content="2024-02-25T23:13:00+08:00">
+  <meta itemprop="dateModified" content="2024-02-25T23:13:00+08:00">
+  <meta itemprop="wordCount" content="2652">
+  <meta itemprop="keywords" content="LLM">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Run LLM on AMD rx580">
+  <meta name="twitter:description" content="Make 亮机卡 great again">
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -402,14 +409,14 @@
 </span><span class="lnt">8
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">git clone https://github.com/pytorch/pytorch.git -b v1.13.1
-</span></span><span class="line"><span class="cl">cd pytorch
-</span></span><span class="line"><span class="cl">export PATH=/opt/rocm/bin:$PATH ROCM_PATH=/opt/rocm HIP_PATH=/opt/rocm/hip
-</span></span><span class="line"><span class="cl">export PYTORCH_ROCM_ARCH=gfx803
-</span></span><span class="line"><span class="cl">export PYTORCH_BUILD_VERSION=1.13.1 PYTORCH_BUILD_NUMBER=1
-</span></span><span class="line"><span class="cl">python3 tools/amd_build/build_amd.py
-</span></span><span class="line"><span class="cl">USE_ROCM=1 USE_NINJA=1 python3 setup.py bdist_wheel
-</span></span><span class="line"><span class="cl">pip3 install ./dist/torch-1.13.1-cp38-cp38-linux_x86_64.whl
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pytorch</span><span class="o">/</span><span class="n">pytorch</span><span class="o">.</span><span class="n">git</span> <span class="o">-</span><span class="n">b</span> <span class="n">v1</span><span class="o">.</span><span class="mf">13.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">cd</span> <span class="n">pytorch</span>
+</span></span><span class="line"><span class="cl"><span class="k">export</span> <span class="n">PATH</span><span class="o">=/</span><span class="n">opt</span><span class="o">/</span><span class="n">rocm</span><span class="o">/</span><span class="n">bin</span><span class="p">:</span><span class="o">$</span><span class="n">PATH</span> <span class="n">ROCM_PATH</span><span class="o">=/</span><span class="n">opt</span><span class="o">/</span><span class="n">rocm</span> <span class="n">HIP_PATH</span><span class="o">=/</span><span class="n">opt</span><span class="o">/</span><span class="n">rocm</span><span class="o">/</span><span class="n">hip</span>
+</span></span><span class="line"><span class="cl"><span class="k">export</span> <span class="n">PYTORCH_ROCM_ARCH</span><span class="o">=</span><span class="n">gfx803</span>
+</span></span><span class="line"><span class="cl"><span class="k">export</span> <span class="n">PYTORCH_BUILD_VERSION</span><span class="o">=</span><span class="mf">1.13</span><span class="o">.</span><span class="mi">1</span> <span class="n">PYTORCH_BUILD_NUMBER</span><span class="o">=</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">python3</span> <span class="n">tools</span><span class="o">/</span><span class="n">amd_build</span><span class="o">/</span><span class="n">build_amd</span><span class="o">.</span><span class="n">py</span>
+</span></span><span class="line"><span class="cl"><span class="n">USE_ROCM</span><span class="o">=</span><span class="mi">1</span> <span class="n">USE_NINJA</span><span class="o">=</span><span class="mi">1</span> <span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">bdist_wheel</span>
+</span></span><span class="line"><span class="cl"><span class="n">pip3</span> <span class="n">install</span> <span class="o">./</span><span class="n">dist</span><span class="o">/</span><span class="n">torch</span><span class="o">-</span><span class="mf">1.13</span><span class="o">.</span><span class="mi">1</span><span class="o">-</span><span class="n">cp38</span><span class="o">-</span><span class="n">cp38</span><span class="o">-</span><span class="n">linux_x86_64</span><span class="o">.</span><span class="n">whl</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><h2 id="4-使用-ollama-运行开源大模型">4. 使用 ollama 运行开源大模型</h2>
@@ -430,16 +437,16 @@
 </span><span class="lnt">10
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">2024/02/25 22:46:00 gpu.go:213: Searching for GPU management library librocm_smi64.so
-</span></span><span class="line"><span class="cl">2024/02/25 22:46:00 gpu.go:258: Discovered GPU libraries: [/opt/rocm/lib/librocm_smi64.so.5.0.50701 /opt/rocm-5.7.1/lib/librocm_smi64.so.5.0.50701]
-</span></span><span class="line"><span class="cl">2024/02/25 22:46:00 gpu.go:104: Radeon GPU detected
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="mi">2024</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span> <span class="mi">22</span><span class="p">:</span><span class="mi">46</span><span class="p">:</span><span class="mi">00</span> <span class="n">gpu</span><span class="o">.</span><span class="n">go</span><span class="p">:</span><span class="mi">213</span><span class="p">:</span> <span class="n">Searching</span> <span class="k">for</span> <span class="n">GPU</span> <span class="n">management</span> <span class="n">library</span> <span class="n">librocm_smi64</span><span class="o">.</span><span class="n">so</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2024</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span> <span class="mi">22</span><span class="p">:</span><span class="mi">46</span><span class="p">:</span><span class="mi">00</span> <span class="n">gpu</span><span class="o">.</span><span class="n">go</span><span class="p">:</span><span class="mi">258</span><span class="p">:</span> <span class="n">Discovered</span> <span class="n">GPU</span> <span class="n">libraries</span><span class="p">:</span> <span class="p">[</span><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">rocm</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">librocm_smi64</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mf">5.0</span><span class="o">.</span><span class="mi">50701</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">rocm</span><span class="o">-</span><span class="mf">5.7</span><span class="o">.</span><span class="mi">1</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">librocm_smi64</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="mf">5.0</span><span class="o">.</span><span class="mi">50701</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2024</span><span class="o">/</span><span class="mi">02</span><span class="o">/</span><span class="mi">25</span> <span class="mi">22</span><span class="p">:</span><span class="mi">46</span><span class="p">:</span><span class="mi">00</span> <span class="n">gpu</span><span class="o">.</span><span class="n">go</span><span class="p">:</span><span class="mi">104</span><span class="p">:</span> <span class="n">Radeon</span> <span class="n">GPU</span> <span class="n">detected</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">(加载模型后出现)
-</span></span><span class="line"><span class="cl">llm_load_tensors: using ROCm for GPU acceleration
-</span></span><span class="line"><span class="cl">llm_load_tensors: mem required  =  875.17 MiB
-</span></span><span class="line"><span class="cl">llm_load_tensors: offloading 26 repeating layers to GPU
-</span></span><span class="line"><span class="cl">llm_load_tensors: offloaded 26/33 layers to GPU
-</span></span><span class="line"><span class="cl">llm_load_tensors: VRAM used: 3042.81 MiB
+</span></span><span class="line"><span class="cl"><span class="p">(</span><span class="err">加载模型后出现</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">llm_load_tensors</span><span class="p">:</span> <span class="n">using</span> <span class="n">ROCm</span> <span class="k">for</span> <span class="n">GPU</span> <span class="n">acceleration</span>
+</span></span><span class="line"><span class="cl"><span class="n">llm_load_tensors</span><span class="p">:</span> <span class="n">mem</span> <span class="n">required</span>  <span class="o">=</span>  <span class="mf">875.17</span> <span class="n">MiB</span>
+</span></span><span class="line"><span class="cl"><span class="n">llm_load_tensors</span><span class="p">:</span> <span class="n">offloading</span> <span class="mi">26</span> <span class="n">repeating</span> <span class="n">layers</span> <span class="n">to</span> <span class="n">GPU</span>
+</span></span><span class="line"><span class="cl"><span class="n">llm_load_tensors</span><span class="p">:</span> <span class="n">offloaded</span> <span class="mi">26</span><span class="o">/</span><span class="mi">33</span> <span class="n">layers</span> <span class="n">to</span> <span class="n">GPU</span>
+</span></span><span class="line"><span class="cl"><span class="n">llm_load_tensors</span><span class="p">:</span> <span class="n">VRAM</span> <span class="n">used</span><span class="p">:</span> <span class="mf">3042.81</span> <span class="n">MiB</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>另开一个终端运行 ./ollama run mistral</p>
@@ -478,37 +485,37 @@
 </span><span class="lnt">31
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">tiny@box:~/ollama$ ./ollama run mistral
-</span></span><span class="line"><span class="cl">&gt;&gt;&gt; Who is Andrej Karpathy?
-</span></span><span class="line"><span class="cl"> Andrej Karpathy is a research scientist at Tesla, Inc. He previously worked as a research scientist and a postdoctoral fellow
-</span></span><span class="line"><span class="cl">at Stanford University Artificial Intelligence Laboratory (SAIL). His research focuses on deep learning and computer vision,
-</span></span><span class="line"><span class="cl">with an emphasis on applying these technologies to real-world problems.
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">tiny</span><span class="err">@</span><span class="n">box</span><span class="p">:</span><span class="o">~/</span><span class="n">ollama</span><span class="o">$</span> <span class="o">./</span><span class="n">ollama</span> <span class="n">run</span> <span class="n">mistral</span>
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="n">Who</span> <span class="n">is</span> <span class="n">Andrej</span> <span class="n">Karpathy</span><span class="err">?</span>
+</span></span><span class="line"><span class="cl"> <span class="n">Andrej</span> <span class="n">Karpathy</span> <span class="n">is</span> <span class="n">a</span> <span class="n">research</span> <span class="n">scientist</span> <span class="n">at</span> <span class="n">Tesla</span><span class="p">,</span> <span class="n">Inc</span><span class="o">.</span> <span class="n">He</span> <span class="n">previously</span> <span class="n">worked</span> <span class="n">as</span> <span class="n">a</span> <span class="n">research</span> <span class="n">scientist</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">postdoctoral</span> <span class="n">fellow</span>
+</span></span><span class="line"><span class="cl"><span class="n">at</span> <span class="n">Stanford</span> <span class="n">University</span> <span class="n">Artificial</span> <span class="n">Intelligence</span> <span class="n">Laboratory</span> <span class="p">(</span><span class="n">SAIL</span><span class="p">)</span><span class="o">.</span> <span class="n">His</span> <span class="n">research</span> <span class="n">focuses</span> <span class="n">on</span> <span class="n">deep</span> <span class="n">learning</span> <span class="ow">and</span> <span class="n">computer</span> <span class="n">vision</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="n">with</span> <span class="n">an</span> <span class="n">emphasis</span> <span class="n">on</span> <span class="n">applying</span> <span class="n">these</span> <span class="n">technologies</span> <span class="n">to</span> <span class="n">real</span><span class="o">-</span><span class="n">world</span> <span class="n">problems</span><span class="o">.</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Karpathy gained widespread attention in the machine learning community when he published a blog series called &#34;Deep Learning for
-</span></span><span class="line"><span class="cl">Self-Driving Cars&#34; which described his experience working on autonomous driving projects using deep learning techniques. He has
-</span></span><span class="line"><span class="cl">also made significant contributions to various open source machine learning projects, including TensorFlow and PyTorch, and has
-</span></span><span class="line"><span class="cl">authored several influential research papers in the field of deep learning.
+</span></span><span class="line"><span class="cl"><span class="n">Karpathy</span> <span class="n">gained</span> <span class="n">widespread</span> <span class="n">attention</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">machine</span> <span class="n">learning</span> <span class="n">community</span> <span class="n">when</span> <span class="n">he</span> <span class="n">published</span> <span class="n">a</span> <span class="n">blog</span> <span class="n">series</span> <span class="n">called</span> <span class="s2">&#34;Deep Learning for</span>
+</span></span><span class="line"><span class="cl"><span class="n">Self</span><span class="o">-</span><span class="n">Driving</span> <span class="n">Cars</span><span class="s2">&#34; which described his experience working on autonomous driving projects using deep learning techniques. He has</span>
+</span></span><span class="line"><span class="cl"><span class="n">also</span> <span class="n">made</span> <span class="n">significant</span> <span class="n">contributions</span> <span class="n">to</span> <span class="n">various</span> <span class="n">open</span> <span class="n">source</span> <span class="n">machine</span> <span class="n">learning</span> <span class="n">projects</span><span class="p">,</span> <span class="n">including</span> <span class="n">TensorFlow</span> <span class="ow">and</span> <span class="n">PyTorch</span><span class="p">,</span> <span class="ow">and</span> <span class="n">has</span>
+</span></span><span class="line"><span class="cl"><span class="n">authored</span> <span class="n">several</span> <span class="n">influential</span> <span class="n">research</span> <span class="n">papers</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">field</span> <span class="n">of</span> <span class="n">deep</span> <span class="n">learning</span><span class="o">.</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">Karpathy holds a Ph.D. in computer science from Stanford University, where his advisor was Fei-Fei Li, a renowned computer
-</span></span><span class="line"><span class="cl">vision expert and director of the Stanford Artificial Intelligence Laboratory.
+</span></span><span class="line"><span class="cl"><span class="n">Karpathy</span> <span class="n">holds</span> <span class="n">a</span> <span class="n">Ph</span><span class="o">.</span><span class="n">D</span><span class="o">.</span> <span class="ow">in</span> <span class="n">computer</span> <span class="n">science</span> <span class="n">from</span> <span class="n">Stanford</span> <span class="n">University</span><span class="p">,</span> <span class="n">where</span> <span class="n">his</span> <span class="n">advisor</span> <span class="n">was</span> <span class="n">Fei</span><span class="o">-</span><span class="n">Fei</span> <span class="n">Li</span><span class="p">,</span> <span class="n">a</span> <span class="n">renowned</span> <span class="n">computer</span>
+</span></span><span class="line"><span class="cl"><span class="n">vision</span> <span class="n">expert</span> <span class="ow">and</span> <span class="n">director</span> <span class="n">of</span> <span class="n">the</span> <span class="n">Stanford</span> <span class="n">Artificial</span> <span class="n">Intelligence</span> <span class="n">Laboratory</span><span class="o">.</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">&gt;&gt;&gt; 为什么x**2的导数是2x，用基础微积分证明
-</span></span><span class="line"><span class="cl"> 首先，我们需要简明地介绍一下函数和其导数的概念。
+</span></span><span class="line"><span class="cl"><span class="o">&gt;&gt;&gt;</span> <span class="err">为什么</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="err">的导数是</span><span class="mi">2</span><span class="n">x</span><span class="err">，用基础微积分证明</span>
+</span></span><span class="line"><span class="cl"> <span class="err">首先，我们需要简明地介绍一下函数和其导数的概念。</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">函数f(x)的导数f&#39;(x)（或写成df/dx）可以解释为：如果在点x处有一条足够近的直线，使得从x向右（或左）偏移量小时，点 функ值变化很小，但函数值和偏移量之比很大，那么这条直线的斜率正好是f&#39;(x)。
+</span></span><span class="line"><span class="cl"><span class="err">函数</span><span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="err">的导数</span><span class="n">f</span><span class="s1">&#39;(x)（或写成df/dx）可以解释为：如果在点x处有一条足够近的直线，使得从x向右（或左）偏移量小时，点 функ值变化很小，但函数值和偏移量之比很大，那么这条直线的斜率正好是f&#39;</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="err">。</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">现在，我们来求 x^2 函数的导数。
+</span></span><span class="line"><span class="cl"><span class="err">现在，我们来求</span> <span class="n">x</span><span class="o">^</span><span class="mi">2</span> <span class="err">函数的导数。</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">令 h = Δx，则 x += h 时函数值变为 (x + h)^2 = x^2 + 2xh + h^2
+</span></span><span class="line"><span class="cl"><span class="err">令</span> <span class="n">h</span> <span class="o">=</span> <span class="err">Δ</span><span class="n">x</span><span class="err">，则</span> <span class="n">x</span> <span class="o">+=</span> <span class="n">h</span> <span class="err">时函数值变为</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span><span class="o">^</span><span class="mi">2</span> <span class="o">=</span> <span class="n">x</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="n">xh</span> <span class="o">+</span> <span class="n">h</span><span class="o">^</span><span class="mi">2</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">函数值的变化 Delta f(x) = f(x+h) - f(x) = (x+h)^2 - x^2 = 2xh + h^2
+</span></span><span class="line"><span class="cl"><span class="err">函数值的变化</span> <span class="n">Delta</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">h</span><span class="p">)</span><span class="o">^</span><span class="mi">2</span> <span class="o">-</span> <span class="n">x</span><span class="o">^</span><span class="mi">2</span> <span class="o">=</span> <span class="mi">2</span><span class="n">xh</span> <span class="o">+</span> <span class="n">h</span><span class="o">^</span><span class="mi">2</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">当 h 很小时，h^2 可以忽略，因此 Delta f(x)≈ 2xh
+</span></span><span class="line"><span class="cl"><span class="err">当</span> <span class="n">h</span> <span class="err">很小时，</span><span class="n">h</span><span class="o">^</span><span class="mi">2</span> <span class="err">可以忽略，因此</span> <span class="n">Delta</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="err">≈</span> <span class="mi">2</span><span class="n">xh</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">所以，f&#39;(x) = Δf/Δx = lim (h→0) [(2xh)/h] = lim (h→0) 2x = 2x。
+</span></span><span class="line"><span class="cl"><span class="err">所以，</span><span class="n">f</span><span class="s1">&#39;(x) = Δf/Δx = lim (h→0) [(2xh)/h] = lim (h→0) 2x = 2x。</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">因此，x^2 函数的导数是 2x。
+</span></span><span class="line"><span class="cl"><span class="err">因此，</span><span class="n">x</span><span class="o">^</span><span class="mi">2</span> <span class="err">函数的导数是</span> <span class="mi">2</span><span class="n">x</span><span class="err">。</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div>
@@ -517,7 +524,7 @@
     <div class="post-copyright">
   <p class="copyright-item">
     <span class="item-title">文章作者</span>
-    <span class="item-content">b1tg</span>
+    <span class="item-content"></span>
   </p>
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
@@ -553,24 +560,24 @@
       </div>
     </main>
     <script src="https://giscus.app/client.js"
-    data-repo="b1tg/b1tg.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
-    data-category="Discuss"
-    data-category-id="DIC_kwDODT0ats4CQAsT"
-    data-mapping="title"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="bottom"
-    data-theme="preferred_color_scheme"
-    data-lang="en"
-    crossorigin="anonymous"
-    async>
-</script>
+        data-repo="b1tg/b1tg.github.io"
+        data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
+        data-category="Discuss"
+        data-category-id="DIC_kwDODT0ats4CQAsT"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+    </script>
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
-  <a href="https://b1tg.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  
 </div>
 
 <div class="copyright">
@@ -588,7 +595,7 @@
   <span class="copyright-year">
     &copy; 
     2018 - 
-    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>b1tg</span>
+    2025<span class="heart"><i class="iconfont icon-heart"></i></span><span></span>
   </span>
 </div>
 
@@ -608,17 +615,9 @@
 <script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
 
 
-
-
-
-<script src="https://t.usermaven.com/lib.js"
-    data-key="UM6sMIrGGS"
-    data-tracking-host="https://events.usermaven.com"
-    data-autocapture="true"
-    defer>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' 
+  data-cf-beacon='{"token": "f1aebb9faa064f7d8bdcd38a271c079e"}'>
 </script>
-<script>window.usermaven = window.usermaven || (function(){(window.usermavenQ = window.usermavenQ || []).push(arguments);})</script>
-
 
 
 
@@ -626,5 +625,4 @@
 
 
 </body>
-
 </html>

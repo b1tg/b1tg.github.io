@@ -16,14 +16,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="b1tg" /><meta name="description" content="b1tg blog." /><meta name="keywords" content="Hugo, b1tg, even" />
+<meta name="author" content="" /><meta name="description" content="b1tg blog." /><meta name="keywords" content="Hugo, b1tg, even" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.109.0 with theme even" />
+<meta name="generator" content="Hugo 0.140.2 with theme even" />
 
 
 <link rel="canonical" href="https://b1tg.github.io/" />
@@ -41,14 +41,20 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="B1TG" />
-<meta property="og:description" content="b1tg blog." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://b1tg.github.io/" />
-<meta itemprop="name" content="B1TG">
-<meta itemprop="description" content="b1tg blog."><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="B1TG"/>
-<meta name="twitter:description" content="b1tg blog."/>
+<meta property="og:url" content="https://b1tg.github.io/">
+  <meta property="og:site_name" content="B1TG">
+  <meta property="og:title" content="B1TG">
+  <meta property="og:description" content="b1tg blog.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="website">
+
+  <meta itemprop="name" content="B1TG">
+  <meta itemprop="description" content="b1tg blog.">
+  <meta itemprop="datePublished" content="2024-06-14T23:47:00+08:00">
+  <meta itemprop="dateModified" content="2024-06-14T23:47:00+08:00">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="B1TG">
+  <meta name="twitter:description" content="b1tg blog.">
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -138,7 +144,8 @@
   
   <div class="post-content">
     <div class="post-summary">
-      0x00 前言 最近学了点 eBPF 相关的东西，写了 github-hosts-ebpf 这个项目练手， 项目基于 aya-rs 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录
+      <h2 id="0x00-前言">0x00 前言</h2>
+<p>最近学了点 eBPF 相关的东西，写了 <a href="https://github.com/b1tg/github-hosts-ebpf">github-hosts-ebpf</a> 这个项目练手， 项目基于 <a href="https://github.com/aya-rs/aya">aya-rs</a> 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录为加速 IP 地址。你可能要问了，为什么不直接改 hosts 文件？emmm, <a href="https://www.youtube.com/watch?v=onZ4KMM94yI">just for fun :)</a></p>
     </div>
     <div class="read-more">
       <a href="/post/github-hosts-ebpf/" class="read-more-link">阅读更多</a>
@@ -157,7 +164,8 @@
   
   <div class="post-content">
     <div class="post-summary">
-      0x00 前言 在逆向工程中，常常会遇到加/解密函数，运气好的话发现是常见算法，找个在线工具直接解就好；运气不好的话就得慢慢厘清算法细节，并尝试写脚本
+      <h2 id="0x00-前言">0x00 前言</h2>
+<p>在逆向工程中，常常会遇到加/解密函数，运气好的话发现是常见算法，找个在线工具直接解就好；运气不好的话就得慢慢厘清算法细节，并尝试写脚本还原算法。之前翻四哥 scz 博客 [1] 的时候发现了 flare-emu 这个模拟执行工具，留了个印象，最近逆向时有个解密字符串的需求，就翻出这个工具试用了一下，体验很棒，这里整理了一些基础用法分享给大家。</p>
     </div>
     <div class="read-more">
       <a href="/post/flare-emu-tutorial/" class="read-more-link">阅读更多</a>
@@ -176,7 +184,36 @@
   
   <div class="post-content">
     <div class="post-summary">
-      0x00 断点打印 断点打印 eax 的值，然后继续 1 bp 004046A5 &#34;.printf \&#34;res %d\\n\&#34;, @eax;g;&#34; 断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续 1 bp 004040e2 &#34;.printf \&#34;%d vs %d \\n\&#34;, @eax, poi(ebp-35Ch);g;&#34; 0x01 条件断点 如果 eax 满足条件，则断下，否则继续运
+      <h2 id="0x00-断点打印">0x00 断点打印</h2>
+<p>断点打印 eax 的值，然后继续</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="nf">bp</span> <span class="mi">004046</span><span class="no">A5</span> <span class="err">&#34;</span><span class="no">.printf</span> <span class="err">\&#34;</span><span class="no">res</span> <span class="nv">%d</span><span class="err">\\</span><span class="no">n</span><span class="err">\&#34;</span><span class="p">,</span> <span class="err">@</span><span class="no">eax</span><span class="c1">;g;&#34;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="nf">bp</span> <span class="mi">004040</span><span class="no">e2</span> <span class="err">&#34;</span><span class="no">.printf</span> <span class="err">\&#34;</span><span class="nv">%d</span> <span class="no">vs</span> <span class="nv">%d</span> <span class="err">\\</span><span class="no">n</span><span class="err">\&#34;</span><span class="p">,</span> <span class="err">@</span><span class="no">eax</span><span class="p">,</span> <span class="no">poi</span><span class="p">(</span><span class="no">ebp-35Ch</span><span class="p">)</span><span class="c1">;g;&#34;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="0x01-条件断点">0x01 条件断点</h2>
+<p>如果 eax 满足条件，则断下，否则继续运行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-asm" data-lang="asm"><span class="line"><span class="cl"><span class="nf">bp</span> <span class="mi">004046</span><span class="no">A5</span> <span class="err">&#34;</span><span class="no">.if</span><span class="p">(</span><span class="err">@</span><span class="no">eax</span><span class="err">==</span><span class="mi">7</span><span class="no">ed</span><span class="p">)</span><span class="err">{</span><span class="no">.printf</span> <span class="err">\&#34;</span><span class="no">res</span> <span class="nv">%d</span><span class="err">\\</span><span class="no">n</span><span class="err">\&#34;</span><span class="p">,</span> <span class="err">@</span><span class="no">eax</span><span class="c1">;} .else {gc;}&#34;
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div>
     </div>
     <div class="read-more">
       <a href="/post/windbg-tips/" class="read-more-link">阅读更多</a>
@@ -195,7 +232,9 @@
   
   <div class="post-content">
     <div class="post-summary">
-      lcamtfu: 我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他
+      <p><a href="https://twitter.com/lcamtuf/status/1427301196906176512">lcamtfu: </a></p>
+<blockquote>
+<p>我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他们那样被记住（产生类似的影响）。</p>
     </div>
     <div class="read-more">
       <a href="/post/impact-and-ie-marches/" class="read-more-link">阅读更多</a>
@@ -214,7 +253,42 @@
   
   <div class="post-content">
     <div class="post-summary">
-      概述：nvim 配置 c++ 环境 第一步， 配好 nvim + coc.nvim 环境，按照项目 readme [1] 做就可以 第二步，配置 c++ 环境： 在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件 给 &quot;languageserver&quot; 字段加上关于 ccls 的配置： 1
+      <p>概述：nvim 配置 c++ 环境</p>
+<p>第一步， 配好 nvim + coc.nvim 环境，按照项目 readme [1] 做就可以</p>
+<p>第二步，配置 c++ 环境：</p>
+<p>在 nvim 中运行 <code>:CocConfig</code> 会打开 coc-settings.json 文件</p>
+<p>给 <code>&quot;languageserver&quot;</code> 字段加上关于 ccls 的配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="s2">&#34;languageserver&#34;</span><span class="err">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;ccls&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;command&#34;</span><span class="p">:</span> <span class="s2">&#34;ccls&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;filetypes&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;c&#34;</span><span class="p">,</span> <span class="s2">&#34;cc&#34;</span><span class="p">,</span> <span class="s2">&#34;cpp&#34;</span><span class="p">,</span> <span class="s2">&#34;c++&#34;</span><span class="p">,</span> <span class="s2">&#34;objc&#34;</span><span class="p">,</span> <span class="s2">&#34;objcpp&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;rootPatterns&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;.ccls&#34;</span><span class="p">,</span> <span class="s2">&#34;compile_commands.json&#34;</span><span class="p">,</span> <span class="s2">&#34;.git/&#34;</span><span class="p">,</span> <span class="s2">&#34;.hg/&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;initializationOptions&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cache&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;directory&#34;</span><span class="p">:</span> <span class="s2">&#34;/tmp/ccls&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>第三步，针对项目的定制：</p>
     </div>
     <div class="read-more">
       <a href="/post/nvim-cpp-setup/" class="read-more-link">阅读更多</a>
@@ -240,24 +314,26 @@
       </div>
     </main>
     <script src="https://giscus.app/client.js"
-    data-repo="b1tg/b1tg.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
-    data-category="Discuss"
-    data-category-id="DIC_kwDODT0ats4CQAsT"
-    data-mapping="title"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="bottom"
-    data-theme="preferred_color_scheme"
-    data-lang="en"
-    crossorigin="anonymous"
-    async>
-</script>
+        data-repo="b1tg/b1tg.github.io"
+        data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
+        data-category="Discuss"
+        data-category-id="DIC_kwDODT0ats4CQAsT"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+    </script>
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
-  <a href="https://b1tg.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  
+    <a href="/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  
 </div>
 
 <div class="copyright">
@@ -275,7 +351,7 @@
   <span class="copyright-year">
     &copy; 
     2018 - 
-    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>b1tg</span>
+    2025<span class="heart"><i class="iconfont icon-heart"></i></span><span></span>
   </span>
 </div>
 
@@ -295,17 +371,9 @@
 <script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
 
 
-
-
-
-<script src="https://t.usermaven.com/lib.js"
-    data-key="UM6sMIrGGS"
-    data-tracking-host="https://events.usermaven.com"
-    data-autocapture="true"
-    defer>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' 
+  data-cf-beacon='{"token": "f1aebb9faa064f7d8bdcd38a271c079e"}'>
 </script>
-<script>window.usermaven = window.usermaven || (function(){(window.usermavenQ = window.usermavenQ || []).push(arguments);})</script>
-
 
 
 
@@ -313,5 +381,4 @@
 
 
 </body>
-
 </html>

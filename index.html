@@ -16,14 +16,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="b1tg" /><meta name="description" content="b1tg blog." /><meta name="keywords" content="Hugo, b1tg, even" />
+<meta name="author" content="" /><meta name="description" content="b1tg blog." /><meta name="keywords" content="Hugo, b1tg, even" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.109.0 with theme even" />
+<meta name="generator" content="Hugo 0.140.2 with theme even" />
 
 
 <link rel="canonical" href="https://b1tg.github.io/" />
@@ -41,14 +41,20 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="B1TG" />
-<meta property="og:description" content="b1tg blog." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://b1tg.github.io/" />
-<meta itemprop="name" content="B1TG">
-<meta itemprop="description" content="b1tg blog."><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="B1TG"/>
-<meta name="twitter:description" content="b1tg blog."/>
+<meta property="og:url" content="https://b1tg.github.io/">
+  <meta property="og:site_name" content="B1TG">
+  <meta property="og:title" content="B1TG">
+  <meta property="og:description" content="b1tg blog.">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="website">
+
+  <meta itemprop="name" content="B1TG">
+  <meta itemprop="description" content="b1tg blog.">
+  <meta itemprop="datePublished" content="2024-06-14T23:47:00+08:00">
+  <meta itemprop="dateModified" content="2024-06-14T23:47:00+08:00">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="B1TG">
+  <meta name="twitter:description" content="b1tg blog.">
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -176,7 +182,30 @@
   
   <div class="post-content">
     <div class="post-summary">
-      效果 basic 首先安装 putty，并把 plink.exe 放到 PATH 里面。 使用 emacs 编辑 ssh 服务器上的文件： ​ C-x C-f /plink:root@1.2.3.4:/tmp/ 在配置里面添加 tramp 默认信息，C-x C-f /-:: 将使用默认信息登录： 1 2
+      <h2 id="效果">效果</h2>
+<p><img src="/img/windows-emacs-ssh-via-tramp/emacs-tramp-show-case.png" alt="emacs-tramp-show-case"></p>
+<h2 id="basic">basic</h2>
+<p>首先安装 putty，并把 plink.exe 放到 PATH 里面。</p>
+<p>使用 emacs 编辑 ssh 服务器上的文件：</p>
+<p>​	<code>C-x C-f /plink:root@1.2.3.4:/tmp/</code></p>
+<p>在配置里面添加 tramp 默认信息，<code>C-x C-f /-::</code> 将使用默认信息登录：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-lisp" data-lang="lisp"><span class="line"><span class="cl"><span class="p">(</span><span class="nv">custom-set-variables</span>
+</span></span><span class="line"><span class="cl"> <span class="o">&#39;</span><span class="p">(</span><span class="nv">tramp-default-method</span> <span class="s">&#34;plink&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> <span class="o">&#39;</span><span class="p">(</span><span class="nv">tramp-default-user</span> <span class="s">&#34;root&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> <span class="o">&#39;</span><span class="p">(</span><span class="nv">tramp-default-host</span> <span class="s">&#34;1.2.3.4&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="c1">;; use /-:: to nav to default host</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>添加帮助函数，不用每次输入一堆信息：</p>
     </div>
     <div class="read-more">
       <a href="/post/windows-emacs-ssh-via-tramp/" class="read-more-link">阅读更多</a>
@@ -195,7 +224,11 @@
   
   <div class="post-content">
     <div class="post-summary">
-      前言 @jduck 近日公开了CVE-2023-21716的POC，并提供了漏洞细节 。 这篇文章主要是记录下我调试这个漏洞POC的过程。 POC样本 生成POC
+      <h2 id="前言">前言</h2>
+<p><a href="https://twitter.com/jduck">@jduck</a> 近日公开了CVE-2023-21716的POC，并提供了<a href="https://qoop.org/publications/cve-2023-21716-rtf-fonttbl.md">漏洞细节</a> 。</p>
+<p>这篇文章主要是记录下我调试这个漏洞POC的过程。</p>
+<h2 id="poc样本">POC样本</h2>
+<p>生成POC的只需要很短的代码：</p>
     </div>
     <div class="read-more">
       <a href="/post/cve-2023-21716-office-rtf-vuln/" class="read-more-link">阅读更多</a>
@@ -214,7 +247,21 @@
   
   <div class="post-content">
     <div class="post-summary">
-      0x00 前言 在逆向 Golang 程序时，发现调用约定和平时遇到的 C/C++ 不太一样，ida 反编译效果也不咋样，于是研究一番。 本次分析的 go 版本为 go1.19.3： 1 2 &gt;
+      <h2 id="0x00-前言">0x00 前言</h2>
+<p>在逆向 Golang 程序时，发现调用约定和平时遇到的 C/C++ 不太一样，ida 反编译效果也不咋样，于是研究一番。</p>
+<p>本次分析的 go 版本为 go1.19.3：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt; go version
+</span></span><span class="line"><span class="cl">go version go1.19.3 windows/amd64
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="0x01-寄存器还是栈">0x01 寄存器还是栈</h2>
+<p>Go internal ABI specification [2] 中给出了函数调用时参数和返回值传递的规范，总的来说：使用寄存器和栈混合放置的方式，优先使用寄存器，不适用的情况使用栈。</p>
     </div>
     <div class="read-more">
       <a href="/post/golang-call-conversion/" class="read-more-link">阅读更多</a>
@@ -237,24 +284,26 @@
       </div>
     </main>
     <script src="https://giscus.app/client.js"
-    data-repo="b1tg/b1tg.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
-    data-category="Discuss"
-    data-category-id="DIC_kwDODT0ats4CQAsT"
-    data-mapping="title"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="bottom"
-    data-theme="preferred_color_scheme"
-    data-lang="en"
-    crossorigin="anonymous"
-    async>
-</script>
+        data-repo="b1tg/b1tg.github.io"
+        data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
+        data-category="Discuss"
+        data-category-id="DIC_kwDODT0ats4CQAsT"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+    </script>
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
-  <a href="https://b1tg.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  
+    <a href="/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  
 </div>
 
 <div class="copyright">
@@ -272,7 +321,7 @@
   <span class="copyright-year">
     &copy; 
     2018 - 
-    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>b1tg</span>
+    2025<span class="heart"><i class="iconfont icon-heart"></i></span><span></span>
   </span>
 </div>
 
@@ -292,17 +341,9 @@
 <script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
 
 
-
-
-
-<script src="https://t.usermaven.com/lib.js"
-    data-key="UM6sMIrGGS"
-    data-tracking-host="https://events.usermaven.com"
-    data-autocapture="true"
-    defer>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' 
+  data-cf-beacon='{"token": "f1aebb9faa064f7d8bdcd38a271c079e"}'>
 </script>
-<script>window.usermaven = window.usermaven || (function(){(window.usermavenQ = window.usermavenQ || []).push(arguments);})</script>
-
 
 
 
@@ -310,5 +351,4 @@
 
 
 </body>
-
 </html>

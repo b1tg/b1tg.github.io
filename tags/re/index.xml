@@ -4,26 +4,23 @@
     <title>RE on B1TG</title>
     <link>https://b1tg.github.io/tags/re/</link>
     <description>Recent content in RE on B1TG</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 28 Feb 2023 23:40:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/re/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Feb 2023 23:40:00 +0800</lastBuildDate>
+    <atom:link href="https://b1tg.github.io/tags/re/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Golang call conversion (Golang 调用规约）</title>
       <link>https://b1tg.github.io/post/golang-call-conversion/</link>
       <pubDate>Tue, 28 Feb 2023 23:40:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/golang-call-conversion/</guid>
-      <description>0x00 前言 在逆向 Golang 程序时，发现调用约定和平时遇到的 C/C++ 不太一样，ida 反编译效果也不咋样，于是研究一番。 本次分析的 go 版本为 go1.19.3： 1 2 &amp;gt;</description>
+      <description>&lt;h2 id=&#34;0x00-前言&#34;&gt;0x00 前言&lt;/h2&gt;&#xA;&lt;p&gt;在逆向 Golang 程序时，发现调用约定和平时遇到的 C/C++ 不太一样，ida 反编译效果也不咋样，于是研究一番。&lt;/p&gt;&#xA;&lt;p&gt;本次分析的 go 版本为 go1.19.3：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;&#xA;&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2&#xA;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&amp;gt; go version&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;go version go1.19.3 windows/amd64&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/div&gt;&#xA;&lt;/div&gt;&lt;h2 id=&#34;0x01-寄存器还是栈&#34;&gt;0x01 寄存器还是栈&lt;/h2&gt;&#xA;&lt;p&gt;Go internal ABI specification [2] 中给出了函数调用时参数和返回值传递的规范，总的来说：使用寄存器和栈混合放置的方式，优先使用寄存器，不适用的情况使用栈。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>IDA flare-emu 教程</title>
       <link>https://b1tg.github.io/post/flare-emu-tutorial/</link>
       <pubDate>Sat, 22 Jan 2022 23:37:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/flare-emu-tutorial/</guid>
-      <description>0x00 前言 在逆向工程中，常常会遇到加/解密函数，运气好的话发现是常见算法，找个在线工具直接解就好；运气不好的话就得慢慢厘清算法细节，并尝试写脚本</description>
+      <description>&lt;h2 id=&#34;0x00-前言&#34;&gt;0x00 前言&lt;/h2&gt;&#xA;&lt;p&gt;在逆向工程中，常常会遇到加/解密函数，运气好的话发现是常见算法，找个在线工具直接解就好；运气不好的话就得慢慢厘清算法细节，并尝试写脚本还原算法。之前翻四哥 scz 博客 [1] 的时候发现了 flare-emu 这个模拟执行工具，留了个印象，最近逆向时有个解密字符串的需求，就翻出这个工具试用了一下，体验很棒，这里整理了一些基础用法分享给大家。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

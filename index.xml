@@ -4,260 +4,205 @@
     <title>B1TG</title>
     <link>https://b1tg.github.io/</link>
     <description>Recent content on B1TG</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 25 Feb 2024 23:13:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>TIL</title>
-      <link>https://b1tg.github.io/til/</link>
-      <pubDate>Fri, 14 Jun 2024 23:47:00 +0800</pubDate>
-      
-      <guid>https://b1tg.github.io/til/</guid>
-      <description>** Today I Leanerd ** 2024_06_14 https://spaceraccoon.dev/about/ 他在sg zoom 文件分析blog提纲： golang 类如何找加载、github库 pytinstaller类如何解压，版本 脚本类如何解混淆 通用：如</description>
-    </item>
-    
+    <lastBuildDate>Sun, 25 Feb 2024 23:13:00 +0800</lastBuildDate>
+    <atom:link href="https://b1tg.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Run LLM on AMD rx580</title>
       <link>https://b1tg.github.io/post/run-llm-on-amd-rx580/</link>
       <pubDate>Sun, 25 Feb 2024 23:13:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/run-llm-on-amd-rx580/</guid>
       <description>Make 亮机卡 great again</description>
     </item>
-    
     <item>
       <title>abc</title>
       <link>https://b1tg.github.io/collections/test/</link>
       <pubDate>Thu, 12 Oct 2023 22:49:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/collections/test/</guid>
-      <description>test </description>
+      <description>&lt;h1 id=&#34;test&#34;&gt;test&lt;/h1&gt;</description>
     </item>
-    
     <item>
       <title>CVE-2023-38831 winrar 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2023-38831-winrar-analysis/</link>
       <pubDate>Wed, 30 Aug 2023 22:00:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2023-38831-winrar-analysis/</guid>
       <description>CVE-2023-38831 winrar 漏洞分析</description>
     </item>
-    
     <item>
       <title>使用Emacs的tramp功能连接SSH服务</title>
       <link>https://b1tg.github.io/post/windows-emacs-ssh-via-tramp/</link>
       <pubDate>Wed, 12 Apr 2023 22:49:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/windows-emacs-ssh-via-tramp/</guid>
-      <description>效果 basic 首先安装 putty，并把 plink.exe 放到 PATH 里面。 使用 emacs 编辑 ssh 服务器上的文件： ​ C-x C-f /plink:root@1.2.3.4:/tmp/ 在配置里面添加 tramp 默认信息，C-x C-f /-:: 将使用默认信息登录： 1 2</description>
+      <description>&lt;h2 id=&#34;效果&#34;&gt;效果&lt;/h2&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://b1tg.github.io/img/windows-emacs-ssh-via-tramp/emacs-tramp-show-case.png&#34; alt=&#34;emacs-tramp-show-case&#34;&gt;&lt;/p&gt;&#xA;&lt;h2 id=&#34;basic&#34;&gt;basic&lt;/h2&gt;&#xA;&lt;p&gt;首先安装 putty，并把 plink.exe 放到 PATH 里面。&lt;/p&gt;&#xA;&lt;p&gt;使用 emacs 编辑 ssh 服务器上的文件：&lt;/p&gt;&#xA;&lt;p&gt;​&#x9;&lt;code&gt;C-x C-f /plink:root@1.2.3.4:/tmp/&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;在配置里面添加 tramp 默认信息，&lt;code&gt;C-x C-f /-::&lt;/code&gt; 将使用默认信息登录：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;&#xA;&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5&#xA;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;custom-set-variables&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tramp-default-method&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;plink&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tramp-default-user&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tramp-default-host&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;1.2.3.4&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;;; use /-:: to nav to default host&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/div&gt;&#xA;&lt;/div&gt;&lt;p&gt;添加帮助函数，不用每次输入一堆信息：&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>CVE-2023-21716 RTF堆溢出漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2023-21716-office-rtf-vuln/</link>
       <pubDate>Wed, 08 Mar 2023 22:12:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2023-21716-office-rtf-vuln/</guid>
-      <description>前言 @jduck 近日公开了CVE-2023-21716的POC，并提供了漏洞细节 。 这篇文章主要是记录下我调试这个漏洞POC的过程。 POC样本 生成POC</description>
+      <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://twitter.com/jduck&#34;&gt;@jduck&lt;/a&gt; 近日公开了CVE-2023-21716的POC，并提供了&lt;a href=&#34;https://qoop.org/publications/cve-2023-21716-rtf-fonttbl.md&#34;&gt;漏洞细节&lt;/a&gt; 。&lt;/p&gt;&#xA;&lt;p&gt;这篇文章主要是记录下我调试这个漏洞POC的过程。&lt;/p&gt;&#xA;&lt;h2 id=&#34;poc样本&#34;&gt;POC样本&lt;/h2&gt;&#xA;&lt;p&gt;生成POC的只需要很短的代码：&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Golang call conversion (Golang 调用规约）</title>
       <link>https://b1tg.github.io/post/golang-call-conversion/</link>
       <pubDate>Tue, 28 Feb 2023 23:40:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/golang-call-conversion/</guid>
-      <description>0x00 前言 在逆向 Golang 程序时，发现调用约定和平时遇到的 C/C++ 不太一样，ida 反编译效果也不咋样，于是研究一番。 本次分析的 go 版本为 go1.19.3： 1 2 &amp;gt;</description>
+      <description>&lt;h2 id=&#34;0x00-前言&#34;&gt;0x00 前言&lt;/h2&gt;&#xA;&lt;p&gt;在逆向 Golang 程序时，发现调用约定和平时遇到的 C/C++ 不太一样，ida 反编译效果也不咋样，于是研究一番。&lt;/p&gt;&#xA;&lt;p&gt;本次分析的 go 版本为 go1.19.3：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;&#xA;&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2&#xA;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&amp;gt; go version&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;go version go1.19.3 windows/amd64&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/div&gt;&#xA;&lt;/div&gt;&lt;h2 id=&#34;0x01-寄存器还是栈&#34;&gt;0x01 寄存器还是栈&lt;/h2&gt;&#xA;&lt;p&gt;Go internal ABI specification [2] 中给出了函数调用时参数和返回值传递的规范，总的来说：使用寄存器和栈混合放置的方式，优先使用寄存器，不适用的情况使用栈。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>基于 eBPF&#43;Rust 的 Github DNS 加速</title>
       <link>https://b1tg.github.io/post/github-hosts-ebpf/</link>
       <pubDate>Fri, 06 Jan 2023 22:30:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/github-hosts-ebpf/</guid>
-      <description>0x00 前言 最近学了点 eBPF 相关的东西，写了 github-hosts-ebpf 这个项目练手， 项目基于 aya-rs 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录</description>
+      <description>&lt;h2 id=&#34;0x00-前言&#34;&gt;0x00 前言&lt;/h2&gt;&#xA;&lt;p&gt;最近学了点 eBPF 相关的东西，写了 &lt;a href=&#34;https://github.com/b1tg/github-hosts-ebpf&#34;&gt;github-hosts-ebpf&lt;/a&gt; 这个项目练手， 项目基于 &lt;a href=&#34;https://github.com/aya-rs/aya&#34;&gt;aya-rs&lt;/a&gt; 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录为加速 IP 地址。你可能要问了，为什么不直接改 hosts 文件？emmm, &lt;a href=&#34;https://www.youtube.com/watch?v=onZ4KMM94yI&#34;&gt;just for fun :)&lt;/a&gt;&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>使用 Python 快速创建 HTTPS server</title>
       <link>https://b1tg.github.io/notes/simple-https-server/</link>
       <pubDate>Tue, 08 Nov 2022 17:29:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/notes/simple-https-server/</guid>
-      <description>使用 Python 快速创建 HTTPS server 1 2 3 4 5 6 7 8 9 10 11 12 13 14 # taken from http://www.piware.de/2011/01/creating-an-https-server-in-python/ # generate server.xml with the following command: # openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes # run as follows: # python simple-https-server.py # then in your browser, visit: # https://localhost:4443 import BaseHTTPServer, SimpleHTTPServer import ssl httpd = BaseHTTPServer.HTTPServer((&amp;#39;localhost&amp;#39;, 4443),</description>
+      <description>&lt;p&gt;使用 Python 快速创建 HTTPS server&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;&#xA;&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14&#xA;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# taken from http://www.piware.de/2011/01/creating-an-https-server-in-python/&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# generate server.xml with the following command:&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#    openssl req -new -x509 -keyout server.pem -out server.pem -days 365 -nodes&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# run as follows:&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#    python simple-https-server.py&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# then in your browser, visit:&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#    https://localhost:4443&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;BaseHTTPServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;SimpleHTTPServer&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;ssl&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;httpd&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;BaseHTTPServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HTTPServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4443&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;SimpleHTTPServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SimpleHTTPRequestHandler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;httpd&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;socket&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ssl&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wrap_socket&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;httpd&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;socket&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;certfile&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;./server.pem&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;server_side&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;kc&#34;&gt;True&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;httpd&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;serve_forever&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/div&gt;&#xA;&lt;/div&gt;&lt;p&gt;&lt;a href=&#34;https://gist.github.com/dergachev/7028596&#34;&gt;https://gist.github.com/dergachev/7028596&lt;/a&gt;&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>IDA flare-emu 教程</title>
       <link>https://b1tg.github.io/post/flare-emu-tutorial/</link>
       <pubDate>Sat, 22 Jan 2022 23:37:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/flare-emu-tutorial/</guid>
-      <description>0x00 前言 在逆向工程中，常常会遇到加/解密函数，运气好的话发现是常见算法，找个在线工具直接解就好；运气不好的话就得慢慢厘清算法细节，并尝试写脚本</description>
+      <description>&lt;h2 id=&#34;0x00-前言&#34;&gt;0x00 前言&lt;/h2&gt;&#xA;&lt;p&gt;在逆向工程中，常常会遇到加/解密函数，运气好的话发现是常见算法，找个在线工具直接解就好；运气不好的话就得慢慢厘清算法细节，并尝试写脚本还原算法。之前翻四哥 scz 博客 [1] 的时候发现了 flare-emu 这个模拟执行工具，留了个印象，最近逆向时有个解密字符串的需求，就翻出这个工具试用了一下，体验很棒，这里整理了一些基础用法分享给大家。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Windbg Tips</title>
       <link>https://b1tg.github.io/post/windbg-tips/</link>
       <pubDate>Mon, 23 Aug 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://b1tg.github.io/post/windbg-tips/</guid>
-      <description>0x00 断点打印 断点打印 eax 的值，然后继续 1 bp 004046A5 &amp;#34;.printf \&amp;#34;res %d\\n\&amp;#34;, @eax;g;&amp;#34; 断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续 1 bp 004040e2 &amp;#34;.printf \&amp;#34;%d vs %d \\n\&amp;#34;, @eax, poi(ebp-35Ch);g;&amp;#34; 0x01 条件断点 如果 eax 满足条件，则断下，否则继续运</description>
+      <description>&lt;h2 id=&#34;0x00-断点打印&#34;&gt;0x00 断点打印&lt;/h2&gt;&#xA;&lt;p&gt;断点打印 eax 的值，然后继续&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;&#xA;&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1&#xA;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-asm&#34; data-lang=&#34;asm&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nf&#34;&gt;bp&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;004046&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;A5&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;.printf&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;\&amp;#34;&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;res&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;%d&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;\\&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;\&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;eax&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;;g;&amp;#34;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/div&gt;&#xA;&lt;/div&gt;&lt;p&gt;断点打印 eax 和 poi(ebp-0x35c) 的值，然后继续&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;&#xA;&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1&#xA;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-asm&#34; data-lang=&#34;asm&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nf&#34;&gt;bp&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;004040&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;e2&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;.printf&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;\&amp;#34;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;%d&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;vs&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;%d&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;\\&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;\&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;eax&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;poi&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;ebp-35Ch&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;;g;&amp;#34;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/div&gt;&#xA;&lt;/div&gt;&lt;h2 id=&#34;0x01-条件断点&#34;&gt;0x01 条件断点&lt;/h2&gt;&#xA;&lt;p&gt;如果 eax 满足条件，则断下，否则继续运行&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;&#xA;&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1&#xA;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-asm&#34; data-lang=&#34;asm&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nf&#34;&gt;bp&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;004046&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;A5&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;.if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;eax&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;==&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;ed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;.printf&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;\&amp;#34;&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;res&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;%d&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;\\&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;\&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;@&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;eax&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;;} .else {gc;}&amp;#34;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/div&gt;&#xA;&lt;/div&gt;</description>
     </item>
-    
     <item>
       <title>IE, death marches and impact</title>
       <link>https://b1tg.github.io/post/impact-and-ie-marches/</link>
       <pubDate>Wed, 18 Aug 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://b1tg.github.io/post/impact-and-ie-marches/</guid>
-      <description>lcamtfu: 我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://twitter.com/lcamtuf/status/1427301196906176512&#34;&gt;lcamtfu: &lt;/a&gt;&lt;/p&gt;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;我们的技术社区中，有很多像 Linux Tovalds、Steve Jobs 这样的技术偶像，大家尝试模仿他们去改变世界。但现实是，你的职业生涯几乎肯定不会像他们那样被记住（产生类似的影响）。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>nvim c&#43;&#43; 环境配置</title>
       <link>https://b1tg.github.io/post/nvim-cpp-setup/</link>
       <pubDate>Sun, 13 Jun 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://b1tg.github.io/post/nvim-cpp-setup/</guid>
-      <description>概述：nvim 配置 c++ 环境 第一步， 配好 nvim + coc.nvim 环境，按照项目 readme [1] 做就可以 第二步，配置 c++ 环境： 在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件 给 &amp;quot;languageserver&amp;quot; 字段加上关于 ccls 的配置： 1</description>
+      <description>&lt;p&gt;概述：nvim 配置 c++ 环境&lt;/p&gt;&#xA;&lt;p&gt;第一步， 配好 nvim + coc.nvim 环境，按照项目 readme [1] 做就可以&lt;/p&gt;&#xA;&lt;p&gt;第二步，配置 c++ 环境：&lt;/p&gt;&#xA;&lt;p&gt;在 nvim 中运行 &lt;code&gt;:CocConfig&lt;/code&gt; 会打开 coc-settings.json 文件&lt;/p&gt;&#xA;&lt;p&gt;给 &lt;code&gt;&amp;quot;languageserver&amp;quot;&lt;/code&gt; 字段加上关于 ccls 的配置：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;&#xA;&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11&#xA;&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12&#xA;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&#xA;&lt;td class=&#34;lntd&#34;&gt;&#xA;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;languageserver&amp;#34;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;nt&#34;&gt;&amp;#34;ccls&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;command&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;ccls&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;filetypes&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;c&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;cc&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;cpp&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;c++&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;objc&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;objcpp&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;rootPatterns&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;.ccls&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;compile_commands.json&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;.git/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;.hg/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;],&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nt&#34;&gt;&amp;#34;initializationOptions&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;nt&#34;&gt;&amp;#34;cache&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;          &lt;span class=&#34;nt&#34;&gt;&amp;#34;directory&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/tmp/ccls&amp;#34;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;      &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&#xA;&lt;/div&gt;&#xA;&lt;/div&gt;&lt;p&gt;第三步，针对项目的定制：&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Chrome V8 CVE-2018-6065 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2018-6065-analysis/</link>
       <pubDate>Sat, 24 Apr 2021 20:14:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2018-6065-analysis/</guid>
       <description>Chrome V8 CVE-2018-6065 漏洞分析</description>
     </item>
-    
     <item>
       <title>About</title>
       <link>https://b1tg.github.io/quotes/</link>
       <pubDate>Fri, 22 Jan 2021 23:47:10 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/quotes/</guid>
-      <description>你需要持续地整理自己周遭的一切。因为你处在的这个世界所指向的趋势是无序的。如果你自身不做足够多的努力，你就会被这样的无序性所吞噬。 虽然生命的</description>
+      <description>&lt;p&gt;你需要持续地整理自己周遭的一切。因为你处在的这个世界所指向的趋势是无序的。如果你自身不做足够多的努力，你就会被这样的无序性所吞噬。&#xA;虽然生命的最终结局是熵到达最大值时吞噬一切意义，但是那个时刻离现在的我们还有几十年的时间。而在这几十年里，你需要持续整理你周遭的一切。这或许可以理解为一种对抗，也可以被认为这就是生命的意义。&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>CVE-2018-0802 Microsoft Office stack overflow 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2018-0802-office-eqnedt32/</link>
       <pubDate>Wed, 15 Jan 2020 15:32:30 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2018-0802-office-eqnedt32/</guid>
       <description>Office远程执行漏洞，”噩梦公式“二代目</description>
     </item>
-    
     <item>
       <title>CVE-2017-11882 Microsoft Office stack overflow 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2017-11882-office-eqnedt32/</link>
       <pubDate>Tue, 14 Jan 2020 14:09:40 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2017-11882-office-eqnedt32/</guid>
       <description>Office远程执行漏洞，”噩梦公式“一代目</description>
     </item>
-    
     <item>
       <title>CVE-2012-0003 Windows Media Player 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2012-0003-microsoft-windows-media-player-heap-overflow/</link>
       <pubDate>Fri, 10 Jan 2020 00:39:50 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2012-0003-microsoft-windows-media-player-heap-overflow/</guid>
       <description>CVE-2012-0003 Microsoft Windows Media Player heap overflow</description>
     </item>
-    
     <item>
       <title>CVE-2010-3333 Microsoft RTF stack overflow 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2010-3333-microsoft-rtf-stack-overflow/</link>
       <pubDate>Tue, 07 Jan 2020 17:11:50 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2010-3333-microsoft-rtf-stack-overflow/</guid>
       <description>CVE-2010-3333-Microsoft-RTF-stack-overflow</description>
     </item>
-    
     <item>
       <title>CVE-2010-2883 Adobe Reader stack overflow 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2010-2883-analysis/</link>
       <pubDate>Mon, 06 Jan 2020 01:07:59 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2010-2883-analysis/</guid>
       <description>CVE-2010-2883 Adobe Reader stack overflow</description>
     </item>
-    
     <item>
       <title>blinkroot writeup</title>
       <link>https://b1tg.github.io/post/blinkroot-writeup/</link>
       <pubDate>Thu, 21 Nov 2019 00:23:09 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/blinkroot-writeup/</guid>
       <description>hitcon2015 blinkroot writeup</description>
     </item>
-    
     <item>
       <title>linux中的延迟绑定</title>
       <link>https://b1tg.github.io/post/linux-lazybinding/</link>
       <pubDate>Wed, 20 Nov 2019 20:51:29 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/linux-lazybinding/</guid>
       <description>调试一下</description>
     </item>
-    
     <item>
       <title>About</title>
       <link>https://b1tg.github.io/about/</link>
       <pubDate>Sat, 16 Nov 2019 18:23:10 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/about/</guid>
-      <description>安全工程师 Github: https://github.com/b1tg Email: b1tg[@]protonmail[.]ch</description>
+      <description>&lt;p&gt;安全工程师&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Github: &lt;a href=&#34;https://github.com/b1tg&#34;&gt;https://github.com/b1tg&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;Email: b1tg[@]protonmail[.]ch&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
-    
     <item>
       <title>linux-exploitation-course笔记</title>
       <link>https://b1tg.github.io/post/linux-exploitation-course-note/</link>
       <pubDate>Fri, 15 Nov 2019 12:20:37 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/linux-exploitation-course-note/</guid>
       <description>linux-exploitation-course学习笔记</description>
     </item>
-    
     <item>
       <title>Visual Studio Code本地代码执行漏洞</title>
       <link>https://b1tg.github.io/post/vscode-local-execute/</link>
       <pubDate>Tue, 05 Nov 2019 12:54:02 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/vscode-local-execute/</guid>
       <description>CVE-2019-1414漏洞复现与分析</description>
     </item>
-    
     <item>
       <title>how2heap笔记</title>
       <link>https://b1tg.github.io/post/how2heap/</link>
       <pubDate>Wed, 30 Oct 2019 14:28:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/how2heap/</guid>
       <description>how2heap笔记</description>
     </item>
-    
     <item>
       <title>Vim任意代码执行漏洞</title>
       <link>https://b1tg.github.io/post/vim-arbitary-execute/</link>
       <pubDate>Sun, 16 Jun 2019 12:02:27 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/vim-arbitary-execute/</guid>
       <description>CVE-2019-12735</description>
     </item>
-    
+    <item>
+      <title>TIL</title>
+      <link>https://b1tg.github.io/til/</link>
+      <pubDate>Wed, 14 Jun 2000 23:47:00 +0800</pubDate>
+      <guid>https://b1tg.github.io/til/</guid>
+      <description>&lt;p&gt;** Today I Leanerd **&lt;/p&gt;&#xA;&lt;h2 id=&#34;2024_06_14&#34;&gt;2024_06_14&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://spaceraccoon.dev/about/&#34;&gt;https://spaceraccoon.dev/about/&lt;/a&gt; 他在sg zoom&lt;/li&gt;&#xA;&lt;li&gt;文件分析blog提纲：&#xA;&lt;ul&gt;&#xA;&lt;li&gt;golang 类如何找加载、github库&lt;/li&gt;&#xA;&lt;li&gt;pytinstaller类如何解压，版本&lt;/li&gt;&#xA;&lt;li&gt;脚本类如何解混淆&lt;/li&gt;&#xA;&lt;li&gt;通用：如何找入口点&lt;/li&gt;&#xA;&lt;li&gt;工具：tinytracer&lt;/li&gt;&#xA;&lt;li&gt;工具：hawkeye&lt;/li&gt;&#xA;&lt;li&gt;工具：floss针对shellcode提取字符串&lt;/li&gt;&#xA;&lt;li&gt;实现：hyperv shellcode执行&lt;/li&gt;&#xA;&lt;li&gt;实现：如何把 windefener 数据库用在linux上&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;#emacs  修复 Windows 上 tramp mode 和  waka-time共用时的bug：会尝试调用sh，来执行进程报错，导致文件无法保存&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://github.com/b1tg/stuff/blob/main/wakatime-mode-patch.el&#34;&gt;https://github.com/b1tg/stuff/blob/main/wakatime-mode-patch.el&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;#emacs Emacs tips&#xA;&lt;ul&gt;&#xA;&lt;li&gt;键盘调出 message 窗口： &lt;code&gt;C-h e&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;打印调试 : &lt;code&gt;(message &amp;quot;abc: %s&amp;quot; a)&lt;/code&gt;&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;2024_06_13&#34;&gt;2024_06_13&lt;/h2&gt;&#xA;&lt;h3 id=&#34;previous-research&#34;&gt;previous research&lt;/h3&gt;&#xA;&lt;pre&gt;&lt;code&gt;- HawkEye.py&#xD;&#xA;&#x9;- python HawkEye.py --path kf.exe&#xD;&#xA;&#x9;- fork了一份把少量修改提上去了：https://github.com/b1tg/HawkEye 。基本是 2023/07/03改的&#xD;&#xA;- https://github.com/hasherezade/tiny_tracer/issues/33 提issue 增加了 黑名单功能excluded.txt 2023/08/09&#xD;&#xA;- fuzz pdf&#xD;&#xA;  ```&#xD;&#xA;  X:\Green\DynamoRIO-Windows-9.0.1\bin64\drrun.exe -verbose -64 -t drcov — test 1 2&#xD;&#xA;  &#xD;&#xA;  C:\Users\dell\Desktop\DynamoRIO-Windows-8.0.18752\bin64\drrun.exe -verbose -64 -t drcov — &amp;quot;C:\Program Files (x86)\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe&amp;quot; &amp;quot;C:\Users\dell\Desktop\libreoffice-ano-2.pdf&amp;quot;&#xD;&#xA;  &#xD;&#xA;  &#xD;&#xA;  C:\Users\dell\Desktop\DynamoRIO-Windows-8.0.18752\bin32\drrun.exe -verbose  -t drcov -- &amp;quot;C:\Program Files (x86)\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe&amp;quot; &amp;quot;C:\Users\dell\Desktop\libreoffice-ano-2.pdf&amp;quot;&#xD;&#xA;  &#xD;&#xA;  &#xD;&#xA;  C:\Users\dell\Desktop\DynamoRIO-Windows-8.0.18752\bin32\drrun.exe -verbose  -t drcov -- &amp;quot;C:\Program Files (x86)\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe&amp;quot; &amp;quot;C:\Users\dell\Desktop\libreoffice.pdf&amp;quot;&#xD;&#xA;  ```&#xD;&#xA;&lt;/code&gt;&lt;/pre&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;start reading 《SRE book》&lt;/li&gt;&#xA;&lt;li&gt;tailscale 子网功能&#xA;&lt;ul&gt;&#xA;&lt;li&gt;子网中一台机器：&lt;code&gt;&amp;quot;C:\Program Files\Tailscale\tailscale.exe&amp;quot; up --advertise-routes=192.168.12.0/24&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;web上勾选确认一下  Subnets&lt;/li&gt;&#xA;&lt;li&gt;想要用作发起方的机器：sudo tailscale up &amp;ndash;accept-routes&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;2024_06_11&#34;&gt;2024_06_11&lt;/h2&gt;&#xA;&lt;h3 id=&#34;理线头&#34;&gt;理线头&lt;/h3&gt;&#xA;&lt;p&gt;在虚拟机快照里面看到了一些自己之前的研究尝试，但是都没能落成。&lt;/p&gt;</description>
+    </item>
     <item>
       <title></title>
       <link>https://b1tg.github.io/collections/index1/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
       <guid>https://b1tg.github.io/collections/index1/</guid>
-      <description>index</description>
+      <description>&lt;p&gt;index&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

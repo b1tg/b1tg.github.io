@@ -2,28 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://b1tg.github.io/til/</loc>
+    <loc>https://b1tg.github.io/</loc>
     <lastmod>2024-06-14T23:47:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://b1tg.github.io/</loc>
-    <lastmod>2024-02-25T23:13:00+08:00</lastmod>
+    <loc>https://b1tg.github.io/post/</loc>
+    <lastmod>2024-06-14T23:47:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://b1tg.github.io/tags/llm/</loc>
-    <lastmod>2024-02-25T23:13:00+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://b1tg.github.io/post/</loc>
     <lastmod>2024-02-25T23:13:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -319,6 +312,13 @@
   <url>
     <loc>https://b1tg.github.io/post/vim-arbitary-execute/</loc>
     <lastmod>2019-06-16T12:02:27+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1tg.github.io/til/</loc>
+    <lastmod>2000-06-14T23:47:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

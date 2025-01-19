@@ -4,98 +4,79 @@
     <title>漏洞分析 on B1TG</title>
     <link>https://b1tg.github.io/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/</link>
     <description>Recent content in 漏洞分析 on B1TG</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 30 Aug 2023 22:00:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 30 Aug 2023 22:00:00 +0800</lastBuildDate>
+    <atom:link href="https://b1tg.github.io/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>CVE-2023-38831 winrar 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2023-38831-winrar-analysis/</link>
       <pubDate>Wed, 30 Aug 2023 22:00:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2023-38831-winrar-analysis/</guid>
       <description>CVE-2023-38831 winrar 漏洞分析</description>
     </item>
-    
     <item>
       <title>CVE-2023-21716 RTF堆溢出漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2023-21716-office-rtf-vuln/</link>
       <pubDate>Wed, 08 Mar 2023 22:12:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2023-21716-office-rtf-vuln/</guid>
-      <description>前言 @jduck 近日公开了CVE-2023-21716的POC，并提供了漏洞细节 。 这篇文章主要是记录下我调试这个漏洞POC的过程。 POC样本 生成POC</description>
+      <description>&lt;h2 id=&#34;前言&#34;&gt;前言&lt;/h2&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://twitter.com/jduck&#34;&gt;@jduck&lt;/a&gt; 近日公开了CVE-2023-21716的POC，并提供了&lt;a href=&#34;https://qoop.org/publications/cve-2023-21716-rtf-fonttbl.md&#34;&gt;漏洞细节&lt;/a&gt; 。&lt;/p&gt;&#xA;&lt;p&gt;这篇文章主要是记录下我调试这个漏洞POC的过程。&lt;/p&gt;&#xA;&lt;h2 id=&#34;poc样本&#34;&gt;POC样本&lt;/h2&gt;&#xA;&lt;p&gt;生成POC的只需要很短的代码：&lt;/p&gt;</description>
     </item>
-    
     <item>
       <title>Chrome V8 CVE-2018-6065 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2018-6065-analysis/</link>
       <pubDate>Sat, 24 Apr 2021 20:14:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2018-6065-analysis/</guid>
       <description>Chrome V8 CVE-2018-6065 漏洞分析</description>
     </item>
-    
     <item>
       <title>CVE-2018-0802 Microsoft Office stack overflow 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2018-0802-office-eqnedt32/</link>
       <pubDate>Wed, 15 Jan 2020 15:32:30 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2018-0802-office-eqnedt32/</guid>
       <description>Office远程执行漏洞，”噩梦公式“二代目</description>
     </item>
-    
     <item>
       <title>CVE-2017-11882 Microsoft Office stack overflow 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2017-11882-office-eqnedt32/</link>
       <pubDate>Tue, 14 Jan 2020 14:09:40 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2017-11882-office-eqnedt32/</guid>
       <description>Office远程执行漏洞，”噩梦公式“一代目</description>
     </item>
-    
     <item>
       <title>CVE-2012-0003 Windows Media Player 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2012-0003-microsoft-windows-media-player-heap-overflow/</link>
       <pubDate>Fri, 10 Jan 2020 00:39:50 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2012-0003-microsoft-windows-media-player-heap-overflow/</guid>
       <description>CVE-2012-0003 Microsoft Windows Media Player heap overflow</description>
     </item>
-    
     <item>
       <title>CVE-2010-3333 Microsoft RTF stack overflow 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2010-3333-microsoft-rtf-stack-overflow/</link>
       <pubDate>Tue, 07 Jan 2020 17:11:50 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2010-3333-microsoft-rtf-stack-overflow/</guid>
       <description>CVE-2010-3333-Microsoft-RTF-stack-overflow</description>
     </item>
-    
     <item>
       <title>CVE-2010-2883 Adobe Reader stack overflow 漏洞分析</title>
       <link>https://b1tg.github.io/post/cve-2010-2883-analysis/</link>
       <pubDate>Mon, 06 Jan 2020 01:07:59 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/cve-2010-2883-analysis/</guid>
       <description>CVE-2010-2883 Adobe Reader stack overflow</description>
     </item>
-    
     <item>
       <title>Visual Studio Code本地代码执行漏洞</title>
       <link>https://b1tg.github.io/post/vscode-local-execute/</link>
       <pubDate>Tue, 05 Nov 2019 12:54:02 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/vscode-local-execute/</guid>
       <description>CVE-2019-1414漏洞复现与分析</description>
     </item>
-    
     <item>
       <title>Vim任意代码执行漏洞</title>
       <link>https://b1tg.github.io/post/vim-arbitary-execute/</link>
       <pubDate>Sun, 16 Jun 2019 12:02:27 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/vim-arbitary-execute/</guid>
       <description>CVE-2019-12735</description>
     </item>
-    
   </channel>
 </rss>

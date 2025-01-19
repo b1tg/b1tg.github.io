@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>linux on B1TG</title>
+    <title>Linux on B1TG</title>
     <link>https://b1tg.github.io/tags/linux/</link>
-    <description>Recent content in linux on B1TG</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in Linux on B1TG</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 20 Nov 2019 20:51:29 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 20 Nov 2019 20:51:29 +0800</lastBuildDate>
+    <atom:link href="https://b1tg.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>linux中的延迟绑定</title>
       <link>https://b1tg.github.io/post/linux-lazybinding/</link>
       <pubDate>Wed, 20 Nov 2019 20:51:29 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/linux-lazybinding/</guid>
       <description>调试一下</description>
     </item>
-    
   </channel>
 </rss>

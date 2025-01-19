@@ -4,17 +4,16 @@
     <title>IDA on B1TG</title>
     <link>https://b1tg.github.io/tags/ida/</link>
     <description>Recent content in IDA on B1TG</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 22 Jan 2022 23:37:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/ida/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 22 Jan 2022 23:37:00 +0800</lastBuildDate>
+    <atom:link href="https://b1tg.github.io/tags/ida/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>IDA flare-emu 教程</title>
       <link>https://b1tg.github.io/post/flare-emu-tutorial/</link>
       <pubDate>Sat, 22 Jan 2022 23:37:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/flare-emu-tutorial/</guid>
-      <description>0x00 前言 在逆向工程中，常常会遇到加/解密函数，运气好的话发现是常见算法，找个在线工具直接解就好；运气不好的话就得慢慢厘清算法细节，并尝试写脚本</description>
+      <description>&lt;h2 id=&#34;0x00-前言&#34;&gt;0x00 前言&lt;/h2&gt;&#xA;&lt;p&gt;在逆向工程中，常常会遇到加/解密函数，运气好的话发现是常见算法，找个在线工具直接解就好；运气不好的话就得慢慢厘清算法细节，并尝试写脚本还原算法。之前翻四哥 scz 博客 [1] 的时候发现了 flare-emu 这个模拟执行工具，留了个印象，最近逆向时有个解密字符串的需求，就翻出这个工具试用了一下，体验很棒，这里整理了一些基础用法分享给大家。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>eBPF on B1TG</title>
+    <title>EBPF on B1TG</title>
     <link>https://b1tg.github.io/tags/ebpf/</link>
-    <description>Recent content in eBPF on B1TG</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>Recent content in EBPF on B1TG</description>
+    <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 06 Jan 2023 22:30:00 +0800</lastBuildDate><atom:link href="https://b1tg.github.io/tags/ebpf/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Jan 2023 22:30:00 +0800</lastBuildDate>
+    <atom:link href="https://b1tg.github.io/tags/ebpf/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>基于 eBPF&#43;Rust 的 Github DNS 加速</title>
       <link>https://b1tg.github.io/post/github-hosts-ebpf/</link>
       <pubDate>Fri, 06 Jan 2023 22:30:00 +0800</pubDate>
-      
       <guid>https://b1tg.github.io/post/github-hosts-ebpf/</guid>
-      <description>0x00 前言 最近学了点 eBPF 相关的东西，写了 github-hosts-ebpf 这个项目练手， 项目基于 aya-rs 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录</description>
+      <description>&lt;h2 id=&#34;0x00-前言&#34;&gt;0x00 前言&lt;/h2&gt;&#xA;&lt;p&gt;最近学了点 eBPF 相关的东西，写了 &lt;a href=&#34;https://github.com/b1tg/github-hosts-ebpf&#34;&gt;github-hosts-ebpf&lt;/a&gt; 这个项目练手， 项目基于 &lt;a href=&#34;https://github.com/aya-rs/aya&#34;&gt;aya-rs&lt;/a&gt; 开发，功能是通过 XDP 解析 DNS 响应包，当发现 DNS 解析 GITHUB 相关域名时，修改 DNS 响应包中的 A 记录为加速 IP 地址。你可能要问了，为什么不直接改 hosts 文件？emmm, &lt;a href=&#34;https://www.youtube.com/watch?v=onZ4KMM94yI&#34;&gt;just for fun :)&lt;/a&gt;&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

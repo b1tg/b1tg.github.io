@@ -16,14 +16,20 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="b1tg" /><meta name="description" content="概述：nvim 配置 c&#43;&#43; 环境 第一步， 配好 nvim &#43; coc.nvim 环境，按照项目 readme [1] 做就可以 第二步，配置 c&#43;&#43; 环境： 在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件 给 &amp;quot;languageserver&amp;quot; 字段加上关于 ccls 的配置： 1" /><meta name="keywords" content="Hugo, b1tg, even" />
+<meta name="author" content="" /><meta name="description" content="概述：nvim 配置 c&#43;&#43; 环境
+第一步， 配好 nvim &#43; coc.nvim 环境，按照项目 readme [1] 做就可以
+第二步，配置 c&#43;&#43; 环境：
+在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件
+给 &quot;languageserver&quot; 字段加上关于 ccls 的配置：
+1 2 3 4 5 6 7 8 9 10 11 12 &#34;languageserver&#34;: { &#34;ccls&#34;: { &#34;command&#34;: &#34;ccls&#34;, &#34;filetypes&#34;: [&#34;c&#34;, &#34;cc&#34;, &#34;cpp&#34;, &#34;c&#43;&#43;&#34;, &#34;objc&#34;, &#34;objcpp&#34;], &#34;rootPatterns&#34;: [&#34;.ccls&#34;, &#34;compile_commands.json&#34;, &#34;.git/&#34;, &#34;.hg/&#34;], &#34;initializationOptions&#34;: { &#34;cache&#34;: { &#34;directory&#34;: &#34;/tmp/ccls&#34; } } } } 第三步，针对项目的定制：
+" /><meta name="keywords" content="Hugo, b1tg, even" />
 
 
 
 
 
 
-<meta name="generator" content="Hugo 0.109.0 with theme even" />
+<meta name="generator" content="Hugo 0.140.2 with theme even" />
 
 
 <link rel="canonical" href="https://b1tg.github.io/post/nvim-cpp-setup/" />
@@ -39,19 +45,41 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.1.20/dist/jquery.fancybox.min.css" integrity="sha256-7TyXnr2YU040zfSP+rEcz29ggW4j56/ujTPwjMzyqFY=" crossorigin="anonymous">
 
 
-<meta property="og:title" content="nvim c&#43;&#43; 环境配置" />
-<meta property="og:description" content="概述：nvim 配置 c&#43;&#43; 环境 第一步， 配好 nvim &#43; coc.nvim 环境，按照项目 readme [1] 做就可以 第二步，配置 c&#43;&#43; 环境： 在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件 给 &quot;languageserver&quot; 字段加上关于 ccls 的配置： 1" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://b1tg.github.io/post/nvim-cpp-setup/" /><meta property="article:section" content="post" />
-<meta property="article:published_time" content="2021-06-13T00:00:00+00:00" />
-<meta property="article:modified_time" content="2021-06-13T00:00:00+00:00" />
-<meta itemprop="name" content="nvim c&#43;&#43; 环境配置">
-<meta itemprop="description" content="概述：nvim 配置 c&#43;&#43; 环境 第一步， 配好 nvim &#43; coc.nvim 环境，按照项目 readme [1] 做就可以 第二步，配置 c&#43;&#43; 环境： 在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件 给 &quot;languageserver&quot; 字段加上关于 ccls 的配置： 1"><meta itemprop="datePublished" content="2021-06-13T00:00:00+00:00" />
-<meta itemprop="dateModified" content="2021-06-13T00:00:00+00:00" />
-<meta itemprop="wordCount" content="224">
-<meta itemprop="keywords" content="setup," /><meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="nvim c&#43;&#43; 环境配置"/>
-<meta name="twitter:description" content="概述：nvim 配置 c&#43;&#43; 环境 第一步， 配好 nvim &#43; coc.nvim 环境，按照项目 readme [1] 做就可以 第二步，配置 c&#43;&#43; 环境： 在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件 给 &quot;languageserver&quot; 字段加上关于 ccls 的配置： 1"/>
+<meta property="og:url" content="https://b1tg.github.io/post/nvim-cpp-setup/">
+  <meta property="og:site_name" content="B1TG">
+  <meta property="og:title" content="nvim c&#43;&#43; 环境配置">
+  <meta property="og:description" content="概述：nvim 配置 c&#43;&#43; 环境
+第一步， 配好 nvim &#43; coc.nvim 环境，按照项目 readme [1] 做就可以
+第二步，配置 c&#43;&#43; 环境：
+在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件
+给 &#34;languageserver&#34; 字段加上关于 ccls 的配置：
+1 2 3 4 5 6 7 8 9 10 11 12 &#34;languageserver&#34;: { &#34;ccls&#34;: { &#34;command&#34;: &#34;ccls&#34;, &#34;filetypes&#34;: [&#34;c&#34;, &#34;cc&#34;, &#34;cpp&#34;, &#34;c&#43;&#43;&#34;, &#34;objc&#34;, &#34;objcpp&#34;], &#34;rootPatterns&#34;: [&#34;.ccls&#34;, &#34;compile_commands.json&#34;, &#34;.git/&#34;, &#34;.hg/&#34;], &#34;initializationOptions&#34;: { &#34;cache&#34;: { &#34;directory&#34;: &#34;/tmp/ccls&#34; } } } } 第三步，针对项目的定制：">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2021-06-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2021-06-13T00:00:00+00:00">
+    <meta property="article:tag" content="Setup">
+
+  <meta itemprop="name" content="nvim c&#43;&#43; 环境配置">
+  <meta itemprop="description" content="概述：nvim 配置 c&#43;&#43; 环境
+第一步， 配好 nvim &#43; coc.nvim 环境，按照项目 readme [1] 做就可以
+第二步，配置 c&#43;&#43; 环境：
+在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件
+给 &#34;languageserver&#34; 字段加上关于 ccls 的配置：
+1 2 3 4 5 6 7 8 9 10 11 12 &#34;languageserver&#34;: { &#34;ccls&#34;: { &#34;command&#34;: &#34;ccls&#34;, &#34;filetypes&#34;: [&#34;c&#34;, &#34;cc&#34;, &#34;cpp&#34;, &#34;c&#43;&#43;&#34;, &#34;objc&#34;, &#34;objcpp&#34;], &#34;rootPatterns&#34;: [&#34;.ccls&#34;, &#34;compile_commands.json&#34;, &#34;.git/&#34;, &#34;.hg/&#34;], &#34;initializationOptions&#34;: { &#34;cache&#34;: { &#34;directory&#34;: &#34;/tmp/ccls&#34; } } } } 第三步，针对项目的定制：">
+  <meta itemprop="datePublished" content="2021-06-13T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2021-06-13T00:00:00+00:00">
+  <meta itemprop="wordCount" content="224">
+  <meta itemprop="keywords" content="Setup">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="nvim c&#43;&#43; 环境配置">
+  <meta name="twitter:description" content="概述：nvim 配置 c&#43;&#43; 环境
+第一步， 配好 nvim &#43; coc.nvim 环境，按照项目 readme [1] 做就可以
+第二步，配置 c&#43;&#43; 环境：
+在 nvim 中运行 :CocConfig 会打开 coc-settings.json 文件
+给 &#34;languageserver&#34; 字段加上关于 ccls 的配置：
+1 2 3 4 5 6 7 8 9 10 11 12 &#34;languageserver&#34;: { &#34;ccls&#34;: { &#34;command&#34;: &#34;ccls&#34;, &#34;filetypes&#34;: [&#34;c&#34;, &#34;cc&#34;, &#34;cpp&#34;, &#34;c&#43;&#43;&#34;, &#34;objc&#34;, &#34;objcpp&#34;], &#34;rootPatterns&#34;: [&#34;.ccls&#34;, &#34;compile_commands.json&#34;, &#34;.git/&#34;, &#34;.hg/&#34;], &#34;initializationOptions&#34;: { &#34;cache&#34;: { &#34;directory&#34;: &#34;/tmp/ccls&#34; } } } } 第三步，针对项目的定制：">
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -193,9 +221,9 @@
 </span><span class="lnt">3
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">clang++
-</span></span><span class="line"><span class="cl">%cpp -std=c++2a
-</span></span><span class="line"><span class="cl">-I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">clang</span><span class="o">++</span>
+</span></span><span class="line"><span class="cl"><span class="o">%</span><span class="n">cpp</span> <span class="o">-</span><span class="n">std</span><span class="o">=</span><span class="n">c</span><span class="o">++</span><span class="mi">2</span><span class="n">a</span>
+</span></span><span class="line"><span class="cl"><span class="o">-</span><span class="n">I</span><span class="o">/</span><span class="n">Applications</span><span class="o">/</span><span class="n">Xcode</span><span class="o">.</span><span class="n">app</span><span class="o">/</span><span class="n">Contents</span><span class="o">/</span><span class="n">Developer</span><span class="o">/</span><span class="n">Toolchains</span><span class="o">/</span><span class="n">XcodeDefault</span><span class="o">.</span><span class="n">xctoolchain</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">c</span><span class="o">++/</span><span class="n">v1</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>在默认找不到库的位置时，需要手动找到库的位置，并用 -I 来指明路径：</p>
@@ -220,7 +248,7 @@
     <div class="post-copyright">
   <p class="copyright-item">
     <span class="item-title">文章作者</span>
-    <span class="item-content">b1tg</span>
+    <span class="item-content"></span>
   </p>
   <p class="copyright-item">
     <span class="item-title">上次更新</span>
@@ -260,24 +288,24 @@
       </div>
     </main>
     <script src="https://giscus.app/client.js"
-    data-repo="b1tg/b1tg.github.io"
-    data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
-    data-category="Discuss"
-    data-category-id="DIC_kwDODT0ats4CQAsT"
-    data-mapping="title"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="bottom"
-    data-theme="preferred_color_scheme"
-    data-lang="en"
-    crossorigin="anonymous"
-    async>
-</script>
+        data-repo="b1tg/b1tg.github.io"
+        data-repo-id="MDEwOlJlcG9zaXRvcnkyMjIxMDgzNDI="
+        data-category="Discuss"
+        data-category-id="DIC_kwDODT0ats4CQAsT"
+        data-mapping="title"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+    </script>
     <footer id="footer" class="footer">
       <div class="social-links">
       <a href="http://github.com/b1tg" class="iconfont icon-github" title="github"></a>
-  <a href="https://b1tg.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+  
 </div>
 
 <div class="copyright">
@@ -295,7 +323,7 @@
   <span class="copyright-year">
     &copy; 
     2018 - 
-    2024<span class="heart"><i class="iconfont icon-heart"></i></span><span>b1tg</span>
+    2025<span class="heart"><i class="iconfont icon-heart"></i></span><span></span>
   </span>
 </div>
 
@@ -315,17 +343,9 @@
 <script type="text/javascript" src="/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js"></script>
 
 
-
-
-
-<script src="https://t.usermaven.com/lib.js"
-    data-key="UM6sMIrGGS"
-    data-tracking-host="https://events.usermaven.com"
-    data-autocapture="true"
-    defer>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' 
+  data-cf-beacon='{"token": "f1aebb9faa064f7d8bdcd38a271c079e"}'>
 </script>
-<script>window.usermaven = window.usermaven || (function(){(window.usermavenQ = window.usermavenQ || []).push(arguments);})</script>
-
 
 
 
@@ -333,5 +353,4 @@
 
 
 </body>
-
 </html>
