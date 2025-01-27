@@ -3,14 +3,42 @@
   
   <url>
     <loc>https://b1tg.github.io/</loc>
-    <lastmod>2024-06-14T23:47:00+08:00</lastmod>
+    <lastmod>2025-01-27T11:23:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://b1tg.github.io/post/</loc>
-    <lastmod>2024-06-14T23:47:00+08:00</lastmod>
+    <lastmod>2025-01-27T11:23:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1tg.github.io/tags/project/</loc>
+    <lastmod>2025-01-27T11:23:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1tg.github.io/tags/re/</loc>
+    <lastmod>2025-01-27T11:23:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1tg.github.io/tags/</loc>
+    <lastmod>2025-01-27T11:23:00+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://b1tg.github.io/post/win11-oneocr/</loc>
+    <lastmod>2025-01-27T11:23:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -24,13 +52,6 @@
   
   <url>
     <loc>https://b1tg.github.io/post/run-llm-on-amd-rx580/</loc>
-    <lastmod>2024-02-25T23:13:00+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://b1tg.github.io/tags/</loc>
     <lastmod>2024-02-25T23:13:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -94,13 +115,6 @@
   
   <url>
     <loc>https://b1tg.github.io/post/golang-call-conversion/</loc>
-    <lastmod>2023-02-28T23:40:00+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://b1tg.github.io/tags/re/</loc>
     <lastmod>2023-02-28T23:40:00+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

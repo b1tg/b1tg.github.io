@@ -50,8 +50,8 @@
 
   <meta itemprop="name" content="B1TG">
   <meta itemprop="description" content="b1tg blog.">
-  <meta itemprop="datePublished" content="2024-06-14T23:47:00+08:00">
-  <meta itemprop="dateModified" content="2024-06-14T23:47:00+08:00">
+  <meta itemprop="datePublished" content="2025-01-27T11:23:00+08:00">
+  <meta itemprop="dateModified" content="2025-01-27T11:23:00+08:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="B1TG">
   <meta name="twitter:description" content="b1tg blog.">
@@ -133,6 +133,39 @@
       <div class="content-wrapper">
         <div id="content" class="content">
           <section id="posts" class="posts">
+    <article class="post">
+  <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/golang-call-conversion/">Golang call conversion (Golang 调用规约）</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2023-02-28 </span>
+      
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <h2 id="0x00-前言">0x00 前言</h2>
+<p>在逆向 Golang 程序时，发现调用约定和平时遇到的 C/C++ 不太一样，ida 反编译效果也不咋样，于是研究一番。</p>
+<p>本次分析的 go 版本为 go1.19.3：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&gt; go version
+</span></span><span class="line"><span class="cl">go version go1.19.3 windows/amd64
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="0x01-寄存器还是栈">0x01 寄存器还是栈</h2>
+<p>Go internal ABI specification [2] 中给出了函数调用时参数和返回值传递的规范，总的来说：使用寄存器和栈混合放置的方式，优先使用寄存器，不适用的情况使用栈。</p>
+    </div>
+    <div class="read-more">
+      <a href="/post/golang-call-conversion/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
     <article class="post">
   <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/github-hosts-ebpf/">基于 eBPF&#43;Rust 的 Github DNS 加速</a></h1>
@@ -238,60 +271,6 @@
     </div>
     <div class="read-more">
       <a href="/post/impact-and-ie-marches/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/nvim-cpp-setup/">nvim c&#43;&#43; 环境配置</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2021-06-13 </span>
-      
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      <p>概述：nvim 配置 c++ 环境</p>
-<p>第一步， 配好 nvim + coc.nvim 环境，按照项目 readme [1] 做就可以</p>
-<p>第二步，配置 c++ 环境：</p>
-<p>在 nvim 中运行 <code>:CocConfig</code> 会打开 coc-settings.json 文件</p>
-<p>给 <code>&quot;languageserver&quot;</code> 字段加上关于 ccls 的配置：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="s2">&#34;languageserver&#34;</span><span class="err">:</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">  <span class="nt">&#34;ccls&#34;</span><span class="p">:</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="nt">&#34;command&#34;</span><span class="p">:</span> <span class="s2">&#34;ccls&#34;</span><span class="p">,</span>
-</span></span><span class="line"><span class="cl">    <span class="nt">&#34;filetypes&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;c&#34;</span><span class="p">,</span> <span class="s2">&#34;cc&#34;</span><span class="p">,</span> <span class="s2">&#34;cpp&#34;</span><span class="p">,</span> <span class="s2">&#34;c++&#34;</span><span class="p">,</span> <span class="s2">&#34;objc&#34;</span><span class="p">,</span> <span class="s2">&#34;objcpp&#34;</span><span class="p">],</span>
-</span></span><span class="line"><span class="cl">    <span class="nt">&#34;rootPatterns&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;.ccls&#34;</span><span class="p">,</span> <span class="s2">&#34;compile_commands.json&#34;</span><span class="p">,</span> <span class="s2">&#34;.git/&#34;</span><span class="p">,</span> <span class="s2">&#34;.hg/&#34;</span><span class="p">],</span>
-</span></span><span class="line"><span class="cl">    <span class="nt">&#34;initializationOptions&#34;</span><span class="p">:</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cache&#34;</span><span class="p">:</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">          <span class="nt">&#34;directory&#34;</span><span class="p">:</span> <span class="s2">&#34;/tmp/ccls&#34;</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">      <span class="p">}</span>
-</span></span><span class="line"><span class="cl">  <span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>第三步，针对项目的定制：</p>
-    </div>
-    <div class="read-more">
-      <a href="/post/nvim-cpp-setup/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

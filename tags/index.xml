@@ -6,8 +6,22 @@
     <description>Recent content in Tags on B1TG</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 25 Feb 2024 23:13:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 27 Jan 2025 11:23:00 +0800</lastBuildDate>
     <atom:link href="https://b1tg.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Project</title>
+      <link>https://b1tg.github.io/tags/project/</link>
+      <pubDate>Mon, 27 Jan 2025 11:23:00 +0800</pubDate>
+      <guid>https://b1tg.github.io/tags/project/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RE</title>
+      <link>https://b1tg.github.io/tags/re/</link>
+      <pubDate>Mon, 27 Jan 2025 11:23:00 +0800</pubDate>
+      <guid>https://b1tg.github.io/tags/re/</guid>
+      <description></description>
+    </item>
     <item>
       <title>LLM</title>
       <link>https://b1tg.github.io/tags/llm/</link>
@@ -34,13 +48,6 @@
       <link>https://b1tg.github.io/tags/golang/</link>
       <pubDate>Tue, 28 Feb 2023 23:40:00 +0800</pubDate>
       <guid>https://b1tg.github.io/tags/golang/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>RE</title>
-      <link>https://b1tg.github.io/tags/re/</link>
-      <pubDate>Tue, 28 Feb 2023 23:40:00 +0800</pubDate>
-      <guid>https://b1tg.github.io/tags/re/</guid>
       <description></description>
     </item>
     <item>

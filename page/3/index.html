@@ -50,8 +50,8 @@
 
   <meta itemprop="name" content="B1TG">
   <meta itemprop="description" content="b1tg blog.">
-  <meta itemprop="datePublished" content="2024-06-14T23:47:00+08:00">
-  <meta itemprop="dateModified" content="2024-06-14T23:47:00+08:00">
+  <meta itemprop="datePublished" content="2025-01-27T11:23:00+08:00">
+  <meta itemprop="dateModified" content="2025-01-27T11:23:00+08:00">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="B1TG">
   <meta name="twitter:description" content="b1tg blog.">
@@ -135,6 +135,60 @@
           <section id="posts" class="posts">
     <article class="post">
   <header class="post-header">
+    <h1 class="post-title"><a class="post-link" href="/post/nvim-cpp-setup/">nvim c&#43;&#43; 环境配置</a></h1>
+    <div class="post-meta">
+      <span class="post-time"> 2021-06-13 </span>
+      
+    </div>
+  </header>
+  
+  <div class="post-content">
+    <div class="post-summary">
+      <p>概述：nvim 配置 c++ 环境</p>
+<p>第一步， 配好 nvim + coc.nvim 环境，按照项目 readme [1] 做就可以</p>
+<p>第二步，配置 c++ 环境：</p>
+<p>在 nvim 中运行 <code>:CocConfig</code> 会打开 coc-settings.json 文件</p>
+<p>给 <code>&quot;languageserver&quot;</code> 字段加上关于 ccls 的配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="s2">&#34;languageserver&#34;</span><span class="err">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;ccls&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;command&#34;</span><span class="p">:</span> <span class="s2">&#34;ccls&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;filetypes&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;c&#34;</span><span class="p">,</span> <span class="s2">&#34;cc&#34;</span><span class="p">,</span> <span class="s2">&#34;cpp&#34;</span><span class="p">,</span> <span class="s2">&#34;c++&#34;</span><span class="p">,</span> <span class="s2">&#34;objc&#34;</span><span class="p">,</span> <span class="s2">&#34;objcpp&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;rootPatterns&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;.ccls&#34;</span><span class="p">,</span> <span class="s2">&#34;compile_commands.json&#34;</span><span class="p">,</span> <span class="s2">&#34;.git/&#34;</span><span class="p">,</span> <span class="s2">&#34;.hg/&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;initializationOptions&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;cache&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">          <span class="nt">&#34;directory&#34;</span><span class="p">:</span> <span class="s2">&#34;/tmp/ccls&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>第三步，针对项目的定制：</p>
+    </div>
+    <div class="read-more">
+      <a href="/post/nvim-cpp-setup/" class="read-more-link">阅读更多</a>
+    </div>
+  </div>
+</article>
+
+    <article class="post">
+  <header class="post-header">
     <h1 class="post-title"><a class="post-link" href="/post/cve-2018-6065-analysis/">Chrome V8 CVE-2018-6065 漏洞分析</a></h1>
     <div class="post-meta">
       <span class="post-time"> 2021-04-24 </span>
@@ -205,25 +259,6 @@
     </div>
     <div class="read-more">
       <a href="/post/cve-2012-0003-microsoft-windows-media-player-heap-overflow/" class="read-more-link">阅读更多</a>
-    </div>
-  </div>
-</article>
-
-    <article class="post">
-  <header class="post-header">
-    <h1 class="post-title"><a class="post-link" href="/post/cve-2010-3333-microsoft-rtf-stack-overflow/">CVE-2010-3333 Microsoft RTF stack overflow 漏洞分析</a></h1>
-    <div class="post-meta">
-      <span class="post-time"> 2020-01-07 </span>
-      
-    </div>
-  </header>
-  
-  <div class="post-content">
-    <div class="post-summary">
-      CVE-2010-3333-Microsoft-RTF-stack-overflow
-    </div>
-    <div class="read-more">
-      <a href="/post/cve-2010-3333-microsoft-rtf-stack-overflow/" class="read-more-link">阅读更多</a>
     </div>
   </div>
 </article>

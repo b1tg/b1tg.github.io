@@ -6,8 +6,15 @@
     <description>Recent content in RE on B1TG</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 28 Feb 2023 23:40:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 27 Jan 2025 11:23:00 +0800</lastBuildDate>
     <atom:link href="https://b1tg.github.io/tags/re/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Windows11 SnippingTool OCR from commandline</title>
+      <link>https://b1tg.github.io/post/win11-oneocr/</link>
+      <pubDate>Mon, 27 Jan 2025 11:23:00 +0800</pubDate>
+      <guid>https://b1tg.github.io/post/win11-oneocr/</guid>
+      <description>Windows11 SnippingTool OCR</description>
+    </item>
     <item>
       <title>Golang call conversion (Golang 调用规约）</title>
       <link>https://b1tg.github.io/post/golang-call-conversion/</link>

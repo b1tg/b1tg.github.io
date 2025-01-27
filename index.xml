@@ -6,8 +6,15 @@
     <description>Recent content on B1TG</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 25 Feb 2024 23:13:00 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 27 Jan 2025 11:23:00 +0800</lastBuildDate>
     <atom:link href="https://b1tg.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Windows11 SnippingTool OCR from commandline</title>
+      <link>https://b1tg.github.io/post/win11-oneocr/</link>
+      <pubDate>Mon, 27 Jan 2025 11:23:00 +0800</pubDate>
+      <guid>https://b1tg.github.io/post/win11-oneocr/</guid>
+      <description>Windows11 SnippingTool OCR</description>
+    </item>
     <item>
       <title>Run LLM on AMD rx580</title>
       <link>https://b1tg.github.io/post/run-llm-on-amd-rx580/</link>
@@ -104,7 +111,7 @@
       <link>https://b1tg.github.io/quotes/</link>
       <pubDate>Fri, 22 Jan 2021 23:47:10 +0800</pubDate>
       <guid>https://b1tg.github.io/quotes/</guid>
-      <description>&lt;p&gt;你需要持续地整理自己周遭的一切。因为你处在的这个世界所指向的趋势是无序的。如果你自身不做足够多的努力，你就会被这样的无序性所吞噬。&#xA;虽然生命的最终结局是熵到达最大值时吞噬一切意义，但是那个时刻离现在的我们还有几十年的时间。而在这几十年里，你需要持续整理你周遭的一切。这或许可以理解为一种对抗，也可以被认为这就是生命的意义。&lt;/p&gt;</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://x.com/shuimudianxin/status/1880624159996436924&#34;&gt;https://x.com/shuimudianxin/status/1880624159996436924&lt;/a&gt;&lt;/p&gt;&#xA;&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;zh&#34; dir=&#34;ltr&#34;&gt;这本书恶心的地方在于本质上这是一本antlr的推销书籍。里面各种对树的操作都是建立在使用antlr的前提上的。虽然讲了很多有用的模式，但本质不是完备的。&lt;br&gt;在我看来应该不依赖任何框架来讲实现模式才对啊。 &lt;a href=&#34;https://t.co/jIPqI53gNY&#34;&gt;pic.twitter.com/jIPqI53gNY&lt;/a&gt;&lt;/p&gt;&amp;mdash; 水母点心 (@shuimudianxin) &lt;a href=&#34;https://twitter.com/shuimudianxin/status/1880624159996436924?ref_src=twsrc%5Etfw&#34;&gt;January 18, 2025&lt;/a&gt;&lt;/blockquote&gt;&#xA;&lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;&#xA;&#xA;&#xA;&lt;p&gt;你需要持续地整理自己周遭的一切。因为你处在的这个世界所指向的趋势是无序的。如果你自身不做足够多的努力，你就会被这样的无序性所吞噬。&#xA;虽然生命的最终结局是熵到达最大值时吞噬一切意义，但是那个时刻离现在的我们还有几十年的时间。而在这几十年里，你需要持续整理你周遭的一切。这或许可以理解为一种对抗，也可以被认为这就是生命的意义。&lt;/p&gt;</description>
     </item>
     <item>
       <title>CVE-2018-0802 Microsoft Office stack overflow 漏洞分析</title>
